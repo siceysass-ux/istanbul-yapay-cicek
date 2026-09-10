@@ -33,18 +33,20 @@ export async function getCategoryBySlug(slug: string) {
   });
 }
 
-export async function getProductsByCategory(categorySlug: string) {
-  const category = await prisma.category.findUnique({
-    where: { slug: categorySlug },
-    include: { children: true },
-  });
-  if (!category) return [];
-  const categoryIds = [category.id, ...category.children.map((c) => c.id)];
-  return prisma.product.findMany({
-    where: { categoryId: { in: categoryIds }, isActive: true },
-    select: productListSelect,
-    orderBy: { createdAt: "desc" },
-  }) as Promise<ProductListItem[]>;
+export async function getProductsByCategory(categoryIds: string[], page = 1, pageSize = 12) {
+  const where = { categoryId: { in: categoryIds }, isActive: true };
+  const [products, total] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      select: productListSelect,
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }) as Promise<ProductListItem[]>,
+    prisma.product.count({ where }),
+  ]);
+
+  return { products, total };
 }
 
 export async function getFeaturedProducts(limit = 8) {
