@@ -10,9 +10,8 @@ export type ProductWithRelations = Product & {
 
 export type ProductListItem = Pick<
   ProductWithRelations,
-  "id" | "slug" | "name" | "shortDesc" | "basePrice" | "discountPrice" | "stock" | "rating" | "reviewCount" | "isNew" | "isFeatured" | "arEnabled"
+  "id" | "slug" | "name" | "shortDesc" | "basePrice" | "discountPrice" | "stock" | "rating" | "reviewCount" | "isNew" | "isFeatured" | "arEnabled" | "categoryId"
 > & {
   brand: Pick<Brand, "name"> | null;
-  images: Pick<ProductImage, "url" | "alt">[];
-  variants: Pick<Variant, "id" | "type" | "name" | "stock" | "priceDelta">[];
+  images: Pick<ProductImage, "id" | "url" | "alt">[];
 };

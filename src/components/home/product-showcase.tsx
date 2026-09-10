@@ -5,13 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductCard } from "@/components/product/product-card";
 import { ProductGridSkeleton } from "@/components/shared/skeletons";
-import type { ProductWithRelations } from "@/lib/types";
+import type { ProductListItem } from "@/lib/types";
 import type { Category } from "@prisma/client";
 
 const PAGE_SIZE = 12;
 
 interface ProductShowcaseProps {
-  products: ProductWithRelations[];
+  products: ProductListItem[];
   categories: Category[];
 }
 

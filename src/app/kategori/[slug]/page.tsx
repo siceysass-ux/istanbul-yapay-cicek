@@ -6,6 +6,8 @@ import { getCategoryBySlug, getProductsByCategory } from "@/lib/queries";
 import { ProductCard } from "@/components/product/product-card";
 import { ProductFilters } from "@/components/product/product-filters";
 
+export const revalidate = 300;
+
 export async function generateMetadata({
   params,
 }: {
@@ -73,7 +75,7 @@ export default async function CategoryPage({
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
               {products.map((product, i) => (
-                <ProductCard key={product.id} product={product} index={i} />
+                <ProductCard key={product.id} product={product} index={i} imagePriority={i < 6} />
               ))}
             </div>
           )}

@@ -10,10 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCart } from "@/stores/cart";
 import { formatPrice, cn } from "@/lib/utils";
-import type { ProductWithRelations } from "@/lib/types";
+import type { ProductListItem } from "@/lib/types";
 
 interface QuickViewModalProps {
-  product: ProductWithRelations | null;
+  product: ProductListItem | null;
   isOpen: boolean;
   onClose: () => void;
 }

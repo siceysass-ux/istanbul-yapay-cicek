@@ -10,6 +10,8 @@ import { ProductJsonLd, BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
+export const revalidate = 300;
+
 export async function generateMetadata({
   params,
 }: {

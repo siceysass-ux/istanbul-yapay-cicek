@@ -6,14 +6,14 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/product/product-card";
 import { SectionHeading } from "@/components/shared/section-heading";
-import type { ProductWithRelations } from "@/lib/types";
+import type { ProductListItem } from "@/lib/types";
 
 interface ProductSectionProps {
   title: string;
   subtitle?: string;
   accent?: string;
   number?: string;
-  products: ProductWithRelations[];
+  products: ProductListItem[];
   viewAllHref?: string;
 }
 

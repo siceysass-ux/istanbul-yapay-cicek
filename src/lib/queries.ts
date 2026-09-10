@@ -1,6 +1,24 @@
 import { prisma } from "@/lib/prisma";
 import type { ProductWithRelations, ProductListItem } from "@/lib/types";
 
+const productListSelect = {
+  id: true,
+  slug: true,
+  name: true,
+  shortDesc: true,
+  basePrice: true,
+  discountPrice: true,
+  stock: true,
+  rating: true,
+  reviewCount: true,
+  isNew: true,
+  isFeatured: true,
+  arEnabled: true,
+  categoryId: true,
+  brand: { select: { name: true } },
+  images: { orderBy: { order: "asc" as const }, take: 1, select: { id: true, url: true, alt: true } },
+};
+
 export async function getCategories() {
   return prisma.category.findMany({
     where: { parentId: null },
@@ -24,27 +42,27 @@ export async function getProductsByCategory(categorySlug: string) {
   const categoryIds = [category.id, ...category.children.map((c) => c.id)];
   return prisma.product.findMany({
     where: { categoryId: { in: categoryIds }, isActive: true },
-    include: { brand: true, images: true, variants: true },
+    select: productListSelect,
     orderBy: { createdAt: "desc" },
-  }) as Promise<ProductWithRelations[]>;
+  }) as Promise<ProductListItem[]>;
 }
 
 export async function getFeaturedProducts(limit = 8) {
   return prisma.product.findMany({
     where: { isFeatured: true, isActive: true },
-    include: { brand: true, images: true, variants: true },
+    select: productListSelect,
     take: limit,
     orderBy: { rating: "desc" },
-  }) as Promise<ProductWithRelations[]>;
+  }) as Promise<ProductListItem[]>;
 }
 
 export async function getNewProducts(limit = 8) {
   return prisma.product.findMany({
     where: { isNew: true, isActive: true },
-    include: { brand: true, images: true, variants: true },
+    select: productListSelect,
     take: limit,
     orderBy: { createdAt: "desc" },
-  }) as Promise<ProductWithRelations[]>;
+  }) as Promise<ProductListItem[]>;
 }
 
 export async function getProductBySlug(slug: string) {
@@ -63,9 +81,9 @@ export async function getProductBySlug(slug: string) {
 export async function getRelatedProducts(categoryId: string, excludeId: string, limit = 4) {
   return prisma.product.findMany({
     where: { categoryId, isActive: true, id: { not: excludeId } },
-    include: { brand: true, images: true, variants: true },
+    select: productListSelect,
     take: limit,
-  }) as Promise<ProductWithRelations[]>;
+  }) as Promise<ProductListItem[]>;
 }
 
 export async function getProjects() {
@@ -79,9 +97,9 @@ export async function getProjectBySlug(slug: string) {
 export async function getAllProducts() {
   return prisma.product.findMany({
     where: { isActive: true },
-    include: { brand: true, images: true, variants: true },
+    select: productListSelect,
     orderBy: { createdAt: "desc" },
-  }) as Promise<ProductWithRelations[]>;
+  }) as Promise<ProductListItem[]>;
 }
 
 export async function searchProducts(query: string) {
@@ -94,7 +112,7 @@ export async function searchProducts(query: string) {
         { description: { contains: query } },
       ],
     },
-    include: { brand: true, images: true, variants: true },
+    select: productListSelect,
     take: 20,
-  }) as Promise<ProductWithRelations[]>;
+  }) as Promise<ProductListItem[]>;
 }

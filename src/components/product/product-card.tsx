@@ -12,14 +12,15 @@ import { QuickViewModal } from "@/components/product/quick-view-modal";
 import { flyToCart } from "@/components/shared/flying-cart";
 import { useCart } from "@/stores/cart";
 import { formatPrice } from "@/lib/utils";
-import type { ProductWithRelations } from "@/lib/types";
+import type { ProductListItem } from "@/lib/types";
 
 interface ProductCardProps {
-  product: ProductWithRelations;
+  product: ProductListItem;
   index?: number;
+  imagePriority?: boolean;
 }
 
-export function ProductCard({ product, index = 0 }: ProductCardProps) {
+export function ProductCard({ product, index = 0, imagePriority = false }: ProductCardProps) {
   const [quickViewOpen, setQuickViewOpen] = useState(false);
   const [favorite, setFavorite] = useState(false);
   const addItem = useCart((s) => s.addItem);
@@ -128,6 +129,8 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
               src={image}
               alt={product.name}
               fill
+              priority={imagePriority}
+              quality={65}
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
               className={`object-cover transition-transform duration-700 ease-out group-hover:scale-110 ${
                 !inStock ? "grayscale opacity-70" : ""
