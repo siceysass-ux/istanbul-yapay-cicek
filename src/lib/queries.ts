@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import type { ProductWithRelations, ProductListItem } from "@/lib/types";
 
 export async function getCategories() {
+  if (!prisma) return [];
   return prisma.category.findMany({
     where: { parentId: null },
     orderBy: { order: "asc" },
@@ -9,6 +10,7 @@ export async function getCategories() {
 }
 
 export async function getCategoryBySlug(slug: string) {
+  if (!prisma) return null;
   return prisma.category.findUnique({
     where: { slug },
     include: { children: true, parent: true },
@@ -16,6 +18,7 @@ export async function getCategoryBySlug(slug: string) {
 }
 
 export async function getProductsByCategory(categorySlug: string) {
+  if (!prisma) return [];
   const category = await prisma.category.findUnique({
     where: { slug: categorySlug },
     include: { children: true },
@@ -30,6 +33,7 @@ export async function getProductsByCategory(categorySlug: string) {
 }
 
 export async function getFeaturedProducts(limit = 8) {
+  if (!prisma) return [];
   return prisma.product.findMany({
     where: { isFeatured: true, isActive: true },
     include: { brand: true, images: true, variants: true },
@@ -39,6 +43,7 @@ export async function getFeaturedProducts(limit = 8) {
 }
 
 export async function getNewProducts(limit = 8) {
+  if (!prisma) return [];
   return prisma.product.findMany({
     where: { isNew: true, isActive: true },
     include: { brand: true, images: true, variants: true },
@@ -48,6 +53,7 @@ export async function getNewProducts(limit = 8) {
 }
 
 export async function getProductBySlug(slug: string) {
+  if (!prisma) return null;
   return prisma.product.findUnique({
     where: { slug },
     include: {
@@ -61,6 +67,7 @@ export async function getProductBySlug(slug: string) {
 }
 
 export async function getRelatedProducts(categoryId: string, excludeId: string, limit = 4) {
+  if (!prisma) return [];
   return prisma.product.findMany({
     where: { categoryId, isActive: true, id: { not: excludeId } },
     include: { brand: true, images: true, variants: true },
@@ -69,14 +76,17 @@ export async function getRelatedProducts(categoryId: string, excludeId: string, 
 }
 
 export async function getProjects() {
+  if (!prisma) return [];
   return prisma.project.findMany({ orderBy: { createdAt: "desc" } });
 }
 
 export async function getProjectBySlug(slug: string) {
+  if (!prisma) return null;
   return prisma.project.findUnique({ where: { slug } });
 }
 
 export async function getAllProducts() {
+  if (!prisma) return [];
   return prisma.product.findMany({
     where: { isActive: true },
     include: { brand: true, images: true, variants: true },
@@ -85,6 +95,7 @@ export async function getAllProducts() {
 }
 
 export async function searchProducts(query: string) {
+  if (!prisma) return [];
   return prisma.product.findMany({
     where: {
       isActive: true,
