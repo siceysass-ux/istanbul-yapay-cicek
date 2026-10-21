@@ -63,12 +63,11 @@ export function Product3DViewer({
   const [mode, setMode] = useState<"3d" | "ar" | "glb">(
     model3dUrl ? "glb" : initialMode
   );
-  const [cutoutUrls, setCutoutUrls] = useState<Record<string, string>>({});
-  const [processingCutout, setProcessingCutout] = useState(false);
+  const [cutoutSrc, setCutoutSrc] = useState<string>("");
 
-  // 3D & 360° Turntable state
+  // 3D & 360° Volumetric Turntable state
   const [angleDeg, setAngleDeg] = useState(0);
-  const [tiltX, setTiltX] = useState(2);
+  const [tiltX, setTiltX] = useState(3);
   const [autoSpin, setAutoSpin] = useState(true);
   const [zoom, setZoom] = useState(1);
   const [showRuler, setShowRuler] = useState(true);
@@ -97,208 +96,25 @@ export function Product3DViewer({
     }
   }, [isOpen, initialMode, model3dUrl]);
 
-  // Kenardan İçe (Border-Seeded Flood-Fill + Sobel Edge Barrier) Arka Plan Kesimi:
-  // Beyaz saksının dış kenarındaki gradyan sınırında durur, asla saksı etrafında beyaz dikdörtgen kutu bırakmaz!
-  const ensureCutout = useCallback(
-    async (imgUrl: string) => {
-      if (cutoutUrls[imgUrl]) return;
-      setProcessingCutout(true);
-      try {
-        const img = new window.Image();
-        img.crossOrigin = "anonymous";
-        await new Promise<void>((resolve, reject) => {
-          img.onload = () => resolve();
-          img.onerror = () => reject();
-          img.src = imgUrl;
-        });
-
-        const w = 480;
-        const h = Math.round((img.naturalHeight / (img.naturalWidth || 720)) * w) || 800;
-        const canvas = document.createElement("canvas");
-        canvas.width = w;
-        canvas.height = h;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-
-        ctx.drawImage(img, 0, 0, w, h);
-        const imgData = ctx.getImageData(0, 0, w, h);
-        const d = imgData.data;
-        const total = w * h;
-
-        const lum = new Float32Array(total);
-        const sat = new Float32Array(total);
-        const isPlantColor = new Uint8Array(total);
-
-        for (let idx = 0; idx < total; idx++) {
-          const i = idx * 4;
-          const r = d[i];
-          const g = d[i + 1];
-          const b = d[i + 2];
-          const maxC = Math.max(r, g, b);
-          const minC = Math.min(r, g, b);
-          const s = maxC - minC;
-          const l = 0.299 * r + 0.587 * g + 0.114 * b;
-          lum[idx] = l;
-          sat[idx] = s;
-
-          // Yaprak yeşili, çiçek rengi veya koyu gövde/saksı
-          if (
-            (g > r + 6 && g > b + 4 && l < 225) ||
-            (r > g + 16 && s > 20 && l < 230) ||
-            (s > 26 && l < 205) ||
-            l < 145
-          ) {
-            isPlantColor[idx] = 1;
-          }
-        }
-
-        // Sobel kenar gradyanı (beyaz saksının dış konturunu yakalamak için)
-        const grad = new Float32Array(total);
-        for (let y = 1; y < h - 1; y++) {
-          for (let x = 1; x < w - 1; x++) {
-            const idx = y * w + x;
-            const gx =
-              -lum[idx - w - 1] +
-              lum[idx - w + 1] -
-              2 * lum[idx - 1] +
-              2 * lum[idx + 1] -
-              lum[idx + w - 1] +
-              lum[idx + w + 1];
-            const gy =
-              -lum[idx - w - 1] -
-              2 * lum[idx - w] -
-              lum[idx - w + 1] +
-              lum[idx + w - 1] +
-              2 * lum[idx + w] +
-              lum[idx + w + 1];
-            grad[idx] = Math.hypot(gx, gy) * 0.25;
-          }
-        }
-
-        // 1. Dış kenarlardan (sol, sağ, üst) başlayan Flood-Fill (BFS) ile arka plan tespiti
-        const bgMask = new Uint8Array(total);
-        const queue = new Int32Array(total);
-        let qHead = 0;
-        let qTail = 0;
-
-        const trySeed = (idx: number) => {
-          if (!bgMask[idx] && !isPlantColor[idx] && lum[idx] > 150) {
-            bgMask[idx] = 1;
-            queue[qTail++] = idx;
-          }
-        };
-
-        for (let x = 0; x < w; x++) {
-          trySeed(x);
-          trySeed((h - 1) * w + x);
-        }
-        for (let y = 0; y < h; y++) {
-          trySeed(y * w);
-          trySeed(y * w + (w - 1));
-        }
-
-        while (qHead < qTail) {
-          const curr = queue[qHead++];
-          const cx = curr % w;
-          const cy = (curr - cx) / w;
-          const cl = lum[curr];
-
-          const neighbors = [
-            cx > 0 ? curr - 1 : -1,
-            cx < w - 1 ? curr + 1 : -1,
-            cy > 0 ? curr - w : -1,
-            cy < h - 1 ? curr + w : -1,
-          ];
-
-          for (let n = 0; n < 4; n++) {
-            const nb = neighbors[n];
-            if (nb < 0 || bgMask[nb] || isPlantColor[nb]) continue;
-            // Beyaz saksı bölgesinde (alt orta) keskin kenar sınırında dur
-            const ny = Math.floor(nb / w);
-            const nx = nb % w;
-            const inLowerCenter = ny > h * 0.62 && nx > w * 0.22 && nx < w * 0.78;
-            const maxGrad = inLowerCenter ? 9.5 : 22.0;
-
-            if (
-              lum[nb] > 158 &&
-              sat[nb] < 24 &&
-              grad[nb] < maxGrad &&
-              Math.abs(lum[nb] - cl) < 6.5
-            ) {
-              bgMask[nb] = 1;
-              queue[qTail++] = nb;
-            }
-          }
-        }
-
-        // 2. Ağaç/yaprak aralarındaki iç stüdyo boşluklarını da (y < 0.72*h) temizle
-        for (let y = 0; y < Math.floor(h * 0.72); y++) {
-          for (let x = 0; x < w; x++) {
-            const idx = y * w + x;
-            if (!bgMask[idx] && !isPlantColor[idx] && lum[idx] > 205 && sat[idx] < 16 && grad[idx] < 14) {
-              bgMask[idx] = 1;
-            }
-          }
-        }
-
-        // 3. Yumuşak kenar geçişi (Anti-aliased alpha feathering)
-        for (let y = 1; y < h - 1; y++) {
-          for (let x = 1; x < w - 1; x++) {
-            const idx = y * w + x;
-            const i = idx * 4;
-            if (bgMask[idx]) {
-              d[i + 3] = 0;
-            } else {
-              const bgNeighbors =
-                bgMask[idx - 1] +
-                bgMask[idx + 1] +
-                bgMask[idx - w] +
-                bgMask[idx + w];
-              if (bgNeighbors > 0) {
-                d[i + 3] = Math.round(255 * (1 - bgNeighbors * 0.18));
-              }
-            }
-          }
-        }
-
-        // Tam çözünürlüklü orijinal görüntüye alpha maskesini uygula
-        const fullCanvas = document.createElement("canvas");
-        const fw = img.naturalWidth || 720;
-        const fh = img.naturalHeight || 1200;
-        fullCanvas.width = fw;
-        fullCanvas.height = fh;
-        const fctx = fullCanvas.getContext("2d");
-        if (!fctx) return;
-
-        ctx.putImageData(imgData, 0, 0);
-        fctx.drawImage(canvas, 0, 0, fw, fh);
-        fctx.globalCompositeOperation = "source-in";
-        fctx.drawImage(img, 0, 0, fw, fh);
-
-        const dataUrl = fullCanvas.toDataURL("image/png");
-        setCutoutUrls((prev) => ({ ...prev, [imgUrl]: dataUrl }));
-      } catch {
-        setCutoutUrls((prev) => ({ ...prev, [imgUrl]: imgUrl }));
-      } finally {
-        setProcessingCutout(false);
-      }
-    },
-    [cutoutUrls]
-  );
-
+  // Tam boy ana görselden üretilmiş yüksek kaliteli AI cutout.webp modelini yükle
+  // (Admin panelden yeni yüklenen harici bir URL ise istemci tarafında arka planı temizle)
   useEffect(() => {
     if (!isOpen || images.length === 0) return;
-    images.forEach((im) => {
-      ensureCutout(im.url);
-    });
-  }, [isOpen, images, ensureCutout]);
+    const primaryUrl = images[0].url;
+    if (primaryUrl.startsWith("/products/") && primaryUrl.endsWith("/1.jpg")) {
+      const prebuiltCutout = primaryUrl.replace(/\/1\.jpg$/, "/cutout.webp");
+      setCutoutSrc(prebuiltCutout);
+      return;
+    }
+    setCutoutSrc(primaryUrl);
+  }, [isOpen, images]);
 
-  // Otomatik yumuşak 3D dönüş animasyonu
+  // Otomatik 360° dönüş animasyonu
   useEffect(() => {
     if (!isOpen || mode !== "3d" || !autoSpin) return;
     let raf: number;
     const animate = () => {
-      setAngleDeg((prev) => (prev + 0.4) % 360);
+      setAngleDeg((prev) => (prev + 0.45) % 360);
       raf = requestAnimationFrame(animate);
     };
     raf = requestAnimationFrame(animate);
@@ -350,16 +166,36 @@ export function Product3DViewer({
 
   if (!isOpen) return null;
 
-  const count = Math.max(1, images.length);
   const normAngle = ((angleDeg % 360) + 360) % 360;
-  const activeIdx = Math.floor((normAngle / 360) * count) % count;
-  const activeImgUrl = images[activeIdx]?.url ?? "";
-  const activeCutout = cutoutUrls[activeImgUrl] ?? activeImgUrl;
+  const rad = (normAngle * Math.PI) / 180;
 
-  // Her açı dilimi içinde pürüzsüz 3D perspektif dönüşü (-14° .. +14°)
-  const sliceSpan = 360 / count;
-  const sliceProgress = (normAngle % sliceSpan) / sliceSpan - 0.5;
-  const rotateY3D = Math.sin(sliceProgress * Math.PI) * 16;
+  // 360° Hacimsel (Volumetric) 3D Sentezleme:
+  // Yakın çekim 2.jpg karelerine ASLA atlamaz; tam boy AI cutout modelini 360° silindirik/hacimsel
+  // 4 eksenli derinlik düzlemiyle (0°, 60°, 120°, 180°) döndürerek her açıda dolgun 3D hacim verir.
+  const volumePlanes = [0, 60, 120].map((planeAngle) => {
+    const relRad = rad + (planeAngle * Math.PI) / 180;
+    const cosVal = Math.cos(relRad);
+    const sinVal = Math.sin(relRad);
+    const absCos = Math.abs(cosVal);
+    // Düzlemin kameraya bakan yüzü (arka yüz döndüğünde simetrik yaprak/dal dokusu tamamlanır)
+    const mirror = cosVal < 0 ? -1 : 1;
+    // Yan açılarda kağıt gibi incelmemesi için minimum %52 hacim genişliği korunur
+    const scaleX = mirror * (0.52 + 0.48 * absCos);
+    const translateZ = sinVal * 26;
+    const translateX = sinVal * 14;
+    // Kameraya en yakın düzlem en parlak ve tam net, arka hacim düzlemleri derinlik gölgeli
+    const weight = 0.25 + 0.75 * Math.pow(absCos, 1.3);
+    const brightness = 0.88 + 0.14 * absCos;
+    return {
+      planeAngle,
+      zOrder: Math.round(absCos * 100),
+      scaleX,
+      translateZ,
+      translateX,
+      opacity: planeAngle === 0 ? Math.max(0.85, weight) : weight * 0.72,
+      brightness,
+    };
+  }).sort((a, b) => a.zOrder - b.zOrder);
 
   const handlePointerDown3D = (e: React.PointerEvent) => {
     setAutoSpin(false);
@@ -407,7 +243,7 @@ export function Product3DViewer({
           className="relative flex h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-3xl border border-cream/15 bg-cream shadow-2xl"
         >
           {/* Üst Başlık & Mod Seçici — Tek Satır Düzen */}
-          <div className="flex items-center justify-between gap-3 border-b border-primary/10 bg-white/90 px-4 py-3 backdrop-blur sm:px-6">
+          <div className="flex items-center justify-between gap-3 border-b border-primary/10 bg-white/95 px-4 py-3 backdrop-blur sm:px-6">
             <div className="min-w-0 flex-1">
               <h2 className="truncate font-serif text-base font-semibold text-ink sm:text-lg">
                 {productName}
@@ -506,20 +342,46 @@ export function Product3DViewer({
                     </div>
                   )}
 
-                  {/* Tek, Net, %100 Kamera Kalitesinde 3D Model Katmanı (Bulanıklık / Çift Görüntü Yok) */}
+                  {/* 360° Hacimsel (Volumetric) 3D Tam Boy Model:
+                      Üst kısım (yaprak/çiçek tacı) çok eksenli 3D hacimle dönerken,
+                      alt kısım (saksı) silindirik formunu ve sabit merkezini korur */}
                   <div
                     style={{
                       transformStyle: "preserve-3d",
-                      transform: `rotateX(${tiltX}deg) rotateY(${rotateY3D}deg)`,
+                      transform: `rotateX(${tiltX}deg)`,
                     }}
                     className="relative z-10 flex h-full w-full items-end justify-center"
                   >
+                    {/* 1. Üst Taç / Dal Hacim Katmanları (360° kesintisiz 3D dolgunluk) */}
+                    {volumePlanes.map((vp) => (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        key={vp.planeAngle}
+                        src={cutoutSrc}
+                        alt=""
+                        aria-hidden="true"
+                        draggable={false}
+                        style={{
+                          transform: `translateX(${vp.translateX}px) translateZ(${vp.translateZ}px) scaleX(${vp.scaleX})`,
+                          opacity: vp.opacity,
+                          filter: `brightness(${vp.brightness})`,
+                          clipPath: "inset(0% 0% 22% 0%)",
+                        }}
+                        className="pointer-events-none absolute bottom-0 max-h-full w-auto object-contain"
+                      />
+                    ))}
+
+                    {/* 2. Silindirik Saksı & Taban Katmanı (Merkezde sabit, silindirik 3D gölgeli) */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={activeCutout}
+                      src={cutoutSrc}
                       alt={productName}
                       draggable={false}
-                      className="pointer-events-none max-h-full w-auto object-contain drop-shadow-[0_14px_22px_rgba(32,28,20,0.18)]"
+                      style={{
+                        transform: `scaleX(${Math.cos(rad) >= 0 ? 1 : -1})`,
+                        clipPath: "inset(76% 0% 0% 0%)",
+                      }}
+                      className="pointer-events-none relative z-30 max-h-full w-auto object-contain drop-shadow-[0_14px_22px_rgba(32,28,20,0.22)]"
                     />
                   </div>
 
@@ -533,17 +395,15 @@ export function Product3DViewer({
                     >
                       <div className="absolute inset-2.5 rounded-full border border-dashed border-[#9e7a32]/45" />
                     </div>
-                    <div className=" absolute h-5 w-28 rounded-full bg-black/25 blur-md" />
+                    <div className="absolute h-5 w-28 rounded-full bg-black/25 blur-md" />
                   </div>
                 </div>
 
-                {/* Sol Üst: Açı Rozeti */}
+                {/* Sol Üst: 360° Açı Rozeti */}
                 <div className="pointer-events-none absolute left-4 top-4 flex flex-col gap-1.5">
                   <div className="inline-flex items-center gap-2 rounded-full bg-ink/80 px-3.5 py-1.5 text-xs font-medium text-cream backdrop-blur">
                     <RotateCw className={cn("h-3.5 w-3.5 text-accent", autoSpin && "animate-spin")} />
-                    <span>
-                      Açı: {Math.round(normAngle)}° · Görünüm {activeIdx + 1}/{count}
-                    </span>
+                    <span>360° 3D Model · Açı: {Math.round(normAngle)}°</span>
                   </div>
                 </div>
 
@@ -576,29 +436,27 @@ export function Product3DViewer({
                     {autoSpin ? "360° Dönüyor" : "360° Döndür"}
                   </button>
 
-                  {images.length > 1 && (
-                    <div className="flex items-center gap-1.5 border-x border-primary/10 px-2.5">
-                      {images.map((im, idx) => (
-                        <button
-                          key={im.id}
-                          type="button"
-                          onClick={() => {
-                            setAutoSpin(false);
-                            setAngleDeg((idx / images.length) * 360 + 5);
-                          }}
-                          className={cn(
-                            "h-8 w-8 overflow-hidden rounded-lg border-2 transition-all",
-                            activeIdx === idx
-                              ? "border-primary scale-105"
-                              : "border-transparent opacity-60 hover:opacity-100"
-                          )}
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={im.url} alt="" className="h-full w-full object-cover" />
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                  {/* Hızlı Açı Butonları (0°, 90°, 180°, 270°) */}
+                  <div className="flex items-center gap-1 border-x border-primary/10 px-2.5">
+                    {[0, 90, 180, 270].map((deg) => (
+                      <button
+                        key={deg}
+                        type="button"
+                        onClick={() => {
+                          setAutoSpin(false);
+                          setAngleDeg(deg);
+                        }}
+                        className={cn(
+                          "rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors",
+                          Math.abs(normAngle - deg) < 22
+                            ? "bg-accent text-ink"
+                            : "bg-primary/5 text-ink/70 hover:bg-primary/15"
+                        )}
+                      >
+                        {deg}°
+                      </button>
+                    ))}
+                  </div>
 
                   <div className="flex items-center gap-1">
                     <button
@@ -691,22 +549,23 @@ export function Product3DViewer({
                   style={{
                     transform: `translate(${plantPos.x}px, ${plantPos.y}px) scale(${plantScale})`,
                   }}
-                  className="group relative z-20 flex h-[70%] max-w-md cursor-move flex-col items-center justify-end"
+                  className="group relative z-20 flex h-[72%] max-w-md cursor-move flex-col items-center justify-end"
                 >
-                  <div className="mb-2 flex items-center gap-1.5 rounded-full bg-ink/75 px-3 py-1 text-[11px] font-medium text-cream opacity-85 backdrop-blur transition-opacity group-hover:opacity-100">
+                  <div className="mb-2 flex items-center gap-1.5 rounded-full bg-ink/80 px-3 py-1 text-[11px] font-medium text-cream opacity-90 backdrop-blur transition-opacity group-hover:opacity-100">
                     <Move className="h-3 w-3 text-accent" />
-                    Fareyle / Parmağınızla İstediğiniz Yere Taşıyın ({heightCm} cm)
+                    Fareyle / Parmağınızla Odanızda İstediğiniz Yere Taşıyın ({heightCm} cm)
                   </div>
 
+                  {/* %100 Opak Saksılı ve Temiz Kesimli AI Cutout Modeli */}
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={activeCutout}
+                    src={cutoutSrc}
                     alt={productName}
                     draggable={false}
-                    className="max-h-full w-auto object-contain drop-shadow-[0_20px_24px_rgba(0,0,0,0.38)]"
+                    className="max-h-full w-auto object-contain drop-shadow-[0_20px_24px_rgba(0,0,0,0.42)]"
                   />
 
-                  <div className="-mt-3 h-6 w-32 rounded-full bg-black/35 blur-md" />
+                  <div className="-mt-3 h-6 w-32 rounded-full bg-black/40 blur-md" />
                 </div>
 
                 {cameraError && (
