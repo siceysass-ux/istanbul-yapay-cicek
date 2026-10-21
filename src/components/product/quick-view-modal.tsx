@@ -78,7 +78,7 @@ export function QuickViewModal({ product, isOpen, onClose }: QuickViewModalProps
 
               <div className="grid gap-0 md:grid-cols-2">
                 {/* Görsel */}
-                <div className="relative aspect-[2/3] bg-[#eae6df]">
+                <div className="relative aspect-[2/3] bg-[#f8f7f4]">
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={activeImage}
