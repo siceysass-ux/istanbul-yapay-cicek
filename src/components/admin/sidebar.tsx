@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logoutAction } from "@/app/admin/login/actions";
+import { BrandLogo } from "@/components/shared/brand-logo";
 
 const menu = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -36,14 +37,11 @@ export function AdminSidebar() {
   return (
     <aside className="fixed left-0 top-0 z-30 flex h-screen w-64 flex-col border-r border-primary/10 bg-ink text-cream/80">
       {/* Logo */}
-      <div className="flex h-16 items-center gap-2 border-b border-cream/10 px-5">
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-light">
-          <span className="font-serif text-base text-cream">Ç</span>
-        </div>
-        <div>
-          <div className="font-serif text-sm font-semibold text-cream">Çiçek Yapay</div>
-          <div className="text-[10px] text-cream/40">Admin Panel</div>
-        </div>
+      <div className="flex h-16 items-center justify-between border-b border-cream/10 px-5">
+        <BrandLogo variant="dark" size="sm" showTagline={false} />
+        <span className="rounded-full bg-cream/10 px-2 py-0.5 text-[9px] font-medium uppercase tracking-wider text-cream/60">
+          Admin
+        </span>
       </div>
 
       {/* Menü */}

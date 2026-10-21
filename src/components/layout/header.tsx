@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
-import { Menu, Search, ShoppingBag, User, X, ChevronDown } from "lucide-react";
+import { Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { useCart } from "@/stores/cart";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { BrandLogo } from "@/components/shared/brand-logo";
 
 const navItems = [
   { label: "Yapay Güller", href: "/kategori/yapay-guller" },
@@ -32,11 +32,11 @@ export function Header() {
               <span>🚚 2000₺ üzeri ücretsiz kargo</span>
               <span>📍 İstanbul içi kapıda ödeme</span>
               <span>⚡ 1-3 iş gününde teslim</span>
-              <span>� 500+ tamamlanan proje</span>
+              <span>✦ 500+ tamamlanan proje</span>
               <span>🚚 2000₺ üzeri ücretsiz kargo</span>
               <span>📍 İstanbul içi kapıda ödeme</span>
               <span>⚡ 1-3 iş gününde teslim</span>
-              <span>� 500+ tamamlanan proje</span>
+              <span>✦ 500+ tamamlanan proje</span>
             </div>
           ))}
         </div>
@@ -44,10 +44,10 @@ export function Header() {
 
       {/* Ana header */}
       <header className="sticky top-0 z-40 glass border-b border-primary/10 overflow-visible">
-        <div className="mx-auto flex h-24 max-w-7xl items-center justify-between gap-6 px-4 lg:px-8">
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-6 px-4 lg:px-8">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0 pr-4 lg:pr-8 lg:border-r lg:border-primary/10 py-1 z-50">
-            <Image src="/logo.webp" alt="Çiçek Yapay" width={420} height={180} className="h-30 w-auto" priority />
+          <Link href="/" aria-label="Çiçek Yapay Ana Sayfa" className="flex items-center shrink-0 pr-4 lg:pr-8 lg:border-r lg:border-primary/10 py-1 z-50">
+            <BrandLogo variant="light" size="md" />
           </Link>
 
           {/* Desktop nav */}

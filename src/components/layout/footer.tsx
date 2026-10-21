@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { BrandLogo } from "@/components/shared/brand-logo";
 import {
   Facebook,
   Instagram,
@@ -111,14 +111,8 @@ export function Footer() {
         {/* Marka + sosyal */}
         <div className="mb-10 flex flex-col items-start gap-4 border-b border-cream/10 pb-8 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/" aria-label="Ana sayfa">
-              <Image
-                src="/logo.webp"
-                alt="Çiçek Yapay"
-                width={480}
-                height={207}
-                className="h-16 w-auto"
-              />
+            <Link href="/" aria-label="Çiçek Yapay Ana Sayfa">
+              <BrandLogo variant="dark" size="md" />
             </Link>
             <div className="hidden h-8 w-px bg-cream/10 sm:block" />
             <p className="hidden max-w-xs text-xs leading-relaxed text-cream/50 sm:block">

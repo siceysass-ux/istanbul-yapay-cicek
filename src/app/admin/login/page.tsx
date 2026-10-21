@@ -6,6 +6,7 @@ import { loginAction } from "./actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Lock, Mail, Loader2 } from "lucide-react";
+import { BrandLogo } from "@/components/shared/brand-logo";
 
 export default function AdminLoginPage() {
   const [state, formAction, pending] = useActionState(
@@ -19,14 +20,9 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-ink px-4">
       <div className="w-full max-w-md">
         {/* Logo */}
-        <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-light">
-            <span className="font-serif text-2xl text-cream">Ç</span>
-          </div>
-          <h1 className="font-serif text-2xl font-semibold text-cream">
-            Çiçek Yapay
-          </h1>
-          <p className="mt-1 text-sm text-cream/50">Admin Panel Girişi</p>
+        <div className="mb-8 flex flex-col items-center text-center">
+          <BrandLogo variant="dark" size="lg" />
+          <p className="mt-3 text-sm text-cream/50">Admin Panel Girişi</p>
         </div>
 
         {/* Form */}
