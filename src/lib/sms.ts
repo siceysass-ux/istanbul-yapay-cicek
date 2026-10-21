@@ -69,7 +69,7 @@ export async function sendOrderSms(
   orderNumber: string,
   total: number
 ): Promise<boolean> {
-  const message = `İstanbul Yapay Çiçek: Siparişiniz alındi. Sipariş No: ${orderNumber}. Tutar: ${total.toLocaleString("tr-TR")}₺. Teslimat 1-3 is gunu icinde yapilir.`;
+  const message = `Çiçek Yapay: Siparişiniz alındi. Sipariş No: ${orderNumber}. Tutar: ${total.toLocaleString("tr-TR")}₺. Teslimat 1-3 is gunu icinde yapilir.`;
 
   return sendSms({ to: phone, message });
 }
@@ -83,7 +83,7 @@ export async function sendShippingSms(
   cargoProvider: string,
   cargoCode: string
 ): Promise<boolean> {
-  const message = `İstanbul Yapay Çiçek: ${orderNumber} numarali siparisiniz kargoya verildi. ${cargoProvider} - Takip No: ${cargoCode}`;
+  const message = `Çiçek Yapay: ${orderNumber} numarali siparisiniz kargoya verildi. ${cargoProvider} - Takip No: ${cargoCode}`;
 
   return sendSms({ to: phone, message });
 }
@@ -95,7 +95,7 @@ export async function sendQuoteRequestSms(
   phone: string,
   name: string
 ): Promise<boolean> {
-  const message = `İstanbul Yapay Çiçek: ${name}, kesif talebiniz alindi. Ekibimiz 24 saat icinde sizinle iletisime gececek.`;
+  const message = `Çiçek Yapay: ${name}, kesif talebiniz alindi. Ekibimiz 24 saat icinde sizinle iletisime gececek.`;
 
   return sendSms({ to: phone, message });
 }

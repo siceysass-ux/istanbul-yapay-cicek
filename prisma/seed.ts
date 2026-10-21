@@ -295,7 +295,7 @@ async function main() {
 
   // Site ayarları
   const settings = [
-    { key: "site_name", value: "Dikey Yapay Çiçek" },
+    { key: "site_name", value: "Çiçek Yapay" },
     { key: "phone", value: "0(507) 884 66 03" },
     { key: "email", value: "info@dikeyyapaybahce.com" },
     { key: "address", value: "Nuripaşa Mah. Merve Cad. No:73/A, Zeytinburnu / İstanbul" },

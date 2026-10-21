@@ -40,7 +40,7 @@ export async function sendQuoteRequestEmail(
 
   return sendEmail({
     to: email,
-    subject: "Keşif Talebi Alındı — İstanbul Yapay Çiçek",
+    subject: "Keşif Talebi Alındı — Çiçek Yapay",
     html,
   });
 }
@@ -49,7 +49,7 @@ export async function sendQuoteRequestSms(
   phone: string,
   name: string
 ): Promise<boolean> {
-  const message = `İstanbul Yapay Çiçek: ${name}, kesif talebiniz alindi. Ekibimiz 24 saat icinde sizinle iletisime gececek.`;
+  const message = `Çiçek Yapay: ${name}, kesif talebiniz alindi. Ekibimiz 24 saat icinde sizinle iletisime gececek.`;
   return sendSms({ to: phone, message });
 }
 

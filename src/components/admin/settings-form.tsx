@@ -22,7 +22,7 @@ export function SettingsForm({ initial }: { initial: Record<string, string> }) {
         <h2 className="font-serif text-lg font-semibold">Genel Bilgiler</h2>
         <div>
           <label className="block text-sm font-medium mb-1.5">Site Adı</label>
-          <Input name="site_name" defaultValue={initial.site_name} placeholder="İstanbul Yapay Çiçek" />
+          <Input name="site_name" defaultValue={initial.site_name} placeholder="Çiçek Yapay" />
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <div>

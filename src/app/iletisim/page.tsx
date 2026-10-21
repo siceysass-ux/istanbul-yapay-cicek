@@ -75,7 +75,7 @@ export default function IletisimPage() {
       <div className="mt-10 overflow-hidden rounded-3xl border border-primary/10">
         <iframe
           src="https://www.google.com/maps?q=Nuripa%C5%9Fa+Mah.+Merve+Cad.+No:73/A+Zeytinburnu+%C4%B0stanbul&output=embed"
-          title="İstanbul Yapay Çiçek Konum"
+          title="Çiçek Yapay Konum"
           width="100%"
           height="360"
           loading="lazy"

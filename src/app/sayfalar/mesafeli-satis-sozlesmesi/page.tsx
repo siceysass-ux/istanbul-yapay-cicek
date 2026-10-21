@@ -11,7 +11,7 @@ export default function MesafeliSatisPage() {
         Satıcı ile alışveriş sırasında bilgileri alınan Alıcı arasında akdedilmiştir.
       </p>
       <ul>
-        <li><strong>Satıcı:</strong> İstanbul Yapay Çiçek</li>
+        <li><strong>Satıcı:</strong> Çiçek Yapay</li>
         <li><strong>Adres:</strong> Nuripaşa Mah. Merve Cad. No:73/A, Zeytinburnu / İstanbul</li>
         <li><strong>Telefon:</strong> 0(507) 884 66 03</li>
         <li><strong>E-posta:</strong> info@dikeyyapaybahce.com</li>

@@ -11,7 +11,7 @@ export default function KvkkPage() {
         kişisel verileriniz aşağıda belirtilen kapsamda işlenmektedir.
       </p>
       <ul>
-        <li><strong>Veri Sorumlusu:</strong> İstanbul Yapay Çiçek</li>
+        <li><strong>Veri Sorumlusu:</strong> Çiçek Yapay</li>
         <li><strong>Adres:</strong> Nuripaşa Mah. Merve Cad. No:73/A, Zeytinburnu / İstanbul</li>
         <li><strong>İletişim:</strong> info@dikeyyapaybahce.com · 0(507) 884 66 03</li>
       </ul>

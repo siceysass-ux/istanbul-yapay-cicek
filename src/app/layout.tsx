@@ -35,24 +35,24 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "İstanbul Yapay Çiçek — Yapay Çiçek & Dikey Bahçe",
-    template: "%s — İstanbul Yapay Çiçek",
+    default: "Çiçek Yapay — Yapay Çiçek & Dikey Bahçe",
+    template: "%s — Çiçek Yapay",
   },
   description:
     "Yapay çiçek, ağaç ve dikey bahçe ürünleri. Bakım gerektirmez, ücretsiz kargo.",
   keywords: ["yapay çiçek", "yapay ağaç", "dikey bahçe", "yapay bitki", "gelin buketi", "kuru çiçek"],
   openGraph: {
-    title: "İstanbul Yapay Çiçek",
+    title: "Çiçek Yapay",
     description: "Yapay çiçek ve dikey bahçe ürünleri",
     type: "website",
     locale: "tr_TR",
     url: SITE_URL,
-    siteName: "İstanbul Yapay Çiçek",
-    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "İstanbul Yapay Çiçek" }],
+    siteName: "Çiçek Yapay",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Çiçek Yapay" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "İstanbul Yapay Çiçek",
+    title: "Çiçek Yapay",
     description: "Yapay çiçek ve dikey bahçe ürünleri",
     images: ["/og-image.jpg"],
   },
@@ -80,7 +80,7 @@ export default function RootLayout({
       <body className="antialiased" suppressHydrationWarning>
         <LocalBusinessJsonLd
           data={{
-            name: "İstanbul Yapay Çiçek",
+            name: "Çiçek Yapay",
             phone: "0(507) 884 66 03",
             email: "info@dikeyyapaybahce.com",
             address: "Nuripaşa Mah. Merve Cad. No:73/A, Zeytinburnu / İstanbul",

@@ -21,10 +21,10 @@ export default function AdminLoginPage() {
         {/* Logo */}
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary-light">
-            <span className="font-serif text-2xl text-cream">D</span>
+            <span className="font-serif text-2xl text-cream">Ç</span>
           </div>
           <h1 className="font-serif text-2xl font-semibold text-cream">
-            İstanbul Yapay Çiçek
+            Çiçek Yapay
           </h1>
           <p className="mt-1 text-sm text-cream/50">Admin Panel Girişi</p>
         </div>

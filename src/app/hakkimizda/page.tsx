@@ -2,7 +2,7 @@ import { CustomerSegments } from "@/components/shared/application-areas";
 import Link from "next/link";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 
-export const metadata = { title: "Hakkımızda", description: "Dikey Yapay Bahçe — yapay dikey bahçe, yosun duvar, büyük yapay ağaç ve dekorasyon çözümleri." };
+export const metadata = { title: "Hakkımızda", description: "Çiçek Yapay — yapay çiçek, yapay dikey bahçe, yosun duvar, büyük yapay ağaç ve dekorasyon çözümleri." };
 
 export default function HakkimizdaPage() {
   return (

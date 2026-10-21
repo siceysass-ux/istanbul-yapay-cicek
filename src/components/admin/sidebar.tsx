@@ -38,10 +38,10 @@ export function AdminSidebar() {
       {/* Logo */}
       <div className="flex h-16 items-center gap-2 border-b border-cream/10 px-5">
         <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-light">
-          <span className="font-serif text-base text-cream">D</span>
+          <span className="font-serif text-base text-cream">Ç</span>
         </div>
         <div>
-          <div className="font-serif text-sm font-semibold text-cream">İstanbul Yapay Çiçek</div>
+          <div className="font-serif text-sm font-semibold text-cream">Çiçek Yapay</div>
           <div className="text-[10px] text-cream/40">Admin Panel</div>
         </div>
       </div>

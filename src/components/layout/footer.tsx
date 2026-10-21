@@ -114,7 +114,7 @@ export function Footer() {
             <Link href="/" aria-label="Ana sayfa">
               <Image
                 src="/logo.webp"
-                alt="İstanbul Yapay Çiçek"
+                alt="Çiçek Yapay"
                 width={480}
                 height={207}
                 className="h-16 w-auto"
@@ -206,7 +206,7 @@ export function Footer() {
         <div className="mt-8 overflow-hidden rounded-2xl border border-cream/10">
           <iframe
             src="https://www.google.com/maps?q=Nuripa%C5%9Fa+Mah.+Merve+Cad.+No:73/A+Zeytinburnu+%C4%B0stanbul&output=embed"
-            title="İstanbul Yapay Çiçek Konum"
+            title="Çiçek Yapay Konum"
             width="100%"
             height="240"
             loading="lazy"
@@ -221,7 +221,7 @@ export function Footer() {
       {/* Alt bant */}
       <div className="border-t border-cream/10 bg-ink-light/20">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-cream/40 sm:flex-row lg:px-8">
-          <p>© {year} İstanbul Yapay Çiçek. Tüm hakları saklıdır.</p>
+          <p>© {year} Çiçek Yapay. Tüm hakları saklıdır.</p>
           <div className="flex flex-wrap items-center justify-center gap-2">
             {["VISA", "MASTERCARD", "TROY", "KAPIDA ÖDE"].map((p) => (
               <span

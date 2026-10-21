@@ -47,7 +47,7 @@ export function Header() {
         <div className="mx-auto flex h-24 max-w-7xl items-center justify-between gap-6 px-4 lg:px-8">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 shrink-0 pr-4 lg:pr-8 lg:border-r lg:border-primary/10 py-1 z-50">
-            <Image src="/logo.webp" alt="İstanbul Yapay Çiçek" width={420} height={180} className="h-30 w-auto" priority />
+            <Image src="/logo.webp" alt="Çiçek Yapay" width={420} height={180} className="h-30 w-auto" priority />
           </Link>
 
           {/* Desktop nav */}

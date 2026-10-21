@@ -7,7 +7,7 @@ export default function GizlilikPage() {
     <LegalLayout title="Gizlilik Politikası" updatedAt="Eylül 2026">
       <h2>1. Genel</h2>
       <p>
-        İstanbul Yapay Çiçek olarak, ziyaretçilerimizin ve müşterilerimizin gizliliğini
+        Çiçek Yapay olarak, ziyaretçilerimizin ve müşterilerimizin gizliliğini
         korumayı taahhüt ederiz. Bu politika, web sitemiz üzerinden toplanan
         kişisel verilerin nasıl işlendiğini açıklar.
       </p>

@@ -22,7 +22,7 @@ export const applications: Application[] = [
     subtitle: "Göz alıcı tasarım, lüks ve ultra gerçekçi görünüm",
     heroImage: "/vg-optimized/vg-app-01.webp",
     intro:
-      "Dikey Yapay Bahçe gerçekçi renkleri, gölgeleri, boyutları ve estetiği yakalayan bir görsel dekorasyon tasarımı sunar. Yaşam alanları ve ticari alanlar için iç ya da dış mekan fark etmeksizin tüm alanlara tamamen özelleştirilebilir bir düzen getirir. UV ışınlarına dayanıklı, yangın geciktirici özelliğe sahip ve kaliteli malzeme kullanımı ile doğayı mekanlarla buluşturur.",
+      "Çiçek Yapay gerçekçi renkleri, gölgeleri, boyutları ve estetiği yakalayan bir görsel dekorasyon tasarımı sunar. Yaşam alanları ve ticari alanlar için iç ya da dış mekan fark etmeksizin tüm alanlara tamamen özelleştirilebilir bir düzen getirir. UV ışınlarına dayanıklı, yangın geciktirici özelliğe sahip ve kaliteli malzeme kullanımı ile doğayı mekanlarla buluşturur.",
     sections: [
       {
         heading: "Neden bizi seçmelisiniz?",
@@ -98,7 +98,7 @@ export const applications: Application[] = [
     subtitle: "Yeşillik her alana muhteşem bir dokunuş sağlar",
     heroImage: "/vg-optimized/vg-app-03.webp",
     intro:
-      "Büyük yapay ağaçlar, alan dekorunuza zarif ve rahatlatıcı bir katkı sağlar. Doğal bir iç mekan ağacı harika bir biyofilik iç tasarım sağlar. Doğal bitkilerin bakımı çok fazla zaman ve çaba gerektirir. Dikey Yapay Bahçe, büyük yapay ağaçlar konusunda geniş bir ürün yelpazesine sahiptir.",
+      "Büyük yapay ağaçlar, alan dekorunuza zarif ve rahatlatıcı bir katkı sağlar. Doğal bir iç mekan ağacı harika bir biyofilik iç tasarım sağlar. Doğal bitkilerin bakımı çok fazla zaman ve çaba gerektirir. Çiçek Yapay, büyük yapay ağaçlar konusunda geniş bir ürün yelpazesine sahiptir.",
     sections: [
       {
         heading: "Büyük yapay ağaç",

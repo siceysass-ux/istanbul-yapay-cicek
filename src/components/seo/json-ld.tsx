@@ -74,7 +74,7 @@ export function ProductJsonLd({ product }: { product: ProductData }) {
     sku: product.sku,
     image: product.image,
     url: `${SITE_URL}/urun/${product.slug}`,
-    brand: { "@type": "Brand", name: "İstanbul Yapay Çiçek" },
+    brand: { "@type": "Brand", name: "Çiçek Yapay" },
     offers: {
       "@type": "Offer",
       price: product.discountPrice ?? product.price,
@@ -83,7 +83,7 @@ export function ProductJsonLd({ product }: { product: ProductData }) {
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
       url: `${SITE_URL}/urun/${product.slug}`,
-      seller: { "@type": "Organization", name: "İstanbul Yapay Çiçek" },
+      seller: { "@type": "Organization", name: "Çiçek Yapay" },
     },
   };
 

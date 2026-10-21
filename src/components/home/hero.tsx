@@ -128,9 +128,9 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="font-serif text-5xl font-bold leading-[1.15] tracking-tight text-cream text-balance sm:text-6xl lg:text-7xl"
         >
-          İstanbul
+          Çiçek
           <span className="mt-2 block bg-gradient-to-r from-accent via-accent-light to-accent bg-clip-text text-transparent">
-            Yapay Çiçek
+            Yapay
           </span>
         </motion.h1>
 

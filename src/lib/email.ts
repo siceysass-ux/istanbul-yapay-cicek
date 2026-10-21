@@ -6,7 +6,7 @@
  */
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
-const RESEND_FROM = process.env.RESEND_FROM_EMAIL ?? "İstanbul Yapay Çiçek <noreply@dikeyyapaybahce.com>";
+const RESEND_FROM = process.env.RESEND_FROM_EMAIL ?? "Çiçek Yapay <noreply@dikeyyapaybahce.com>";
 
 interface EmailParams {
   to: string;
@@ -83,7 +83,7 @@ export async function sendOrderConfirmationEmail(
       <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:16px;overflow:hidden;margin-top:20px">
         <div style="background:#2a2520;padding:32px;text-align:center">
           <h1 style="color:#f5ede0;margin:0;font-size:24px">Siparişiniz Alındı</h1>
-          <p style="color:#e0c896;margin:8px 0 0">İstanbul Yapay Çiçek</p>
+          <p style="color:#e0c896;margin:8px 0 0">Çiçek Yapay</p>
         </div>
         <div style="padding:32px">
           <p style="color:#202010;font-size:16px">Merhaba,</p>
@@ -127,7 +127,7 @@ export async function sendOrderConfirmationEmail(
 
           <div style="border-top:1px solid #e0d0b0;padding-top:24px;margin-top:24px">
             <p style="color:#807060;font-size:12px;text-align:center">
-              İstanbul Yapay Çiçek<br>
+              Çiçek Yapay<br>
               Nuripaşa Mah. Merve Cad. No:73/A, Zeytinburnu / İstanbul<br>
               0(507) 884 66 03 · info@dikeyyapaybahce.com
             </p>
@@ -219,7 +219,7 @@ export async function sendQuoteRequestEmail(
 
   return sendEmail({
     to: email,
-    subject: "Keşif Talebi Alındı — İstanbul Yapay Çiçek",
+    subject: "Keşif Talebi Alındı — Çiçek Yapay",
     html,
   });
 }
