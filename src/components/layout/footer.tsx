@@ -208,17 +208,20 @@ export function Footer() {
 
       {/* Alt bant */}
       <div className="border-t border-cream/10 bg-ink-light/20">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-cream/40 sm:flex-row lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-5 text-xs text-cream/50 sm:flex-row lg:px-8">
           <p>© {year} Çiçek Yapay. Tüm hakları saklıdır.</p>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {["VISA", "MASTERCARD", "TROY", "KAPIDA ÖDE"].map((p) => (
-              <span
-                key={p}
-                className="rounded-md bg-cream/5 px-2.5 py-1 text-[10px] font-semibold tracking-wider ring-1 ring-cream/10"
-              >
-                {p}
-              </span>
-            ))}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <div className="rounded-xl bg-white/95 px-3.5 py-1.5 shadow-xs">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/iyzico-band-colored.svg"
+                alt="iyzico ile Öde — Mastercard, Visa, American Express, Troy"
+                className="h-5 sm:h-6 w-auto object-contain"
+              />
+            </div>
+            <span className="rounded-lg bg-cream/10 px-3 py-1.5 text-[10px] font-semibold tracking-wider text-cream ring-1 ring-cream/15">
+              KAPIDA ÖDEME
+            </span>
           </div>
         </div>
       </div>

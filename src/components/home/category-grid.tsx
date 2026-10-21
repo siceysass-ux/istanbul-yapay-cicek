@@ -21,19 +21,9 @@ const iconMap: Record<string, string> = {
 
 export function CategoryGrid({ categories }: { categories: Category[] }) {
   return (
-    <section className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
-      {/* Başlık — ortalanmış, sade */}
-      <div className="mb-10 text-center">
-        <h2 className="font-serif text-3xl font-semibold sm:text-4xl">
-          Kategoriler
-        </h2>
-        <p className="mt-2 text-sm text-muted text-pretty">
-          Her mekana uygun yapay çiçek ve bitki çeşitleri
-        </p>
-      </div>
-
+    <section className="mx-auto max-w-7xl px-4 pt-8 pb-4 lg:px-8">
       {/* Yuvarlak ikon vitrini — wrap, ortalanmış */}
-      <div className="flex flex-wrap justify-center gap-4 sm:gap-5 lg:gap-6">
+      <div className="flex flex-wrap justify-center gap-5 sm:gap-7 lg:gap-10">
           {categories.map((cat, i) => (
             <motion.div
               key={cat.id}

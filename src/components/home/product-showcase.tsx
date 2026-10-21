@@ -44,9 +44,9 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
   };
 
   return (
-    <section id="urunler" className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
+    <section id="urunler" className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
       {/* Başlık — ortalanmış, sade */}
-      <div className="mb-10 text-center">
+      <div className="mb-6 text-center">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

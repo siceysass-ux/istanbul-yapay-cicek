@@ -210,7 +210,17 @@ export default function CheckoutPage() {
 
               {paymentMethod === "card" && (
                 <div className="space-y-4 rounded-2xl bg-primary/5 p-4">
-                  <p className="text-xs text-muted">Kart bilgileriniz 256-bit SSL ile şifrelenir.</p>
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-b border-primary/10 pb-3">
+                    <p className="text-xs text-muted">Kart bilgileriniz 256-bit SSL ve iyzico güvencesiyle şifrelenir.</p>
+                    <div className="rounded-lg bg-white px-3 py-1.5 shadow-2xs">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="/iyzico-band-colored.svg"
+                        alt="iyzico ile Öde — Mastercard, Visa, American Express, Troy"
+                        className="h-5 w-auto object-contain"
+                      />
+                    </div>
+                  </div>
                   <div>
                     <label className="block text-sm font-medium mb-1.5">Kart Numarası</label>
                     <Input placeholder="0000 0000 0000 0000" />

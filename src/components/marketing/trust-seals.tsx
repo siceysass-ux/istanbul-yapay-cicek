@@ -92,22 +92,32 @@ export function TrustSeals({ variant = "light" }: { variant?: "light" | "dark" }
         ))}
       </div>
 
-      {/* Ödeme yöntemleri */}
+      {/* Ödeme yöntemleri — Resmi iyzico kart logoları */}
       <div
-        className={`mt-3 flex flex-wrap items-center gap-1.5 border-t pt-3 ${
+        className={`mt-3 space-y-2 border-t pt-3 ${
           isDark ? "border-cream/10" : "border-primary/10"
         }`}
       >
-        <CreditCard
-          className={`h-3.5 w-3.5 ${isDark ? "text-cream/60" : "text-muted"}`}
-        />
-        <span
-          className={`text-[10px] font-medium ${
-            isDark ? "text-cream/60" : "text-muted"
-          }`}
-        >
-          Kredi Kartı · Taksit · Kapıda Ödeme
-        </span>
+        <div className="rounded-xl bg-white px-3 py-2 shadow-2xs">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/iyzico-band-colored.svg"
+            alt="iyzico ile Öde — Mastercard, Visa, American Express, Troy"
+            className="mx-auto h-5 w-auto object-contain"
+          />
+        </div>
+        <div className="flex items-center gap-1.5">
+          <CreditCard
+            className={`h-3.5 w-3.5 ${isDark ? "text-cream/60" : "text-muted"}`}
+          />
+          <span
+            className={`text-[10px] font-medium ${
+              isDark ? "text-cream/60" : "text-muted"
+            }`}
+          >
+            Kredi Kartı · 3 Taksit · İstanbul İçi Kapıda Ödeme
+          </span>
+        </div>
       </div>
 
       {/* Canlı destek */}
