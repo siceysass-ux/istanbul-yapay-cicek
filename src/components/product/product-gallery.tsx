@@ -36,7 +36,7 @@ export function ProductGallery({
     <div className="space-y-4">
       {/* Ana görsel */}
       <div
-        className="relative aspect-[3/5] overflow-hidden rounded-3xl bg-[#f4f1ea] cursor-zoom-in group"
+        className="relative aspect-[3/5] overflow-hidden rounded-3xl bg-[#f7f8f9] cursor-zoom-in group"
         onClick={() => setZoomOpen(true)}
       >
         <AnimatePresence mode="wait">
@@ -81,7 +81,7 @@ export function ProductGallery({
               setViewerInitialMode("ar");
               setViewer3DOpen(true);
             }}
-            className="flex items-center gap-1.5 rounded-full bg-accent/95 px-3.5 py-2 text-xs font-bold text-ink shadow-lg backdrop-blur transition-all hover:bg-accent hover:scale-105"
+            className="flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-2 text-xs font-bold text-white shadow-lg backdrop-blur transition-all hover:bg-[#d9560b] hover:scale-105"
           >
             <Camera className="h-3.5 w-3.5" />
             Odamda Gör (AR)

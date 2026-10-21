@@ -55,25 +55,25 @@ export function Header() {
   return (
     <>
       {/* Announcement bar */}
-      <div className="bg-primary text-cream overflow-hidden">
+      <div className="bg-[#1e2426] text-white border-b border-accent/30 overflow-hidden">
         <div className="flex whitespace-nowrap marquee py-2 text-xs font-medium tracking-wide">
           {[...Array(2)].map((_, i) => (
             <div key={i} className="flex items-center gap-8 px-4">
               <span>🚚 2000₺ üzeri ücretsiz kargo</span>
               <span>📍 İstanbul içi kapıda ödeme</span>
               <span>⚡ 1-3 iş gününde teslim</span>
-              <span>✦ 1. Sınıf Gerçek Dokulu Koleksiyon</span>
+              <span className="text-accent-light">✦ 1. Sınıf Gerçek Dokulu Koleksiyon</span>
               <span>🚚 2000₺ üzeri ücretsiz kargo</span>
               <span>📍 İstanbul içi kapıda ödeme</span>
               <span>⚡ 1-3 iş gününde teslim</span>
-              <span>✦ 1. Sınıf Gerçek Dokulu Koleksiyon</span>
+              <span className="text-accent-light">✦ 1. Sınıf Gerçek Dokulu Koleksiyon</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Ana header */}
-      <header className="sticky top-0 z-40 border-b border-primary/10 bg-cream/95 backdrop-blur-md shadow-xs">
+      <header className="sticky top-0 z-40 border-b border-primary/10 bg-white/95 backdrop-blur-md shadow-xs">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 lg:px-8">
           {/* Logo */}
           <Link
@@ -95,8 +95,8 @@ export function Header() {
                   className={cn(
                     "shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all",
                     active
-                      ? "bg-primary text-cream shadow-sm"
-                      : "text-ink/85 hover:bg-primary/8 hover:text-primary"
+                      ? "bg-accent text-white shadow-sm"
+                      : "text-ink/85 hover:bg-accent/10 hover:text-accent"
                   )}
                 >
                   {item.label}
@@ -111,8 +111,8 @@ export function Header() {
               className={cn(
                 "shrink-0 whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-medium transition-all",
                 pathname === "/iletisim"
-                  ? "bg-primary/10 text-primary font-semibold"
-                  : "text-ink/75 hover:bg-primary/8 hover:text-primary"
+                  ? "bg-accent text-white font-semibold"
+                  : "text-ink/75 hover:bg-accent/10 hover:text-accent"
               )}
             >
               İletişim
@@ -125,25 +125,25 @@ export function Header() {
               href={B2B_SITE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="group hidden md:inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-[#b08d44]/40 bg-gradient-to-r from-[#26211b] to-[#1a1612] px-4 py-2 text-xs font-medium text-cream shadow-sm transition-all hover:border-accent hover:shadow-md"
+              className="group hidden md:inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-accent/40 bg-[#1e2426] px-4 py-2 text-xs font-medium text-white shadow-sm transition-all hover:bg-accent hover:border-accent hover:shadow-md"
               title="İşletme ve yüksek metraj dikey bahçe projeleri için kurumsal sitemiz"
             >
-              <Building2 className="h-3.5 w-3.5 text-accent shrink-0" />
+              <Building2 className="h-3.5 w-3.5 text-accent group-hover:text-white shrink-0" />
               <span>Dikey Bahçe Projeleri</span>
-              <ArrowUpRight className="h-3.5 w-3.5 text-accent transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" />
+              <ArrowUpRight className="h-3.5 w-3.5 text-accent group-hover:text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" />
             </a>
 
             <Button
               variant="ghost"
               size="icon"
               onClick={toggleCart}
-              className="relative h-10 w-10 rounded-full hover:bg-primary/10"
+              className="relative h-10 w-10 rounded-full hover:bg-accent/10"
               aria-label="Sepet"
               id="cart-button"
             >
               <ShoppingBag className="h-5 w-5" />
               {count > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-ink">
+                <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-accent text-[10px] font-bold text-white">
                   {count}
                 </span>
               )}
@@ -216,14 +216,14 @@ export function Header() {
                       className={cn(
                         "flex items-center gap-3.5 rounded-2xl p-3 transition-all",
                         active
-                          ? "bg-primary text-cream shadow-sm"
-                          : "bg-white/70 text-ink hover:bg-white border border-primary/8"
+                          ? "bg-accent text-white shadow-sm"
+                          : "bg-cream-dark text-ink hover:bg-accent/5 border border-primary/8"
                       )}
                     >
                       <div
                         className={cn(
                           "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl",
-                          active ? "bg-cream/15 text-accent-light" : "bg-primary/8 text-primary"
+                          active ? "bg-white/20 text-white" : "bg-accent/10 text-accent"
                         )}
                       >
                         <item.icon className="h-5 w-5" />
@@ -233,14 +233,14 @@ export function Header() {
                         <div
                           className={cn(
                             "mt-0.5 truncate text-[11px]",
-                            active ? "text-cream/75" : "text-muted"
+                            active ? "text-white/85" : "text-muted"
                           )}
                         >
                           {item.desc}
                         </div>
                       </div>
                       <ChevronRight
-                        className={cn("h-4 w-4 shrink-0", active ? "text-cream" : "text-muted")}
+                        className={cn("h-4 w-4 shrink-0", active ? "text-white" : "text-muted")}
                       />
                     </Link>
                   );
@@ -249,7 +249,7 @@ export function Header() {
             </div>
 
             {/* İşletme & Yüksek Metraj Dikey Bahçe Yönlendirme Kartı */}
-            <div className="rounded-2xl border border-accent/30 bg-gradient-to-br from-[#26211b] to-[#16130f] p-4 text-cream shadow-lg">
+            <div className="rounded-2xl border border-accent/30 bg-gradient-to-br from-[#1b2123] to-[#14181a] p-4 text-white shadow-lg">
               <div className="flex items-center gap-2 text-xs font-semibold text-accent">
                 <Building2 className="h-4 w-4" />
                 <span>İşletme ve Kurumsal Projeler</span>
@@ -257,7 +257,7 @@ export function Header() {
               <p className="mt-1.5 font-serif text-base font-semibold leading-snug">
                 Dikey Yapay Bahçe ve Yosun Duvar Uygulamaları
               </p>
-              <p className="mt-1 text-xs leading-relaxed text-cream/70">
+              <p className="mt-1 text-xs leading-relaxed text-white/75">
                 Otel, ofis, restoran, AVM ve kurumsal mekanlarda yüksek metrajlı dikey bahçe projeleri için kurumsal sitemizi ziyaret edin.
               </p>
               <a
@@ -265,7 +265,7 @@ export function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => setMobileOpen(false)}
-                className="mt-3.5 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-accent px-4 py-2.5 text-xs font-bold text-ink transition-transform active:scale-98"
+                className="mt-3.5 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-accent px-4 py-2.5 text-xs font-bold text-white transition-transform active:scale-98"
               >
                 dikeyyapaybahce.com&apos;a Git
                 <ArrowUpRight className="h-4 w-4" />

@@ -73,8 +73,8 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
           onClick={() => handleCategoryChange("all")}
           className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
             activeCategory === "all"
-              ? "bg-primary text-cream"
-              : "bg-primary/5 text-ink hover:bg-primary/10"
+              ? "bg-accent text-white shadow-sm"
+              : "bg-primary/6 text-ink hover:bg-accent/10 hover:text-accent"
           }`}
         >
           Tümü ({products.length})
@@ -88,8 +88,8 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
               onClick={() => handleCategoryChange(cat.id)}
               className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
                 activeCategory === cat.id
-                  ? "bg-primary text-cream"
-                  : "bg-primary/5 text-ink hover:bg-primary/10"
+                  ? "bg-accent text-white shadow-sm"
+                  : "bg-primary/6 text-ink hover:bg-accent/10 hover:text-accent"
               }`}
             >
               {cat.name} ({count})

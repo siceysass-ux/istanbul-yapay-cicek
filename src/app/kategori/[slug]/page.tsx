@@ -73,8 +73,8 @@ export default async function CategoryPage({
                 href={`/kategori/${cat.slug}`}
                 className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
                   isCurrent
-                    ? "bg-primary text-cream shadow-xs"
-                    : "border border-primary/15 bg-white/60 text-ink/80 hover:border-primary/40 hover:bg-white"
+                    ? "bg-accent text-white shadow-xs"
+                    : "border border-primary/15 bg-white text-ink/80 hover:border-accent hover:text-accent"
                 }`}
               >
                 {cat.label}

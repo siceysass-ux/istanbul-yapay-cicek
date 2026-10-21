@@ -8,10 +8,10 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default: "bg-primary/10 text-primary",
-        new: "bg-accent/20 text-accent border border-accent/30",
+        new: "bg-accent text-white font-semibold shadow-xs",
         discount: "bg-red-500 text-white",
         outOfStock: "bg-gray-200 text-gray-600",
-        featured: "bg-primary text-cream",
+        featured: "bg-primary text-white",
         secondary: "bg-primary-light/15 text-primary-light",
       },
     },

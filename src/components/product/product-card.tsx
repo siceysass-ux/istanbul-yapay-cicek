@@ -95,7 +95,7 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
         className="transform-gpu will-change-transform"
       >
         <Link href={`/urun/${product.slug}`} className="group block">
-          <div className="relative aspect-[3/5] overflow-hidden rounded-2xl bg-[#f4f1ea] ring-1 ring-primary/8 transition-all duration-500 group-hover:ring-primary/20 group-hover:shadow-xl group-hover:shadow-primary/10">
+          <div className="relative aspect-[3/5] overflow-hidden rounded-2xl bg-[#f7f8f9] ring-1 ring-primary/10 transition-all duration-500 group-hover:ring-accent/60 group-hover:shadow-xl group-hover:shadow-accent/10">
             {/* Rozetler */}
             <div className="absolute left-3 top-3 z-10 flex flex-col gap-1.5">
               {product.isNew && <Badge variant="new">YENİ</Badge>}
@@ -163,7 +163,7 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
             {/* Fiyat + stok */}
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-primary">{formatPrice(price)}</span>
+                <span className="font-bold text-ink">{formatPrice(price)}</span>
               </div>
               {inStock && product.stock <= 5 && (
                 <span className="text-[10px] font-medium text-accent">Son {product.stock} adet</span>

@@ -43,17 +43,17 @@
 }
 
 @theme {
-  /* Renk paleti — Logo'dan çıkarıldı (Toprak & Altın) */
-  --color-primary: #2a2520;        /* Koyu kahve (logo ana tonu) */
-  --color-primary-light: #806020;  /* Kahve (logo ikincil) */
-  --color-primary-dark: #101010;   /* Siyah (logo derin ton) */
-  --color-accent: #c0a060;          /* Altın (logo accent) */
-  --color-accent-light: #e0c896;   /* Açık altın */
-  --color-rose-soft: #e8b4b8;
-  --color-cream: #f5ede0;           /* Krem (logo açık ton) */
-  --color-cream-dark: #e0d0b0;     /* Koyu krem (logo) */
-  --color-ink: #202010;             /* Koyu kahve-siyah (logo) */
-  --color-muted: #807060;           /* Kahve-gri (logo muted) */
+  /* Renk paleti — Yeni Logo'dan çıkarıldı (Beyaz, Turuncu #f26816 & Antrasit Siyah #434e51 / #1e2426) */
+  --color-primary: #2b3336;        /* Koyu antrasit-siyah (logo ana koyu tonu) */
+  --color-primary-light: #434e51;  /* Logo antrasit tonu */
+  --color-primary-dark: #14181a;   /* Derin siyah */
+  --color-accent: #f26816;         /* Logo turuncu (#f26816) */
+  --color-accent-light: #ff8238;   /* Açık canlı turuncu */
+  --color-rose-soft: #fde8dc;
+  --color-cream: #ffffff;          /* Saf beyaz */
+  --color-cream-dark: #f4f6f7;     /* Açık gri-beyaz yüzey */
+  --color-ink: #1e2426;            /* Koyu siyah-antrasit metin */
+  --color-muted: #637074;          /* Antrasit-gri ikincil metin */
 
   /* Fontlar — Google Fonts */
   --font-serif: var(--font-playfair), Georgia, serif;
@@ -66,12 +66,12 @@
 
 @layer base {
   :root {
-    --background: #f5ede0;
-    --foreground: #202010;
+    --background: #ffffff;
+    --foreground: #1e2426;
   }
 
   * {
-    border-color: rgba(42, 37, 32, 0.1);
+    border-color: rgba(67, 78, 81, 0.12);
   }
 
   body {
@@ -80,34 +80,6 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
-
-  /* Film grain dokusu — sinematik his */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 9999;
-    pointer-events: none;
-    opacity: 0.15;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 256px 256px;
-    mix-blend-mode: overlay;
-    animation: grain 0.8s steps(1) infinite;
-  }
-
-  @keyframes grain {
-    0%, 100% { transform: translate(0, 0); }
-    10% { transform: translate(-5%, -5%); }
-    20% { transform: translate(-10%, 5%); }
-    30% { transform: translate(5%, -10%); }
-    40% { transform: translate(-5%, 15%); }
-    50% { transform: translate(-10%, 5%); }
-    60% { transform: translate(15%, 0); }
-    70% { transform: translate(0, 10%); }
-    80% { transform: translate(-15%, 0); }
-    90% { transform: translate(10%, 5%); }
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -212,7 +184,7 @@
 
   /* Glassmorphism */
   .glass {
-    background: rgba(250, 248, 243, 0.7);
+    background: rgba(255, 255, 255, 0.92);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
   }
