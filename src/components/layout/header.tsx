@@ -73,7 +73,7 @@ export function Header() {
       </div>
 
       {/* Ana header */}
-      <header className="sticky top-0 z-40 glass border-b border-primary/10">
+      <header className="sticky top-0 z-40 border-b border-primary/10 bg-cream/95 backdrop-blur-md shadow-xs">
         <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 lg:px-8">
           {/* Logo */}
           <Link

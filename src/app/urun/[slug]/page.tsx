@@ -82,7 +82,11 @@ export default async function ProductPage({
 
       {/* Ürün detay */}
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
-        <ProductGallery images={product.images} />
+        <ProductGallery
+          images={product.images}
+          productName={product.name}
+          model3dUrl={product.model3dUrl}
+        />
         <ProductDetail product={product} />
       </div>
 

@@ -18,6 +18,8 @@ export interface ProductFormInput {
   isActive: boolean;
   isFeatured: boolean;
   isNew: boolean;
+  arEnabled?: boolean;
+  model3dUrl?: string | null;
   tags: string;
   images: { url: string; alt: string }[];
 }
@@ -43,6 +45,9 @@ export async function createProductAction(formData: FormData): Promise<{ error?:
   const isActive = formData.get("isActive") === "on";
   const isFeatured = formData.get("isFeatured") === "on";
   const isNew = formData.get("isNew") === "on";
+  const arEnabled = formData.get("arEnabled") === "on";
+  const model3dUrlRaw = (formData.get("model3dUrl") as string)?.trim();
+  const model3dUrl = model3dUrlRaw || null;
   const tags = (formData.get("tags") as string)?.trim() ?? "";
   const imagesRaw = formData.get("images") as string;
   const images = imagesRaw ? JSON.parse(imagesRaw) : [];
@@ -66,13 +71,15 @@ export async function createProductAction(formData: FormData): Promise<{ error?:
         isActive,
         isFeatured,
         isNew,
+        arEnabled,
+        model3dUrl,
         tags,
         images: {
           create: images.map((img: { url: string; alt: string }, i: number) => ({
             url: img.url,
             alt: img.alt || name,
-            width: 800,
-            height: 800,
+            width: 720,
+            height: 1200,
             order: i,
           })),
         },
@@ -103,6 +110,9 @@ export async function updateProductAction(id: string, formData: FormData): Promi
   const isActive = formData.get("isActive") === "on";
   const isFeatured = formData.get("isFeatured") === "on";
   const isNew = formData.get("isNew") === "on";
+  const arEnabled = formData.get("arEnabled") === "on";
+  const model3dUrlRaw = (formData.get("model3dUrl") as string)?.trim();
+  const model3dUrl = model3dUrlRaw || null;
   const tags = (formData.get("tags") as string)?.trim() ?? "";
   const imagesRaw = formData.get("images") as string;
   const images = imagesRaw ? JSON.parse(imagesRaw) : [];
@@ -126,6 +136,8 @@ export async function updateProductAction(id: string, formData: FormData): Promi
         isActive,
         isFeatured,
         isNew,
+        arEnabled,
+        model3dUrl,
         tags,
       },
     });
