@@ -25,18 +25,16 @@ const cities = [
 ];
 
 const products = [
-  "Yapay Dikey Bahçe Paneli",
-  "Yapay Ağaç 150cm",
-  "Yosun Duvar Paneli",
-  "Yapay Gül Buketi",
-  "Dikey Bahçe Modülü",
-  "Yapay Sarmaşık",
-  "Yosun Tablo",
-  "Yapay Bambu 200cm",
-  "Luxury Boxwood Panel",
-  "Akustik Yosun Panel",
-  "Yapay Çit Sistemi",
-  "Bölücü Panel",
+  "Doğal Gövdeli Meyveli Yapay Zeytin Ağacı – 185 cm",
+  "Gri Taş Saksıda Kıvrımlı Yapay Çam Bonsai – 155 cm",
+  "Doğal Gövdeli Pudra Pembe Sarkık Sakura Ağacı – 180 cm",
+  "Siyah Oluklu Saksıda Dev Yapraklı Starliçe – 180 cm",
+  "Gerçek Bambu Gövdeli Çok Dallı Yapay Bambu – 180 cm",
+  "Beyaz Geometrik Saksıda Alacalı Benjamin – 185 cm",
+  "Dev Ayaklı Somon Pembe Katmerli Gül Çiçeği – 170 cm",
+  "Yosunlu Sütun Gövdeli Yapay Monstera – 170 cm",
+  "Gold Şeritli Siyah Saksıda Araokarya Çam – 175 cm",
+  "Doğal Gövdeli Sarkık Beyaz Salkım Ağaç – 180 cm",
 ];
 
 const times = [

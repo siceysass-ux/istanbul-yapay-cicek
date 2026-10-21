@@ -22,7 +22,6 @@ export function ProductGallery({
   const [activeIndex, setActiveIndex] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
   const [viewer3DOpen, setViewer3DOpen] = useState(false);
-  const [viewerInitialMode, setViewerInitialMode] = useState<"3d" | "ar">("3d");
 
   if (images.length === 0) {
     return (
@@ -59,29 +58,15 @@ export function ProductGallery({
           </motion.div>
         </AnimatePresence>
 
-        {/* Sol üst: İnteraktif 3D / 360° ve Odamda Gör (AR) Butonları */}
+        {/* Sol üst: Odamda Gör (AR) Butonu */}
         <div
-          className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2"
+          className="absolute top-4 left-4 z-10 flex items-center"
           onClick={(e) => e.stopPropagation()}
         >
           <button
             type="button"
-            onClick={() => {
-              setViewerInitialMode("3d");
-              setViewer3DOpen(true);
-            }}
-            className="flex items-center gap-1.5 rounded-full bg-ink/85 px-3.5 py-2 text-xs font-semibold text-cream shadow-lg backdrop-blur transition-all hover:bg-primary hover:scale-105"
-          >
-            <Box className="h-3.5 w-3.5 text-accent" />
-            3D / 360° İncele
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setViewerInitialMode("ar");
-              setViewer3DOpen(true);
-            }}
-            className="flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-2 text-xs font-bold text-white shadow-lg backdrop-blur transition-all hover:bg-[#d9560b] hover:scale-105"
+            onClick={() => setViewer3DOpen(true)}
+            className="flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-xs font-bold text-white shadow-lg backdrop-blur transition-all hover:bg-[#d9560b] hover:scale-105"
           >
             <Camera className="h-3.5 w-3.5" />
             Odamda Gör (AR)
@@ -138,14 +123,12 @@ export function ProductGallery({
         </div>
       )}
 
-      {/* 3D & AR Stüdyo Modal */}
+      {/* Odamda Gör (AR) Modal */}
       <Product3DViewer
         isOpen={viewer3DOpen}
         onClose={() => setViewer3DOpen(false)}
         productName={productName}
         images={images}
-        model3dUrl={model3dUrl}
-        initialMode={viewerInitialMode}
       />
 
       {/* Zoom modal */}

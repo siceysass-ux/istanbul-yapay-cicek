@@ -99,11 +99,6 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
             {/* Rozetler */}
             <div className="absolute left-3 top-3 z-10 flex flex-col gap-1.5">
               {product.isNew && <Badge variant="new">YENİ</Badge>}
-              {product.arEnabled && (
-                <Badge variant="featured" className="gap-1">
-                  <Box className="h-3 w-3" /> 3D
-                </Badge>
-              )}
               {!inStock && (
                 <span className="rounded-full bg-ink/80 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-cream backdrop-blur">
                   Tükendi
