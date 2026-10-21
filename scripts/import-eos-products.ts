@@ -748,9 +748,6 @@ async function run() {
     { slug: "yapay-cicek", name: "Yapay Çiçekler", order: 2 },
     { slug: "saksi", name: "Saksılı Bitkiler & Bonsai", order: 3 },
     { slug: "yapay-guller", name: "Yapay Güller & Şakayıklar", order: 4 },
-    { slug: "sarmasik", name: "Sarmaşıklar", order: 5 },
-    { slug: "dikey-bahce", name: "Dikey Bahçe", order: 6 },
-    { slug: "yapay-duvar-panelleri", name: "Duvar Panelleri", order: 7 },
   ];
 
   const catMap = new Map<string, string>();
@@ -793,8 +790,8 @@ async function run() {
       await sharp(srcPath)
         .rotate() // EXIF auto-orient
         .resize({
-          width: 1000,
-          height: 1250,
+          width: 800,
+          height: 1200,
           fit: "cover",
           position: "center",
         })
@@ -804,8 +801,8 @@ async function run() {
       imageRecords.push({
         url: `/products/${item.slug}/${destFile}`,
         alt: `${item.name} - Görsel ${i + 1}`,
-        width: 1000,
-        height: 1250,
+        width: 800,
+        height: 1200,
         order: i,
       });
     }

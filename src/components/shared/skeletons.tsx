@@ -5,7 +5,7 @@
 export function ProductCardSkeleton() {
   return (
     <div className="rounded-2xl border border-primary/10 bg-white/60 p-3">
-      <div className="aspect-square animate-pulse rounded-xl bg-primary/10" />
+      <div className="aspect-[2/3] animate-pulse rounded-xl bg-primary/10" />
       <div className="mt-3 h-3 w-1/4 animate-pulse rounded bg-primary/10" />
       <div className="mt-2 h-4 w-3/4 animate-pulse rounded bg-primary/10" />
       <div className="mt-2 flex items-center justify-between">

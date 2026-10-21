@@ -23,7 +23,7 @@ export function ProductGallery({ images }: { images: ProductImage[] }) {
     <div className="space-y-4">
       {/* Ana görsel */}
       <div
-        className="relative aspect-square overflow-hidden rounded-3xl bg-primary/5 cursor-zoom-in group"
+        className="relative aspect-[2/3] overflow-hidden rounded-3xl bg-[#eae6df] cursor-zoom-in group"
         onClick={() => setZoomOpen(true)}
       >
         <AnimatePresence mode="wait">

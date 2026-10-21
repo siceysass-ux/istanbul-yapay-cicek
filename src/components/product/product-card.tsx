@@ -95,7 +95,7 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
         className="transform-gpu will-change-transform"
       >
         <Link href={`/urun/${product.slug}`} className="group block">
-          <div className="relative aspect-square overflow-hidden rounded-2xl bg-primary/5 ring-1 ring-primary/5 transition-all duration-500 group-hover:ring-primary/20 group-hover:shadow-xl group-hover:shadow-primary/10">
+          <div className="relative aspect-[2/3] overflow-hidden rounded-2xl bg-[#eae6df] ring-1 ring-primary/5 transition-all duration-500 group-hover:ring-primary/20 group-hover:shadow-xl group-hover:shadow-primary/10">
             {/* Rozetler */}
             <div className="absolute left-3 top-3 z-10 flex flex-col gap-1.5">
               {product.isNew && <Badge variant="new">YENİ</Badge>}
@@ -130,9 +130,9 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
               alt={product.name}
               fill
               priority={imagePriority}
-              quality={65}
+              quality={70}
               sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-              className={`object-cover transition-transform duration-700 ease-out group-hover:scale-110 ${
+              className={`object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03] ${
                 !inStock ? "grayscale opacity-70" : ""
               }`}
             />
