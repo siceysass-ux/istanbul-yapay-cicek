@@ -99,7 +99,6 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
             {/* Rozetler */}
             <div className="absolute left-3 top-3 z-10 flex flex-col gap-1.5">
               {product.isNew && <Badge variant="new">YENİ</Badge>}
-              {discount > 0 && <Badge variant="discount">%{discount} İNDİRİM</Badge>}
               {product.arEnabled && (
                 <Badge variant="featured" className="gap-1">
                   <Box className="h-3 w-3" /> 3D
@@ -164,14 +163,7 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
             {/* Fiyat + stok */}
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                {product.discountPrice ? (
-                  <>
-                    <span className="font-semibold text-primary">{formatPrice(price)}</span>
-                    <span className="text-xs text-muted line-through">{formatPrice(product.basePrice)}</span>
-                  </>
-                ) : (
-                  <span className="font-semibold text-primary">{formatPrice(price)}</span>
-                )}
+                <span className="font-semibold text-primary">{formatPrice(price)}</span>
               </div>
               {inStock && product.stock <= 5 && (
                 <span className="text-[10px] font-medium text-accent">Son {product.stock} adet</span>

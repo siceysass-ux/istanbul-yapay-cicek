@@ -4,7 +4,7 @@ import { dirname, join } from "path";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined };
 
-const DB_SEED_VERSION = "eos-camera-v2";
+const DB_SEED_VERSION = "eos-camera-v3";
 
 function ensurePersistentSqliteDb(url: string) {
   if (!url.startsWith("file:/")) return;

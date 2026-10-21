@@ -101,7 +101,6 @@ export function QuickViewModal({ product, isOpen, onClose }: QuickViewModalProps
                   {/* Rozetler */}
                   <div className="absolute left-3 top-3 flex flex-col gap-1.5">
                     {product.isNew && <Badge variant="new">YENİ</Badge>}
-                    {discount > 0 && <Badge variant="discount">%{discount}</Badge>}
                   </div>
 
                   {/* Galeri navigasyon */}
@@ -162,9 +161,6 @@ export function QuickViewModal({ product, isOpen, onClose }: QuickViewModalProps
                   {/* Fiyat */}
                   <div className="mt-4 flex items-center gap-3">
                     <span className="font-serif text-3xl font-bold text-primary">{formatPrice(price)}</span>
-                    {product.discountPrice && (
-                      <span className="text-lg text-muted line-through">{formatPrice(product.basePrice)}</span>
-                    )}
                   </div>
 
                   {/* Açıklama */}

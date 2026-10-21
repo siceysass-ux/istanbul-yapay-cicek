@@ -90,12 +90,6 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
       {/* Fiyat */}
       <div className="flex items-center gap-3">
         <span className="font-serif text-3xl font-bold text-primary">{formatPrice(finalPrice)}</span>
-        {product.discountPrice && (
-          <>
-            <span className="text-lg text-muted line-through">{formatPrice(product.basePrice)}</span>
-            <Badge variant="discount">%{discount} indirim</Badge>
-          </>
-        )}
       </div>
 
       {/* Kısa açıklama */}
