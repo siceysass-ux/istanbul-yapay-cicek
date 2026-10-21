@@ -38,7 +38,7 @@ export function LocalBusinessJsonLd({ data }: { data: LocalBusinessData }) {
     ],
     priceRange: "₺₺",
     sameAs: [
-      "https://instagram.com/dikeyyapaybahce",
+      "https://www.instagram.com/cicekyapaycom/",
       "https://facebook.com/dikeyyapaybahce",
       "https://youtube.com/@dikeyyapaybahce",
     ],

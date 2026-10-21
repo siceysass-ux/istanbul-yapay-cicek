@@ -67,7 +67,7 @@ const linkGroups = [
 ];
 
 const socials = [
-  { Icon: Instagram, href: "https://instagram.com/dikeyyapaybahce", label: "Instagram" },
+  { Icon: Instagram, href: "https://www.instagram.com/cicekyapaycom/", label: "Instagram" },
   { Icon: Facebook, href: "https://facebook.com/dikeyyapaybahce", label: "Facebook" },
   { Icon: Youtube, href: "https://youtube.com/@dikeyyapaybahce", label: "YouTube" },
 ];
