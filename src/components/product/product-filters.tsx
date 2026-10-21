@@ -111,7 +111,7 @@ export function ProductFilters({ category }: ProductFiltersProps) {
 
           {/* Diğer filtreler */}
           <div className="space-y-3">
-            <h4 className="text-sm font-medium">Diğer</h4>
+            <h4 className="text-sm font-medium">Stok Durumu</h4>
             <label className="flex items-center gap-2 text-sm cursor-pointer">
               <input
                 type="checkbox"
@@ -119,16 +119,7 @@ export function ProductFilters({ category }: ProductFiltersProps) {
                 onChange={(e) => setShowOnlyStock(e.target.checked)}
                 className="h-4 w-4 rounded border-primary/30 text-primary focus:ring-primary"
               />
-              Stoktakiler
-            </label>
-            <label className="flex items-center gap-2 text-sm cursor-pointer">
-              <input
-                type="checkbox"
-                checked={showOnlyDiscount}
-                onChange={(e) => setShowOnlyDiscount(e.target.checked)}
-                className="h-4 w-4 rounded border-primary/30 text-primary focus:ring-primary"
-              />
-              İndirimli Ürünler
+              Sadece Stoktakiler
             </label>
           </div>
 

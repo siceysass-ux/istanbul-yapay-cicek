@@ -14,7 +14,7 @@ export function WhatsAppButton() {
       transition={{ delay: 1, type: "spring", stiffness: 200 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      className="fixed bottom-6 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] shadow-xl shadow-[#25D366]/40 sm:h-20 sm:w-20"
+      className="fixed bottom-20 right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-xl shadow-[#25D366]/40 lg:bottom-6 lg:right-6 lg:h-16 lg:w-16"
       aria-label="WhatsApp ile iletişim"
     >
       {/* Titreşim dalgaları — etrafa yayılan sinyal */}
