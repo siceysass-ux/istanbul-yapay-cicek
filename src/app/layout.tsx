@@ -35,7 +35,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Çiçek Yapay — Yapay Çiçek & Dikey Bahçe",
+    default: "Çiçek Yapay — Yapay Çiçek ve Ağaç Koleksiyonu",
     template: "%s — Çiçek Yapay",
   },
   description:

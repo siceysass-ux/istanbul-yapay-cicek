@@ -167,7 +167,7 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
         <TabsList className="w-full justify-start overflow-x-auto">
           <TabsTrigger value="description">Açıklama</TabsTrigger>
           <TabsTrigger value="specs">Özellikler</TabsTrigger>
-          <TabsTrigger value="shipping">Kargo & İade</TabsTrigger>
+          <TabsTrigger value="shipping">Kargo ve İade</TabsTrigger>
           <TabsTrigger value="reviews">Yorumlar ({product.reviewCount})</TabsTrigger>
         </TabsList>
 

@@ -21,7 +21,7 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
           transition={{ duration: 0.6 }}
           className="font-serif text-3xl font-semibold sm:text-4xl"
         >
-          İşletme &amp; Yüksek Metraj Dikey Bahçe Projeleri
+          Kurumsal Dikey Bahçe Projeleri
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 20 }}

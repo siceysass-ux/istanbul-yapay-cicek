@@ -74,7 +74,7 @@ export function BrandLogo({
               isDark ? "bg-cream/15" : "bg-[#1d1a16]/12"
             )}
           />
-          <span>BOTANİK &amp; DEKORASYON</span>
+          <span>BOTANİK VE DEKORASYON</span>
           <span
             className={cn(
               "h-px flex-1 transition-all duration-300",

@@ -101,7 +101,7 @@ export default async function OrderConfirmationPage({
           </div>
           <div className="rounded-2xl bg-primary/5 p-4">
             <div className="mb-2 flex items-center gap-2 text-sm font-medium">
-              <Truck className="h-4 w-4 text-primary" /> Kargo & Ödeme
+              <Truck className="h-4 w-4 text-primary" /> Kargo ve Ödeme
             </div>
             <p className="text-sm text-ink/80">{order.cargoProvider ?? "Standart Kargo"}</p>
             <p className="text-sm text-ink/80">

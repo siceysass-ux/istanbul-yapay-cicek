@@ -63,7 +63,7 @@ export default async function CategoryPage({
           {[
             { label: "Yapay Ağaçlar", slug: "yapay-agac" },
             { label: "Yapay Çiçekler", slug: "yapay-cicek" },
-            { label: "Saksılı & Bonsai", slug: "saksi" },
+            { label: "Saksılı Bitkiler", slug: "saksi" },
             { label: "Dev Çiçekler", slug: "yapay-guller" },
           ].map((cat) => {
             const isCurrent = cat.slug === slug;

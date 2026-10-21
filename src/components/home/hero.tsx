@@ -173,7 +173,7 @@ export function Hero() {
             asChild
           >
             <a href="https://dikeyyapaybahce.com/" target="_blank" rel="noopener noreferrer">
-              Dikey Bahçe &amp; Kurumsal Projeler
+              Dikey Bahçe Projeleri
             </a>
           </Button>
         </motion.div>

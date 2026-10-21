@@ -338,7 +338,7 @@ export function Product3DViewer({
               <div className="flex items-center gap-2">
                 <span className="inline-flex items-center gap-1 rounded-full bg-accent/20 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary">
                   <Sparkles className="h-3 w-3 text-accent" />
-                  3D &amp; AR Stüdyo
+                  3D ve AR Stüdyo
                 </span>
                 <span className="text-xs text-muted">Gerçek Fotoğraf Dokulu Model</span>
               </div>

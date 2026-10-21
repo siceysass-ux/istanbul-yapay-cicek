@@ -5,7 +5,7 @@ import { ProjectsShowcase } from "@/components/home/projects-showcase";
 import { Testimonials } from "@/components/home/testimonials";
 import { getCategories, getProjects, getAllProducts } from "@/lib/queries";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export default async function HomePage() {
   const [categories, projects, allProducts] = await Promise.all([

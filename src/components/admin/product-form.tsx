@@ -67,7 +67,7 @@ export function ProductForm({ action, categories, brands, initial, submitLabel =
 
       {/* Fiyat & stok */}
       <div className="rounded-2xl border border-primary/10 bg-white/60 p-6">
-        <h2 className="font-serif text-lg font-semibold mb-4">Fiyat & Stok</h2>
+        <h2 className="font-serif text-lg font-semibold mb-4">Fiyat ve Stok</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <label className="block text-sm font-medium mb-1.5">Baz Fiyat (₺) *</label>
@@ -161,7 +161,7 @@ export function ProductForm({ action, categories, brands, initial, submitLabel =
 
       {/* 3D & AR Stüdyo Ayarları */}
       <div className="rounded-2xl border border-primary/10 bg-white/60 p-6">
-        <h2 className="font-serif text-lg font-semibold mb-1">3D &amp; 360° Stüdyo / AR (Odamda Gör)</h2>
+        <h2 className="font-serif text-lg font-semibold mb-1">3D ve 360° Stüdyo / AR (Odamda Gör)</h2>
         <p className="text-xs text-muted mb-4">
           Yüklenen ürün fotoğraflarından otomatik olarak gerçek fotoğraf dokulu 3D derinlik sahnesi ve canlı kamera AR (Odamda Gör) modeli oluşturulur.
         </p>

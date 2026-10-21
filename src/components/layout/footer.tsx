@@ -31,8 +31,8 @@ const linkGroups = [
     links: [
       { label: "Yapay Ağaçlar", href: "/kategori/yapay-agac" },
       { label: "Yapay Çiçekler", href: "/kategori/yapay-cicek" },
-      { label: "Saksılı Bitkiler & Bonsai", href: "/kategori/saksi" },
-      { label: "Yapay Güller & Şakayıklar", href: "/kategori/yapay-guller" },
+      { label: "Saksılı Bitkiler", href: "/kategori/saksi" },
+      { label: "Dev Çiçekler", href: "/kategori/yapay-guller" },
     ],
   },
   {
@@ -40,7 +40,7 @@ const linkGroups = [
     links: [
       { label: "Hakkımızda", href: "/hakkimizda" },
       { label: "İletişim", href: "/iletisim" },
-      { label: "Dikey Bahçe & Kurumsal Projeler", href: "https://dikeyyapaybahce.com/" },
+      { label: "Dikey Bahçe Projeleri", href: "https://dikeyyapaybahce.com/" },
     ],
   },
   {
@@ -50,8 +50,8 @@ const linkGroups = [
       { label: "Yosun Duvar", href: "https://dikeyyapaybahce.com/" },
       { label: "Büyük Yapay Ağaç Projeleri", href: "https://dikeyyapaybahce.com/" },
       { label: "Yeşil Duvar Panelleri", href: "https://dikeyyapaybahce.com/" },
-      { label: "Yapay Çit & Bölücü Paneller", href: "https://dikeyyapaybahce.com/" },
-      { label: "Akustik Yosun & Tablolar", href: "https://dikeyyapaybahce.com/" },
+      { label: "Yapay Çit ve Bölücü Paneller", href: "https://dikeyyapaybahce.com/" },
+      { label: "Akustik Yosun ve Tablolar", href: "https://dikeyyapaybahce.com/" },
     ],
   },
   {

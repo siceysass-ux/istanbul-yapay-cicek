@@ -78,7 +78,7 @@ export default function HakkimizdaPage() {
           rel="noopener noreferrer"
           className="inline-block rounded-full bg-primary px-6 py-3 text-sm font-medium text-cream hover:bg-primary-dark transition-colors"
         >
-          Kurumsal &amp; Dikey Bahçe Projeleri (dikeyyapaybahce.com)
+          Kurumsal Dikey Bahçe Projeleri (dikeyyapaybahce.com)
         </a>
       </div>
 

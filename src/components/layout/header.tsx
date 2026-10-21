@@ -25,7 +25,7 @@ import { BrandLogo } from "@/components/shared/brand-logo";
 const categoryNavItems = [
   { label: "Yapay Ağaçlar", href: "/kategori/yapay-agac", icon: Trees, desc: "Zeytin, bambu, benjamin ve tropikal ağaçlar" },
   { label: "Yapay Çiçekler", href: "/kategori/yapay-cicek", icon: Flower2, desc: "Sakura, begonvil, salkım ve çiçekli ağaçlar" },
-  { label: "Saksılı & Bonsai", href: "/kategori/saksi", icon: Sprout, desc: "Tasarım saksılı bitkiler ve bonsai koleksiyonu" },
+  { label: "Saksılı Bitkiler", href: "/kategori/saksi", icon: Sprout, desc: "Tasarım saksılı bitkiler ve bonsai koleksiyonu" },
   { label: "Dev Çiçekler", href: "/kategori/yapay-guller", icon: Sparkles, desc: "Dev ayaklı şakayık, lotus ve vitrin çiçekleri" },
 ];
 
@@ -129,7 +129,7 @@ export function Header() {
               title="İşletme ve yüksek metraj dikey bahçe projeleri için kurumsal sitemiz"
             >
               <Building2 className="h-3.5 w-3.5 text-accent shrink-0" />
-              <span>Dikey Bahçe &amp; Kurumsal Projeler</span>
+              <span>Dikey Bahçe Projeleri</span>
               <ArrowUpRight className="h-3.5 w-3.5 text-accent transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" />
             </a>
 
@@ -252,10 +252,10 @@ export function Header() {
             <div className="rounded-2xl border border-accent/30 bg-gradient-to-br from-[#26211b] to-[#16130f] p-4 text-cream shadow-lg">
               <div className="flex items-center gap-2 text-xs font-semibold text-accent">
                 <Building2 className="h-4 w-4" />
-                <span>İşletme &amp; Yüksek Metraj Projeler</span>
+                <span>İşletme ve Kurumsal Projeler</span>
               </div>
               <p className="mt-1.5 font-serif text-base font-semibold leading-snug">
-                Dikey Yapay Bahçe &amp; Yosun Duvar Uygulamaları
+                Dikey Yapay Bahçe ve Yosun Duvar Uygulamaları
               </p>
               <p className="mt-1 text-xs leading-relaxed text-cream/70">
                 Otel, ofis, restoran, AVM ve kurumsal mekanlarda yüksek metrajlı dikey bahçe projeleri için kurumsal sitemizi ziyaret edin.
