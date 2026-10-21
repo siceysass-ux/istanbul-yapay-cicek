@@ -21,7 +21,7 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
           transition={{ duration: 0.6 }}
           className="font-serif text-3xl font-semibold sm:text-4xl"
         >
-          Projeler
+          İşletme &amp; Yüksek Metraj Dikey Bahçe Projeleri
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -30,7 +30,7 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="mt-2 text-sm text-muted text-pretty"
         >
-          Tamamlanan dikey bahçe ve peyzaj projelerimiz
+          Otel, ofis, restoran, AVM ve kurumsal mekanlarda yüksek metrajlı dikey yapay bahçe ve yosun duvar uygulamalarımız
         </motion.p>
       </div>
 
@@ -43,8 +43,10 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Link
-              href={`/projeler/${project.slug}`}
+            <a
+              href="https://dikeyyapaybahce.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="group relative block overflow-hidden rounded-3xl border border-primary/10 bg-white shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:border-accent/30"
             >
               {/* Görsel */}
@@ -96,21 +98,21 @@ export function ProjectsShowcase({ projects }: { projects: Project[] }) {
 
                   {/* Hover'da CTA */}
                   <div className="mt-3 flex items-center gap-1.5 text-sm font-medium text-accent opacity-0 transition-all duration-300 group-hover:opacity-100">
-                    Detayları gör
+                    dikeyyapaybahce.com&apos;da incele
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </div>
                 </div>
               </div>
-            </Link>
+            </a>
           </motion.div>
         ))}
       </div>
 
       <div className="mt-10 text-center">
         <Button variant="outline" size="lg" asChild>
-          <Link href="/projeler">
-            Tüm projeleri gör <ArrowRight className="h-4 w-4" />
-          </Link>
+          <a href="https://dikeyyapaybahce.com/" target="_blank" rel="noopener noreferrer">
+            Kurumsal Proje Sitemizi Ziyaret Edin (dikeyyapaybahce.com) <ArrowRight className="h-4 w-4" />
+          </a>
         </Button>
       </div>
     </section>

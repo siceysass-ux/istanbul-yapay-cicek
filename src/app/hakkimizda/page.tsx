@@ -72,9 +72,14 @@ export default function HakkimizdaPage() {
       </div>
 
       <div className="mt-8">
-        <Link href="/kesif-talebi" className="inline-block rounded-full bg-primary px-6 py-3 text-sm font-medium text-cream hover:bg-primary-dark transition-colors">
-          Teklif Al
-        </Link>
+        <a
+          href="https://dikeyyapaybahce.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block rounded-full bg-primary px-6 py-3 text-sm font-medium text-cream hover:bg-primary-dark transition-colors"
+        >
+          Kurumsal &amp; Dikey Bahçe Projeleri (dikeyyapaybahce.com)
+        </a>
       </div>
 
       <CustomerSegments />

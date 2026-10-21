@@ -13,10 +13,9 @@ import {
   Sparkles,
   Trees,
   Flower2,
-   Sprout,
-  Layers,
-  Briefcase,
-  Images,
+  Sprout,
+  ArrowUpRight,
+  Building2,
 } from "lucide-react";
 import { useCart } from "@/stores/cart";
 import { cn } from "@/lib/utils";
@@ -30,12 +29,7 @@ const categoryNavItems = [
   { label: "Dev Çiçekler", href: "/kategori/yapay-guller", icon: Sparkles, desc: "Dev ayaklı şakayık, lotus ve vitrin çiçekleri" },
 ];
 
-const corporateNavItems = [
-  { label: "Uygulamalar", href: "/uygulamalar", icon: Layers },
-  { label: "Projeler", href: "/projeler", icon: Briefcase },
-  { label: "Galeri", href: "/galeri", icon: Images },
-  { label: "İletişim", href: "/iletisim", icon: Phone },
-];
+const B2B_SITE_URL = "https://dikeyyapaybahce.com/";
 
 export function Header() {
   const pathname = usePathname();
@@ -43,12 +37,10 @@ export function Header() {
   const count = useCart((s) => s.items.reduce((a, i) => a + i.quantity, 0));
   const toggleCart = useCart((s) => s.toggleCart);
 
-  // Route değiştiğinde mobil menüyü kapat
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
-  // Mobil çekmece açıkken sayfa kaydırmasını kilitle
   useEffect(() => {
     if (mobileOpen) {
       document.body.style.overflow = "hidden";
@@ -70,11 +62,11 @@ export function Header() {
               <span>🚚 2000₺ üzeri ücretsiz kargo</span>
               <span>📍 İstanbul içi kapıda ödeme</span>
               <span>⚡ 1-3 iş gününde teslim</span>
-              <span>✦ 500+ tamamlanan proje</span>
+              <span>✦ 1. Sınıf Gerçek Dokulu Koleksiyon</span>
               <span>🚚 2000₺ üzeri ücretsiz kargo</span>
               <span>📍 İstanbul içi kapıda ödeme</span>
               <span>⚡ 1-3 iş gününde teslim</span>
-              <span>✦ 500+ tamamlanan proje</span>
+              <span>✦ 1. Sınıf Gerçek Dokulu Koleksiyon</span>
             </div>
           ))}
         </div>
@@ -92,8 +84,8 @@ export function Header() {
             <BrandLogo variant="light" size="md" />
           </Link>
 
-          {/* Desktop nav — tek satır (whitespace-nowrap), asla alt alta kırılmaz */}
-          <nav className="hidden lg:flex flex-1 items-center justify-center gap-1 whitespace-nowrap">
+          {/* Desktop nav — tek satır */}
+          <nav className="hidden lg:flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap">
             {categoryNavItems.map((item) => {
               const active = pathname === item.href;
               return (
@@ -101,7 +93,7 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "shrink-0 whitespace-nowrap rounded-full px-3.5 py-2 text-[13.5px] font-medium transition-all",
+                    "shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all",
                     active
                       ? "bg-primary text-cream shadow-sm"
                       : "text-ink/85 hover:bg-primary/8 hover:text-primary"
@@ -114,33 +106,32 @@ export function Header() {
 
             <span className="mx-1.5 h-5 w-px shrink-0 bg-primary/15" aria-hidden="true" />
 
-            {corporateNavItems.slice(0, 3).map((item) => {
-              const active = pathname.startsWith(item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-[13.5px] font-medium transition-all",
-                    active
-                      ? "bg-primary/10 text-primary font-semibold"
-                      : "text-ink/75 hover:bg-primary/8 hover:text-primary"
-                  )}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+            <Link
+              href="/iletisim"
+              className={cn(
+                "shrink-0 whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-medium transition-all",
+                pathname === "/iletisim"
+                  ? "bg-primary/10 text-primary font-semibold"
+                  : "text-ink/75 hover:bg-primary/8 hover:text-primary"
+              )}
+            >
+              İletişim
+            </Link>
           </nav>
 
-          {/* Sağ Aksiyonlar */}
-          <div className="flex items-center gap-2 shrink-0">
-            <Link
-              href="/kesif-talebi"
-              className="hidden xl:inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-primary/20 bg-primary/5 px-4 py-2 text-xs font-semibold text-primary transition-all hover:bg-primary hover:text-cream"
+          {/* Sağ Aksiyonlar: Kurumsal & Yüksek Metraj Dikey Bahçe Yönlendirmesi + Sepet */}
+          <div className="flex items-center gap-2.5 shrink-0">
+            <a
+              href={B2B_SITE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group hidden md:inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-[#b08d44]/40 bg-gradient-to-r from-[#26211b] to-[#1a1612] px-4 py-2 text-xs font-medium text-cream shadow-sm transition-all hover:border-accent hover:shadow-md"
+              title="İşletme ve yüksek metraj dikey bahçe projeleri için kurumsal sitemiz"
             >
-              Keşif Talebi
-            </Link>
+              <Building2 className="h-3.5 w-3.5 text-accent shrink-0" />
+              <span>Dikey Bahçe &amp; Kurumsal Projeler</span>
+              <ArrowUpRight className="h-3.5 w-3.5 text-accent transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" />
+            </a>
 
             <Button
               variant="ghost"
@@ -171,7 +162,7 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobil Tam Ekran / Yan Çekmece Menü (Slide-Over Drawer) */}
+      {/* Mobil Yan Çekmece Menü */}
       <div
         className={cn(
           "fixed inset-0 z-50 lg:hidden transition-all duration-300",
@@ -257,48 +248,45 @@ export function Header() {
               </div>
             </div>
 
-            {/* Kurumsal & Hizmetler */}
-            <div>
-              <p className="px-2 mb-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
-                Uygulama &amp; Kurumsal
-              </p>
-              <div className="grid grid-cols-2 gap-2">
-                {corporateNavItems.map((item) => {
-                  const active = pathname.startsWith(item.href);
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      className={cn(
-                        "flex items-center gap-2.5 rounded-xl border p-3 text-sm font-medium transition-all",
-                        active
-                          ? "border-primary bg-primary/10 text-primary font-semibold"
-                          : "border-primary/10 bg-white/60 text-ink/85 hover:bg-white"
-                      )}
-                    >
-                      <item.icon className="h-4 w-4 text-accent shrink-0" />
-                      <span className="truncate">{item.label}</span>
-                    </Link>
-                  );
-                })}
+            {/* İşletme & Yüksek Metraj Dikey Bahçe Yönlendirme Kartı */}
+            <div className="rounded-2xl border border-accent/30 bg-gradient-to-br from-[#26211b] to-[#16130f] p-4 text-cream shadow-lg">
+              <div className="flex items-center gap-2 text-xs font-semibold text-accent">
+                <Building2 className="h-4 w-4" />
+                <span>İşletme &amp; Yüksek Metraj Projeler</span>
               </div>
+              <p className="mt-1.5 font-serif text-base font-semibold leading-snug">
+                Dikey Yapay Bahçe &amp; Yosun Duvar Uygulamaları
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-cream/70">
+                Otel, ofis, restoran, AVM ve kurumsal mekanlarda yüksek metrajlı dikey bahçe projeleri için kurumsal sitemizi ziyaret edin.
+              </p>
+              <a
+                href={B2B_SITE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileOpen(false)}
+                className="mt-3.5 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-accent px-4 py-2.5 text-xs font-bold text-ink transition-transform active:scale-98"
+              >
+                dikeyyapaybahce.com&apos;a Git
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
             </div>
 
-            {/* Keşif Talebi Kartı */}
-            <div className="rounded-2xl bg-gradient-to-br from-primary to-primary-dark p-4 text-cream">
-              <p className="text-xs font-medium text-accent-light">Profesyonel Peyzaj &amp; Dikey Bahçe</p>
-              <p className="mt-1 font-serif text-base font-semibold">Mekanınız İçin Ücretsiz Keşif</p>
-              <p className="mt-1 text-xs text-cream/70">
-                Ofis, otel, kafe ve konut projeleri için yerinde keşif ve teklif alın.
-              </p>
+            {/* Hızlı Bağlantılar */}
+            <div className="grid grid-cols-2 gap-2">
               <Link
-                href="/kesif-talebi"
+                href="/hakkimizda"
                 onClick={() => setMobileOpen(false)}
-                className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-accent px-4 py-2.5 text-xs font-bold text-ink transition-transform active:scale-98"
+                className="flex items-center justify-center rounded-xl border border-primary/10 bg-white/60 p-3 text-xs font-semibold text-ink/85 hover:bg-white"
               >
-                Ücretsiz Keşif Talebi Oluştur
-                <ChevronRight className="h-4 w-4" />
+                Hakkımızda
+              </Link>
+              <Link
+                href="/iletisim"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-center rounded-xl border border-primary/10 bg-white/60 p-3 text-xs font-semibold text-ink/85 hover:bg-white"
+              >
+                İletişim
               </Link>
             </div>
           </div>

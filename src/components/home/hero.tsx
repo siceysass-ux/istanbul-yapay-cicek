@@ -161,7 +161,7 @@ export function Hero() {
           className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row"
         >
           <Button size="lg" variant="accent" asChild className="group shadow-xl shadow-accent/20">
-            <Link href="/kategori/yapay-cicek">
+            <Link href="/kategori/yapay-agac">
               Ürünleri Keşfet
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
@@ -172,7 +172,9 @@ export function Hero() {
             className="border-accent/40 text-cream hover:bg-accent/10 hover:border-accent/60"
             asChild
           >
-            <Link href="/projeler">Projeleri Gör</Link>
+            <a href="https://dikeyyapaybahce.com/" target="_blank" rel="noopener noreferrer">
+              Dikey Bahçe &amp; Kurumsal Projeler
+            </a>
           </Button>
         </motion.div>
 

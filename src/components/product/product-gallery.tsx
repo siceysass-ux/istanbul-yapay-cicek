@@ -51,11 +51,6 @@ export function ProductGallery({ images }: { images: ProductImage[] }) {
           <ZoomIn className="h-3 w-3" /> Büyüt
         </div>
 
-        {/* 3D rozeti */}
-        <div className="absolute top-4 left-4 flex items-center gap-1.5 rounded-full bg-accent/90 px-3 py-1.5 text-xs font-medium text-ink">
-          <Box className="h-3 w-3" /> 360° Görünüm
-        </div>
-
         {/* Navigasyon okları */}
         {images.length > 1 && (
           <>
