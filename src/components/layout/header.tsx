@@ -9,12 +9,10 @@ import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/shared/brand-logo";
 
 const navItems = [
-  { label: "Yapay Güller", href: "/kategori/yapay-guller" },
-  { label: "Yapay Çiçekler", href: "/kategori/yapay-cicek" },
   { label: "Yapay Ağaçlar", href: "/kategori/yapay-agac" },
-  { label: "Sarmaşıklar", href: "/kategori/sarmasik" },
-  { label: "Dikey Bahçe", href: "/kategori/dikey-bahce" },
-  { label: "Duvar Panelleri", href: "/kategori/yapay-duvar-panelleri" },
+  { label: "Yapay Çiçekler", href: "/kategori/yapay-cicek" },
+  { label: "Saksılı & Bonsai", href: "/kategori/saksi" },
+  { label: "Dev Çiçek & Şakayık", href: "/kategori/yapay-guller" },
 ];
 
 export function Header() {

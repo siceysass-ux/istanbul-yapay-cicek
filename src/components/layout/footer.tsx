@@ -29,11 +29,10 @@ const linkGroups = [
   {
     title: "Kategoriler",
     links: [
-      { label: "Yapay Çiçekler", href: "/kategori/yapay-cicek" },
       { label: "Yapay Ağaçlar", href: "/kategori/yapay-agac" },
-      { label: "Demet Çiçekler", href: "/kategori/demet-cicek" },
-      { label: "Gelin Buketi", href: "/kategori/gelin-buketi" },
-      { label: "Dikey Bahçe", href: "/kategori/dikey-bahce" },
+      { label: "Yapay Çiçekler", href: "/kategori/yapay-cicek" },
+      { label: "Saksılı Bitkiler & Bonsai", href: "/kategori/saksi" },
+      { label: "Yapay Güller & Şakayıklar", href: "/kategori/yapay-guller" },
     ],
   },
   {

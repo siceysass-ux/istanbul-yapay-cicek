@@ -1,14 +1,20 @@
 import { PrismaClient } from "@prisma/client";
-import { existsSync, mkdirSync, copyFileSync, statSync } from "fs";
+import { existsSync, mkdirSync, copyFileSync, statSync, writeFileSync } from "fs";
 import { dirname, join } from "path";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient | undefined };
+
+const DB_SEED_VERSION = "eos-camera-v1";
 
 function ensurePersistentSqliteDb(url: string) {
   if (!url.startsWith("file:/")) return;
   const targetPath = url.slice("file:".length);
   try {
-    const needsSeed = !existsSync(targetPath) || statSync(targetPath).size < 4096;
+    const markerPath = join(dirname(targetPath), `.seed-${DB_SEED_VERSION}`);
+    const needsSeed =
+      !existsSync(targetPath) ||
+      statSync(targetPath).size < 4096 ||
+      !existsSync(markerPath);
     if (!needsSeed) return;
     const candidates = [
       join(process.cwd(), "prisma", "dev.db"),
@@ -18,6 +24,7 @@ function ensurePersistentSqliteDb(url: string) {
     if (seedDb) {
       mkdirSync(dirname(targetPath), { recursive: true });
       copyFileSync(seedDb, targetPath);
+      writeFileSync(markerPath, new Date().toISOString(), "utf8");
     }
   } catch {
     // Ignore FS errors on read-only environments
