@@ -255,10 +255,6 @@ export function SocialProof() {
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] leading-snug text-ink">
                   <span className="font-semibold">{current.name}</span>{" "}
-                  <span className="inline-flex items-center gap-0.5 text-muted">
-                    (<MapPin className="h-2.5 w-2.5 text-accent" />
-                    {current.city})
-                  </span>{" "}
                   {current.action}
                 </p>
                 <p className="mt-0.5 truncate text-xs font-semibold text-accent group-hover:underline">
