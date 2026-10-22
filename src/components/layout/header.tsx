@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import {
   Menu,
   ShoppingBag,
+  Search,
   X,
   ChevronRight,
   Phone,
@@ -21,6 +22,7 @@ import { useCart } from "@/stores/cart";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/shared/brand-logo";
+import { SearchBar } from "@/components/layout/search-bar";
 
 const categoryNavItems = [
   { label: "Yapay Ağaçlar", href: "/kategori/yapay-agac", icon: Trees, desc: "Zeytin, bambu, benjamin ve tropikal ağaçlar" },
@@ -34,11 +36,13 @@ const B2B_SITE_URL = "https://dikeyyapaybahce.com/";
 export function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const count = useCart((s) => s.items.reduce((a, i) => a + i.quantity, 0));
   const toggleCart = useCart((s) => s.toggleCart);
 
   useEffect(() => {
     setMobileOpen(false);
+    setMobileSearchOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -74,18 +78,23 @@ export function Header() {
 
       {/* Ana header */}
       <header className="sticky top-0 z-40 border-b border-primary/10 bg-white/95 backdrop-blur-md shadow-xs">
-        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 lg:px-8">
+        <div className="mx-auto flex h-18 sm:h-20 max-w-7xl items-center justify-between gap-3 px-3.5 sm:px-4 lg:px-8">
           {/* Logo */}
           <Link
             href="/"
             aria-label="Çiçek Yapay Ana Sayfa"
-            className="flex items-center shrink-0 pr-3 xl:pr-6 xl:border-r xl:border-primary/10 py-1 z-50"
+            className="flex items-center shrink-0 pr-2 xl:pr-5 xl:border-r xl:border-primary/10 py-1 z-50"
           >
             <BrandLogo variant="light" size="md" />
           </Link>
 
+          {/* Masaüstü Arama Çubuğu (Ürün veya kategori ara) */}
+          <div className="hidden md:block flex-1 max-w-xs lg:max-w-sm xl:max-w-md">
+            <SearchBar />
+          </div>
+
           {/* Desktop nav — tek satır */}
-          <nav className="hidden lg:flex flex-1 items-center justify-center gap-1.5 whitespace-nowrap">
+          <nav className="hidden xl:flex items-center justify-center gap-1 whitespace-nowrap">
             {categoryNavItems.map((item) => {
               const active = pathname === item.href;
               return (
@@ -93,7 +102,7 @@ export function Header() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "shrink-0 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-all",
+                    "shrink-0 whitespace-nowrap rounded-full px-3.5 py-2 text-xs font-semibold transition-all",
                     active
                       ? "bg-accent text-white shadow-sm"
                       : "text-ink/85 hover:bg-accent/10 hover:text-accent"
@@ -104,14 +113,12 @@ export function Header() {
               );
             })}
 
-            <span className="mx-1.5 h-5 w-px shrink-0 bg-primary/15" aria-hidden="true" />
-
             <Link
               href="/iletisim"
               className={cn(
-                "shrink-0 whitespace-nowrap rounded-full px-3.5 py-2 text-sm font-medium transition-all",
+                "shrink-0 whitespace-nowrap rounded-full px-3 py-2 text-xs font-semibold transition-all",
                 pathname === "/iletisim"
-                  ? "bg-accent text-white font-semibold"
+                  ? "bg-accent text-white"
                   : "text-ink/75 hover:bg-accent/10 hover:text-accent"
               )}
             >
@@ -119,19 +126,30 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Sağ Aksiyonlar: Kurumsal & Yüksek Metraj Dikey Bahçe Yönlendirmesi + Sepet */}
-          <div className="flex items-center gap-2.5 shrink-0">
+          {/* Sağ Aksiyonlar: Kurumsal & Yüksek Metraj Dikey Bahçe Yönlendirmesi + Mobil Arama + Sepet */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <a
               href={B2B_SITE_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="group hidden md:inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-accent/40 bg-[#1e2426] px-4 py-2 text-xs font-medium text-white shadow-sm transition-all hover:bg-accent hover:border-accent hover:shadow-md"
+              className="group hidden lg:inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-accent/40 bg-[#1e2426] px-3.5 py-2 text-xs font-medium text-white shadow-sm transition-all hover:bg-accent hover:border-accent hover:shadow-md"
               title="İşletme ve yüksek metraj dikey bahçe projeleri için kurumsal sitemiz"
             >
               <Building2 className="h-3.5 w-3.5 text-accent group-hover:text-white shrink-0" />
               <span>Dikey Bahçe Projeleri</span>
               <ArrowUpRight className="h-3.5 w-3.5 text-accent group-hover:text-white transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" />
             </a>
+
+            {/* Mobil Arama Aç/Kapat Butonu */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setMobileSearchOpen((v) => !v)}
+              className="md:hidden h-10 w-10 rounded-full hover:bg-accent/10"
+              aria-label="Ürün Ara"
+            >
+              {mobileSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
+            </Button>
 
             <Button
               variant="ghost"
@@ -152,7 +170,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden h-10 w-10 rounded-full border border-primary/15 bg-white/60"
+              className="xl:hidden h-10 w-10 rounded-full border border-primary/15 bg-white/60"
               onClick={() => setMobileOpen(true)}
               aria-label="Menüyü Aç"
             >
@@ -160,12 +178,22 @@ export function Header() {
             </Button>
           </div>
         </div>
+
+        {/* Mobil Açılır Arama Çubuğu */}
+        {mobileSearchOpen && (
+          <div className="md:hidden border-t border-primary/10 bg-white px-3.5 py-2.5">
+            <SearchBar
+              autoFocus
+              onNavigate={() => setMobileSearchOpen(false)}
+            />
+          </div>
+        )}
       </header>
 
       {/* Mobil Yan Çekmece Menü — P2-10: overflow-hidden ile mobilde yatay taşma önlenir */}
       <div
         className={cn(
-          "fixed inset-0 z-50 overflow-hidden lg:hidden transition-all duration-300",
+          "fixed inset-0 z-50 overflow-hidden xl:hidden transition-all duration-300",
           mobileOpen ? "visible pointer-events-auto" : "invisible pointer-events-none"
         )}
         aria-hidden={!mobileOpen}
@@ -199,7 +227,12 @@ export function Header() {
           </div>
 
           {/* Çekmece İçeriği */}
-          <div className="flex-1 overflow-y-auto px-4 py-5 space-y-6">
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+            {/* Çekmece İçi Arama Çubuğu */}
+            <div>
+              <SearchBar onNavigate={() => setMobileOpen(false)} />
+            </div>
+
             {/* Kategoriler */}
             <div>
               <p className="px-2 mb-2.5 text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
