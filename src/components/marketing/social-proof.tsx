@@ -8,6 +8,7 @@ import { CheckCircle2, MapPin, X } from "lucide-react";
 type ProductItem = {
   name: string;
   slug: string;
+  image?: string;
 };
 
 type Notification = {
@@ -138,16 +139,30 @@ export function SocialProof() {
   const [current, setCurrent] = useState<Notification | null>(null);
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const productsRef = useRef<ProductItem[]>(catalogProducts);
 
   const lastNameIdx = useRef(-1);
   const lastCityIdx = useRef(-1);
   const lastProductIdx = useRef(-1);
   const seqRef = useRef(0);
 
+  // Veritabanındaki aktif ürünleri (yeni eklenenler dahil) canlı çek
+  useEffect(() => {
+    fetch("/api/social-proof")
+      .then((res) => res.json())
+      .then((data: { items?: ProductItem[] }) => {
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          productsRef.current = data.items;
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   const nextNotification = (): Notification => {
+    const pool = productsRef.current.length > 0 ? productsRef.current : catalogProducts;
     const n = pickDifferent(names, lastNameIdx.current);
     const c = pickDifferent(cities, lastCityIdx.current);
-    const p = pickDifferent(catalogProducts, lastProductIdx.current);
+    const p = pickDifferent(pool, lastProductIdx.current);
     lastNameIdx.current = n.index;
     lastCityIdx.current = c.index;
     lastProductIdx.current = p.index;
@@ -226,11 +241,11 @@ export function SocialProof() {
               href={`/urun/${current.product.slug}`}
               className="flex items-center gap-3 pr-4 group"
             >
-              {/* Ürün küçük fotoğrafı */}
-              <div className="relative h-13 w-11 shrink-0 overflow-hidden rounded-xl border border-primary/10 bg-cream-dark">
+              {/* Ürün mini fotoğrafı (DB'den gelen kapak görseli) */}
+              <div className="relative h-14 w-12 shrink-0 overflow-hidden rounded-xl border border-primary/15 bg-cream-dark shadow-2xs">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  src={`/products/${current.product.slug}/1.jpg`}
+                  src={current.product.image || `/products/${current.product.slug}/1.jpg`}
                   alt={current.product.name}
                   className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
