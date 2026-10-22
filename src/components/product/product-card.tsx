@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { QuickViewModal } from "@/components/product/quick-view-modal";
 import { flyToCart } from "@/components/shared/flying-cart";
 import { useCart } from "@/stores/cart";
+import { trackAddToCart } from "@/lib/analytics";
 import { formatPrice } from "@/lib/utils";
 import type { ProductListItem } from "@/lib/types";
 
@@ -65,6 +66,12 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
       image,
       maxStock: product.stock,
     });
+    trackAddToCart({
+      id: product.id,
+      name: product.name,
+      price,
+      quantity: 1,
+    });
     toast.success("Sepete eklendi", { description: product.name });
   };
 
@@ -96,9 +103,13 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
       >
         <Link href={`/urun/${product.slug}`} className="group block">
           <div className="relative aspect-[3/5] overflow-hidden rounded-2xl bg-[#f7f8f9] ring-1 ring-primary/10 transition-all duration-500 group-hover:ring-accent/60 group-hover:shadow-xl group-hover:shadow-accent/10">
-            {/* Rozetler */}
+            {/* Rozetler — P2-4: Tek kaynaklı tutarlı rozet mantığı */}
             <div className="absolute left-3 top-3 z-10 flex flex-col gap-1.5">
-              {product.isNew && <Badge variant="new">YENİ</Badge>}
+              {product.isFeatured ? (
+                <Badge variant="new">ÖNE ÇIKAN</Badge>
+              ) : product.isNew ? (
+                <Badge variant="featured">YENİ</Badge>
+              ) : null}
               {!inStock && (
                 <span className="rounded-full bg-ink/80 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-cream backdrop-blur">
                   Tükendi
@@ -165,9 +176,9 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
               )}
             </div>
 
-            {/* Rating + stok durumu */}
+            {/* Rating + stok durumu (P0-5: Gerçek yorum yoksa yıldız gösterme) */}
             <div className="flex items-center justify-between">
-              {product.rating > 0 ? (
+              {product.rating > 0 && product.reviewCount > 0 ? (
                 <div className="flex items-center gap-1.5">
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map((s) => (
@@ -186,11 +197,11 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
                   </span>
                 </div>
               ) : (
-                <span className="text-xs text-muted">Yeni ürün</span>
+                <span className="text-[11px] text-muted">Ücretsiz Kargo</span>
               )}
               {inStock && (
-                <span className="flex items-center gap-1 text-[10px] text-primary/60">
-                  <Check className="h-3 w-3" /> Stokta
+                <span className="flex items-center gap-1 text-[11px] font-medium text-primary/75">
+                  <Check className="h-3 w-3 text-accent" /> Stokta
                 </span>
               )}
             </div>

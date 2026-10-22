@@ -15,17 +15,17 @@ const seals = [
   {
     icon: ShieldCheck,
     title: "Güvenli Ödeme",
-    desc: "256-bit SSL ile şifreli",
+    desc: "256-bit SSL ve iyzico",
   },
   {
     icon: RotateCcw,
-    title: "14 Gün İade",
-    desc: "Koşulsuz para iadesi",
+    title: "14 Gün İade Hakkı",
+    desc: "Orijinal ambalajda kolay iade",
   },
   {
     icon: Truck,
     title: "Hızlı Teslimat",
-    desc: "1-3 iş gününde kargo",
+    desc: "1-3 iş gününde kargoda",
   },
   {
     icon: Lock,
@@ -42,12 +42,12 @@ export function TrustSeals({ variant = "light" }: { variant?: "light" | "dark" }
       className={`rounded-2xl border p-4 ${
         isDark
           ? "border-cream/10 bg-cream/5"
-          : "border-primary/10 bg-primary/5"
+          : "border-primary/10 bg-cream-dark/60"
       }`}
     >
       <div className="mb-3 flex items-center gap-2">
         <BadgeCheck
-          className={`h-4 w-4 ${isDark ? "text-accent" : "text-primary"}`}
+          className={`h-4 w-4 ${isDark ? "text-accent" : "text-accent"}`}
         />
         <span
           className={`text-xs font-semibold ${
@@ -69,7 +69,7 @@ export function TrustSeals({ variant = "light" }: { variant?: "light" | "dark" }
           >
             <seal.icon
               className={`h-4 w-4 shrink-0 mt-0.5 ${
-                isDark ? "text-accent" : "text-primary"
+                isDark ? "text-accent" : "text-accent"
               }`}
             />
             <div className="min-w-0">
@@ -115,25 +115,21 @@ export function TrustSeals({ variant = "light" }: { variant?: "light" | "dark" }
               isDark ? "text-cream/60" : "text-muted"
             }`}
           >
-            Kredi Kartı · 3 Taksit · İstanbul İçi Kapıda Ödeme
+            Kredi Kartı (Tek Çekim / 3 Taksit) · İstanbul İçi Kapıda Nakit Ödeme
           </span>
         </div>
       </div>
 
-      {/* Canlı destek */}
+      {/* Müşteri destek saatleri — P1-14 sözleşme ve iletişimle uyumlu */}
       <div
         className={`mt-2 flex items-center gap-1.5 ${
           isDark ? "text-cream/60" : "text-muted"
         }`}
       >
-        <span className="relative flex h-2 w-2">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-          <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-        </span>
+        <Headphones className="h-3.5 w-3.5 text-accent" />
         <span className="text-[10px] font-medium">
-          Canlı destek aktif · 7/24 ulaşılabilir
+          Müşteri Desteği: Pzt – Cmt 09:00 – 18:00 · 0(507) 884 66 03
         </span>
-        <Headphones className="h-3 w-3" />
       </div>
     </div>
   );

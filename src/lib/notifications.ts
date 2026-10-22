@@ -29,7 +29,7 @@ export async function sendQuoteRequestEmail(
           </p>
           <div style="background:#e0d0b0;border-radius:12px;padding:16px;margin:24px 0">
             <p style="margin:0;color:#807060;font-size:13px">
-              Sorularınız için: 0(507) 884 66 03 · info@dikeyyapaybahce.com
+              Sorularınız için: 0(507) 884 66 03 · info@cicekyapay.com
             </p>
           </div>
         </div>
@@ -88,7 +88,7 @@ export async function sendQuoteRequestAdminNotification(
   `;
 
   return sendEmail({
-    to: "info@dikeyyapaybahce.com",
+    to: "info@cicekyapay.com",
     subject: `Yeni Keşif Talebi — ${data.name}`,
     html,
   });
@@ -127,7 +127,7 @@ export async function sendContactMessageAdminNotification(
   `;
 
   return sendEmail({
-    to: "info@dikeyyapaybahce.com",
+    to: "info@cicekyapay.com",
     subject: `Yeni İletişim Mesajı — ${data.name}`,
     html,
   });

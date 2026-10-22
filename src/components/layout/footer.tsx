@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { BrandLogo } from "@/components/shared/brand-logo";
 import {
-  Facebook,
   Instagram,
-  Youtube,
   Mail,
   Phone,
   MapPin,
@@ -19,64 +17,60 @@ import {
 const year = new Date().getFullYear();
 
 const trustItems = [
-  { icon: Truck, title: "Ücretsiz Kargo", desc: "2000₺ üzeri" },
-  { icon: RotateCcw, title: "14 Gün İade", desc: "Koşulsuz iade" },
+  { icon: Truck, title: "Ücretsiz Kargo", desc: "2000₺ ve üzeri" },
+  { icon: RotateCcw, title: "14 Gün İade Hakkı", desc: "Orijinal ambalajda" },
   { icon: CreditCard, title: "3 Taksit", desc: "Kredi kartına" },
-  { icon: HandCoins, title: "Kapıda Ödeme", desc: "İstanbul içi" },
+  { icon: HandCoins, title: "Kapıda Ödeme", desc: "İstanbul içi nakit" },
 ];
 
 const linkGroups = [
   {
     title: "Kategoriler",
     links: [
-      { label: "Yapay Ağaçlar", href: "/kategori/yapay-agac" },
-      { label: "Yapay Çiçekler", href: "/kategori/yapay-cicek" },
-      { label: "Saksılı Bitkiler", href: "/kategori/saksi" },
-      { label: "Dev Çiçekler", href: "/kategori/yapay-guller" },
+      { label: "Yapay Ağaçlar", href: "/kategori/yapay-agac", external: false },
+      { label: "Yapay Çiçekler", href: "/kategori/yapay-cicek", external: false },
+      { label: "Saksılı Bitkiler", href: "/kategori/saksi", external: false },
+      { label: "Dev Çiçekler", href: "/kategori/dev-cicekler", external: false },
     ],
   },
   {
     title: "Kurumsal",
     links: [
-      { label: "Hakkımızda", href: "/hakkimizda" },
-      { label: "İletişim", href: "/iletisim" },
-      { label: "Dikey Bahçe Projeleri", href: "https://dikeyyapaybahce.com/" },
+      { label: "Hakkımızda", href: "/hakkimizda", external: false },
+      { label: "İletişim ve Mağaza", href: "/iletisim", external: false },
+      { label: "Dikey Bahçe Projeleri", href: "https://dikeyyapaybahce.com/projeler", external: true },
     ],
   },
   {
-    title: "Yüksek Metraj Uygulamalar",
+    title: "Proje ve Peyzaj Çözümleri",
     links: [
-      { label: "Yapay Dikey Bahçe", href: "https://dikeyyapaybahce.com/" },
-      { label: "Yosun Duvar", href: "https://dikeyyapaybahce.com/" },
-      { label: "Büyük Yapay Ağaç Projeleri", href: "https://dikeyyapaybahce.com/" },
-      { label: "Yeşil Duvar Panelleri", href: "https://dikeyyapaybahce.com/" },
-      { label: "Yapay Çit ve Bölücü Paneller", href: "https://dikeyyapaybahce.com/" },
-      { label: "Akustik Yosun ve Tablolar", href: "https://dikeyyapaybahce.com/" },
+      { label: "Yapay Dikey Bahçe", href: "https://dikeyyapaybahce.com/projeler", external: true },
+      { label: "Yosun Duvar Uygulamaları", href: "https://dikeyyapaybahce.com/projeler", external: true },
+      { label: "Büyük Yapay Ağaç Projeleri", href: "https://dikeyyapaybahce.com/projeler", external: true },
+      { label: "Kurumsal Referanslar", href: "https://dikeyyapaybahce.com/projeler", external: true },
     ],
   },
   {
-    title: "Müşteri Hizmetleri",
+    title: "Yasal ve Müşteri Hizmetleri",
     links: [
-      { label: "Mesafeli Satış Sözleşmesi", href: "/sayfalar/mesafeli-satis-sozlesmesi" },
-      { label: "Gizlilik Politikası", href: "/sayfalar/gizlilik-politikasi" },
-      { label: "İade Koşulları", href: "/sayfalar/iade-kosullari" },
-      { label: "KVKK Aydınlatma", href: "/sayfalar/kvkk-aydinlatma" },
-      { label: "Çerez Politikası", href: "/sayfalar/cerez-politikasi" },
+      { label: "Mesafeli Satış Sözleşmesi", href: "/sayfalar/mesafeli-satis-sozlesmesi", external: false },
+      { label: "İade ve Değişim Koşulları", href: "/sayfalar/iade-kosullari", external: false },
+      { label: "Gizlilik ve Güvenlik Politikası", href: "/sayfalar/gizlilik-politikasi", external: false },
+      { label: "KVKK Aydınlatma Metni", href: "/sayfalar/kvkk-aydinlatma", external: false },
+      { label: "Çerez Politikası", href: "/sayfalar/cerez-politikasi", external: false },
     ],
   },
 ];
 
 const socials = [
-  { Icon: Instagram, href: "https://www.instagram.com/cicekyapaycom/", label: "Instagram" },
-  { Icon: Facebook, href: "https://facebook.com/dikeyyapaybahce", label: "Facebook" },
-  { Icon: Youtube, href: "https://youtube.com/@dikeyyapaybahce", label: "YouTube" },
+  { Icon: Instagram, href: "https://www.instagram.com/cicekyapaycom/", label: "Instagram (@cicekyapaycom)" },
 ];
 
 const contactItems = [
   { icon: Phone, label: "Telefon", value: "0(507) 884 66 03", href: "tel:+905078846603" },
-  { icon: MessageCircle, label: "WhatsApp", value: "0(507) 884 66 03", href: "https://wa.me/905078846603" },
-  { icon: Mail, label: "E-posta", value: "info@dikeyyapaybahce.com", href: "mailto:info@dikeyyapaybahce.com" },
-  { icon: MapPin, label: "Adres", value: "Nuripaşa Mah. Merve Cad. No:73/A, Zeytinburnu / İstanbul" },
+  { icon: MessageCircle, label: "WhatsApp", value: "0(507) 884 66 03", href: "https://wa.me/905078846603?text=Merhaba,%20cicekyapay.com%20%C3%BCzerinden%20ula%C5%9F%C4%B1yorum." },
+  { icon: Mail, label: "E-posta", value: "info@cicekyapay.com", href: "mailto:info@cicekyapay.com" },
+  { icon: MapPin, label: "Merkez ve İade Adresi", value: "Nuripaşa Mah. Merve Cad. No:73/A, 34025 Zeytinburnu / İstanbul" },
   { icon: Clock, label: "Çalışma Saatleri", value: "Pzt - Cmt, 09:00 - 18:00" },
 ];
 
@@ -84,16 +78,16 @@ export function Footer() {
   return (
     <footer className="relative overflow-hidden bg-ink text-cream/80 pb-20 lg:pb-0">
       {/* Güvence şeridi */}
-      <div className="border-b border-cream/10 bg-ink-light/30">
+      <div className="border-b border-cream/10 bg-primary/40">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-4 py-6 sm:grid-cols-4 sm:gap-6 lg:px-8">
           {trustItems.map((item) => (
             <div key={item.title} className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/10 sm:h-12 sm:w-12">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/15 sm:h-12 sm:w-12">
                 <item.icon className="h-5 w-5 text-accent" />
               </div>
               <div className="min-w-0">
                 <div className="truncate text-sm font-medium text-cream">{item.title}</div>
-                <div className="truncate text-xs text-cream/50">{item.desc}</div>
+                <div className="truncate text-xs text-cream/55">{item.desc}</div>
               </div>
             </div>
           ))}
@@ -109,8 +103,8 @@ export function Footer() {
               <BrandLogo variant="dark" size="md" />
             </Link>
             <div className="hidden h-8 w-px bg-cream/10 sm:block" />
-            <p className="hidden max-w-xs text-xs leading-relaxed text-cream/50 sm:block">
-              Bakım gerektirmeyen premium yapay çiçek, ağaç ve dikey bahçe ürünleri.
+            <p className="hidden max-w-xs text-xs leading-relaxed text-cream/60 sm:block">
+              Çiçek Yapay Botanik ve Dekorasyon — Doğal gövdeli yapay ağaç, saksılı bitki ve yapay çiçek atölyesi.
             </p>
           </div>
 
@@ -121,7 +115,7 @@ export function Footer() {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-cream/5 ring-1 ring-cream/10 transition-all hover:scale-110 hover:bg-accent hover:text-ink"
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-cream/5 ring-1 ring-cream/10 transition-all hover:scale-110 hover:bg-accent hover:text-white"
                 aria-label={label}
               >
                 <Icon className="h-4 w-4" />
@@ -133,7 +127,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 rounded-full bg-cream/5 px-3 py-2 ring-1 ring-cream/10 transition-all hover:bg-cream/10"
-              aria-label="Google Yorumlar"
+              aria-label="Google İşletme Yorumları"
             >
               <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -157,12 +151,23 @@ export function Footer() {
               <ul className="space-y-2">
                 {group.links.map((link) => (
                   <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-cream/60 transition-colors hover:text-cream"
-                    >
-                      {link.label}
-                    </Link>
+                    {link.external ? (
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-cream/65 transition-colors hover:text-cream"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={link.href}
+                        className="text-sm text-cream/65 transition-colors hover:text-cream"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -174,11 +179,11 @@ export function Footer() {
         <div className="mt-10 grid gap-3 border-t border-cream/10 pt-8 sm:grid-cols-2 lg:grid-cols-5">
           {contactItems.map((item) => {
             const inner = (
-              <div className="flex items-start gap-2.5 text-cream/60 transition-colors hover:text-cream">
+              <div className="flex items-start gap-2.5 text-cream/65 transition-colors hover:text-cream">
                 <item.icon className="h-4 w-4 shrink-0 text-accent mt-0.5" />
                 <div className="min-w-0">
                   <div className="text-[10px] uppercase tracking-wider text-cream/40">{item.label}</div>
-                  <div className="truncate text-xs">{item.value}</div>
+                  <div className="text-xs break-words">{item.value}</div>
                 </div>
               </div>
             );
@@ -196,10 +201,10 @@ export function Footer() {
             src="https://www.google.com/maps?q=Nuripa%C5%9Fa+Mah.+Merve+Cad.+No:73/A+Zeytinburnu+%C4%B0stanbul&output=embed"
             title="Çiçek Yapay Konum"
             width="100%"
-            height="240"
+            height="220"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            className="block w-full grayscale-[40%] contrast-110"
+            className="block w-full grayscale-[30%] contrast-105"
             style={{ border: 0 }}
             allowFullScreen
           />
@@ -207,9 +212,9 @@ export function Footer() {
       </div>
 
       {/* Alt bant */}
-      <div className="border-t border-cream/10 bg-ink-light/20">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-5 text-xs text-cream/50 sm:flex-row lg:px-8">
-          <p>© {year} Çiçek Yapay. Tüm hakları saklıdır.</p>
+      <div className="border-t border-cream/10 bg-black/20">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-5 text-xs text-cream/55 sm:flex-row lg:px-8">
+          <p>© {year} Çiçek Yapay Botanik ve Dekorasyon. Tüm hakları saklıdır.</p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             <div className="rounded-xl bg-white/95 px-3.5 py-1.5 shadow-xs">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -220,7 +225,7 @@ export function Footer() {
               />
             </div>
             <span className="rounded-lg bg-cream/10 px-3 py-1.5 text-[10px] font-semibold tracking-wider text-cream ring-1 ring-cream/15">
-              KAPIDA ÖDEME
+              İSTANBUL İÇİ KAPIDA ÖDEME
             </span>
           </div>
         </div>

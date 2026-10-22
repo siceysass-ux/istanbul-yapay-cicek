@@ -16,6 +16,7 @@ const iconMap: Record<string, string> = {
   "dikey-bahce": "🧱",
   "saksi": "🪴",
   "yapay-guller": "🌹",
+  "dev-cicekler": "🌺",
   "yapay-duvar-panelleri": "🟫",
 };
 

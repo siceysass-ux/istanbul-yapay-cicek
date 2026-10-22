@@ -4,6 +4,7 @@ import { CheckCircle2, Package, Truck, MapPin, ArrowRight } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { formatPrice } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { PurchaseTracker } from "@/components/order/purchase-tracker";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,15 @@ export default async function OrderConfirmationPage({
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 lg:px-8">
+      <PurchaseTracker
+        orderNumber={order.orderNumber}
+        total={order.total}
+        shipping={order.shipping}
+        email={order.email}
+        phone={order.phone}
+        city={order.city}
+        items={items}
+      />
       {/* Başarı */}
       <div className="mb-10 text-center">
         <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">

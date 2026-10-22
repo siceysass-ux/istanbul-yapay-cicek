@@ -9,7 +9,9 @@ import { formatPrice, cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 export function CartDrawer() {
-  const { items, isOpen, closeCart, updateQuantity, removeItem, total } = useCart();
+  const { items, isOpen, closeCart, updateQuantity, removeItem } = useCart();
+  const total = items.reduce((sum, i) => sum + Number(i.price || 0) * Number(i.quantity || 0), 0);
+  const totalCount = items.reduce((sum, i) => sum + Number(i.quantity || 0), 0);
 
   useEffect(() => {
     if (isOpen) document.body.style.overflow = "hidden";
@@ -40,9 +42,9 @@ export function CartDrawer() {
               <div className="flex items-center gap-2">
                 <ShoppingBag className="h-5 w-5 text-primary" />
                 <h2 className="font-serif text-lg font-semibold">Sepetim</h2>
-                <span className="text-sm text-muted">({items.length})</span>
+                <span className="text-sm text-muted">({totalCount})</span>
               </div>
-              <Button variant="ghost" size="icon" onClick={closeCart}>
+              <Button variant="ghost" size="icon" onClick={closeCart} aria-label="Sepeti kapat">
                 <X className="h-5 w-5" />
               </Button>
             </div>
@@ -81,6 +83,7 @@ export function CartDrawer() {
                           <button
                             onClick={() => removeItem(item.id, item.variantId)}
                             className="text-muted hover:text-red-500 transition-colors"
+                            aria-label="Ürünü sepetten kaldır"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -93,6 +96,7 @@ export function CartDrawer() {
                             <button
                               onClick={() => updateQuantity(item.id, item.variantId, item.quantity - 1)}
                               className="flex h-7 w-7 items-center justify-center rounded-full border border-primary/15 hover:bg-primary/5"
+                              aria-label="Adedi azalt"
                             >
                               <Minus className="h-3 w-3" />
                             </button>
@@ -100,6 +104,7 @@ export function CartDrawer() {
                             <button
                               onClick={() => updateQuantity(item.id, item.variantId, item.quantity + 1)}
                               className="flex h-7 w-7 items-center justify-center rounded-full border border-primary/15 hover:bg-primary/5"
+                              aria-label="Adedi artır"
                             >
                               <Plus className="h-3 w-3" />
                             </button>

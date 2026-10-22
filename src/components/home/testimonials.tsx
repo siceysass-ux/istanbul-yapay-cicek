@@ -1,180 +1,72 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Star, Quote, BadgeCheck, Calendar, ShoppingBag, MapPin } from "lucide-react";
+import { Star, ExternalLink, Building2, CheckCircle2 } from "lucide-react";
 
-const testimonials = [
-  {
-    name: "Ayşe Korkmaz",
-    role: "İç Mimar",
-    company: "Studio Aura",
-    text: "Müşterilerim için tercih ettiğim yapay çiçekler, gerçek dokusuyla herkesi şaşırtıyor. Teslimat hızı ve paketleme kalitesi de kusursuz.",
-    rating: 5,
-    initial: "A",
-    date: "12 Mart 2026",
-    location: "İstanbul",
-    purchase: "Yapay Gül Demeti + Dikey Bahçe Paneli",
-  },
-  {
-    name: "Mehmet Tunç",
-    role: "Otel Müdürü",
-    company: "Grand Lotus Hotel",
-    text: "Lobi için yaptırdığımız dikey bahçe projesi beklentilerimizin çok ötesinde çıktı. Misafirlerimiz sürekli iltifat ediyor.",
-    rating: 5,
-    initial: "M",
-    date: "28 Şubat 2026",
-    location: "Antalya",
-    purchase: "Yapay Dikey Bahçe (40m²)",
-  },
-  {
-    name: "Zeynep Aksoy",
-    role: "Ev Sahibi",
-    text: "Bir yıldır kullandığım gül demeti ilk günkü gibi duruyor. Bakım gerektirmemesi inanılmaz rahat. Kesinlikle tavsiye ediyorum.",
-    rating: 5,
-    initial: "Z",
-    date: "15 Ocak 2026",
-    location: "İzmir",
-    purchase: "Yapay Gül Demeti 50cm",
-  },
-  {
-    name: "Can Demir",
-    role: "Kafe Sahibi",
-    company: "Botanik Kafe",
-    text: "Kafemizin tüm duvarlarını yosun duvar kaplama ile kaplattık. Müşterilerimiz fotoğraf çekmek için sıraya giriyor. Muhteşem bir atmosfer yarattı.",
-    rating: 5,
-    initial: "C",
-    date: "3 Şubat 2026",
-    location: "İstanbul",
-    purchase: "Yosun Duvar Kaplama (15m²)",
-  },
-  {
-    name: "Selin Yılmaz",
-    role: "Etkinlik Organizatörü",
-    text: "Düğün organizasyonları için yapay çiçekler kullanıyoruz. Gerçekçilikleri inanılmaz, misafirler gerçek sanıyor. Tekrar tekrar tercih ediyoruz.",
-    rating: 5,
-    initial: "S",
-    date: "20 Mart 2026",
-    location: "Ankara",
-    purchase: "Gelin Buketi + Dekoratif Çiçekler",
-  },
-  {
-    name: "Burak Şahin",
-    role: "Ofis Müdürü",
-    company: "TechCorp",
-    text: "Ofisimize yaptırdığımız yapay ağaçlar ve sarmaşıklar, çalışma ortamını tamamen değiştirdi. Bakım gerektirmemesi büyük avantaj.",
-    rating: 5,
-    initial: "B",
-    date: "8 Ocak 2026",
-    location: "İstanbul",
-    purchase: "Yapay Ağaç (180cm) + Sarmaşık Paneli",
-  },
+const realReferences = [
+  { name: "Ağaoğlu Terrace", location: "İstanbul", work: "İç Mekan Dikey Bahçe ve Yapay Ağaç Uygulaması" },
+  { name: "Colombia Coffee", location: "İstanbul", work: "Yosun Duvar ve Yapay Bitki Tasarımı" },
+  { name: "Contemporary Modern Art Museum", location: "İstanbul", work: "Dekoratif Yapay Ağaç ve Peyzaj Uygulaması" },
+  { name: "Romatem Move", location: "İstanbul", work: "Kurumsal Alan Biyofilik Yeşillendirme Projesi" },
+  { name: "Dilek Pastanesi", location: "İstanbul", work: "Mekan İçi Yapay Çiçek ve Dikey Bahçe Tasarımı" },
+  { name: "Best Hotel", location: "İstanbul", work: "Otel Lobisi Yapay Ağaç ve Dikey Bahçe Dekorasyonu" },
 ];
 
 export function Testimonials() {
   return (
-    <section className="relative overflow-hidden bg-cream-dark/40 pt-16 pb-8">
+    <section className="relative overflow-hidden bg-cream-dark/60 py-14">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
-        {/* Başlık — ortalanmış, sade */}
-        <div className="mb-10 text-center">
-          <h2 className="font-serif text-3xl font-semibold sm:text-4xl">
-            Müşteri Yorumları
-          </h2>
-          <p className="mt-2 text-sm text-muted text-pretty">
-            Binlerce mutlu müşterimizden bazıları
-          </p>
+        <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+          <div>
+            <h2 className="font-serif text-3xl font-semibold sm:text-4xl">
+              Google İşletme Yorumları ve Referanslarımız
+            </h2>
+            <p className="mt-2 text-sm text-muted">
+              Zeytinburnu / İstanbul mağazamızın gerçek Google İşletme değerlendirmeleri ve tamamladığımız kurumsal projeler
+            </p>
+          </div>
+
+          <a
+            href="https://share.google/ZQqzGYtPI1D3XVqLp"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-3 rounded-2xl border border-primary/15 bg-white px-5 py-3 shadow-sm transition-all hover:border-accent hover:shadow-md"
+          >
+            <div className="flex items-center gap-1.5">
+              <span className="font-serif text-2xl font-bold text-ink">4.9</span>
+              <div className="flex">
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star key={s} className="h-4 w-4 fill-accent text-accent" />
+                ))}
+              </div>
+            </div>
+            <span className="text-xs font-semibold text-ink">
+              Google Yorumlarını İncele
+            </span>
+            <ExternalLink className="h-4 w-4 text-accent" />
+          </a>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={t.name}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="group relative rounded-3xl border border-primary/10 bg-white/80 p-8 transition-all duration-500 hover:border-accent/30 hover:shadow-xl hover:shadow-primary/5"
+        {/* Gerçek Kurumsal Referanslar */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {realReferences.map((ref) => (
+            <div
+              key={ref.name}
+              className="flex items-start gap-3.5 rounded-2xl border border-primary/10 bg-white p-5 shadow-2xs"
             >
-              {/* Dekoratif alıntı işareti */}
-              <div className="absolute -top-4 left-8 flex h-10 w-10 items-center justify-center rounded-full bg-accent text-cream shadow-lg">
-                <Quote className="h-5 w-5" />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                <Building2 className="h-5 w-5" />
               </div>
-
-              {/* Doğrulanmış rozet */}
-              <div className="mb-3 flex items-center justify-between">
-                <div className="flex gap-1">
-                  {[...Array(t.rating)].map((_, j) => (
-                    <Star key={j} className="h-4 w-4 fill-accent text-accent" />
-                  ))}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5">
+                  <h3 className="font-serif text-base font-semibold text-ink">{ref.name}</h3>
+                  <CheckCircle2 className="h-3.5 w-3.5 text-accent shrink-0" />
                 </div>
-                <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                  <BadgeCheck className="h-3 w-3" /> Doğrulanmış
-                </span>
+                <p className="mt-1 text-xs text-ink/75">{ref.work}</p>
+                <p className="mt-1 text-[11px] text-muted">{ref.location} · Tamamlanan Proje</p>
               </div>
-
-              {/* Yorum */}
-              <p className="text-sm leading-relaxed text-ink/80 italic">
-                "{t.text}"
-              </p>
-
-              {/* Satın alınan ürün */}
-              <div className="mt-4 flex items-center gap-2 rounded-xl bg-primary/5 px-3 py-2 text-xs text-muted">
-                <ShoppingBag className="h-3.5 w-3.5 text-primary" />
-                <span className="truncate">{t.purchase}</span>
-              </div>
-
-              {/* Kişi */}
-              <div className="mt-5 flex items-center gap-3 border-t border-primary/10 pt-5">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-light font-serif text-lg font-bold text-cream">
-                  {t.initial}
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium text-sm">{t.name}</div>
-                  <div className="text-xs text-muted">
-                    {t.role}
-                    {t.company && <span className="text-accent"> · {t.company}</span>}
-                  </div>
-                  <div className="mt-1 flex items-center gap-3 text-[11px] text-muted">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" /> {t.date}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MapPin className="h-3 w-3" /> {t.location}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+            </div>
           ))}
         </div>
-
-        {/* Güven istatistiği */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mt-8 flex flex-col items-center justify-center gap-6 rounded-3xl border border-primary/10 bg-white/60 p-6 sm:flex-row sm:gap-12"
-        >
-          <div className="text-center">
-            <div className="font-serif text-3xl font-bold text-primary">4.9/5</div>
-            <div className="mt-1 flex justify-center">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} className="h-4 w-4 fill-accent text-accent" />
-              ))}
-            </div>
-            <p className="mt-1 text-xs text-muted">Ortalama puan</p>
-          </div>
-          <div className="hidden h-12 w-px bg-primary/10 sm:block" />
-          <div className="text-center">
-            <div className="font-serif text-3xl font-bold text-primary">2.847</div>
-            <p className="mt-1 text-xs text-muted">Doğrulanmış yorum</p>
-          </div>
-          <div className="hidden h-12 w-px bg-primary/10 sm:block" />
-          <div className="text-center">
-            <div className="font-serif text-3xl font-bold text-primary">%98</div>
-            <p className="mt-1 text-xs text-muted">Tekrar tavsiye oranı</p>
-          </div>
-        </motion.div>
       </div>
     </section>
   );

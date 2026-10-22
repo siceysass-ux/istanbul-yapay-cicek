@@ -39,7 +39,7 @@ const quickCategories = [
   { label: "Yapay Ağaçlar", href: "/kategori/yapay-agac" },
   { label: "Yapay Çiçekler", href: "/kategori/yapay-cicek" },
   { label: "Saksılı Bitkiler", href: "/kategori/saksi" },
-  { label: "Dev Çiçekler", href: "/kategori/yapay-guller" },
+  { label: "Dev Çiçekler", href: "/kategori/dev-cicekler" },
 ];
 
 function VectorStar({ className = "h-4 w-4" }: { className?: string }) {
@@ -157,7 +157,7 @@ export function Hero() {
                   <Truck className="h-3.5 w-3.5 text-[#f26816]" /> 2000₺ Üzeri Ücretsiz Kargo
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <RotateCcw className="h-3.5 w-3.5 text-[#f26816]" /> 14 Gün Koşulsuz İade
+                  <RotateCcw className="h-3.5 w-3.5 text-[#f26816]" /> 14 Gün İade Hakkı
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-[#f26816]" /> İstanbul İçi Kapıda Ödeme

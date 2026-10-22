@@ -9,7 +9,8 @@ import { Button } from "@/components/ui/button";
 import { TrustSeals } from "@/components/marketing/trust-seals";
 
 export default function CartPage() {
-  const { items, updateQuantity, removeItem, total } = useCart();
+  const { items, updateQuantity, removeItem } = useCart();
+  const total = items.reduce((sum, i) => sum + Number(i.price || 0) * Number(i.quantity || 0), 0);
   const shipping = total >= 2000 ? 0 : 49;
   const grandTotal = total + shipping;
 
@@ -54,6 +55,7 @@ export default function CartPage() {
                   <button
                     onClick={() => removeItem(item.id, item.variantId)}
                     className="text-muted hover:text-red-500"
+                    aria-label="Ürünü sepetten kaldır"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -67,6 +69,7 @@ export default function CartPage() {
                     <button
                       onClick={() => updateQuantity(item.id, item.variantId, item.quantity - 1)}
                       className="flex h-8 w-8 items-center justify-center rounded-full border border-primary/15 hover:bg-primary/5"
+                      aria-label="Adedi azalt"
                     >
                       <Minus className="h-3 w-3" />
                     </button>
@@ -74,6 +77,7 @@ export default function CartPage() {
                     <button
                       onClick={() => updateQuantity(item.id, item.variantId, item.quantity + 1)}
                       className="flex h-8 w-8 items-center justify-center rounded-full border border-primary/15 hover:bg-primary/5"
+                      aria-label="Adedi artır"
                     >
                       <Plus className="h-3 w-3" />
                     </button>

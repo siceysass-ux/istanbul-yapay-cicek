@@ -26,7 +26,7 @@ const categoryNavItems = [
   { label: "Yapay Ağaçlar", href: "/kategori/yapay-agac", icon: Trees, desc: "Zeytin, bambu, benjamin ve tropikal ağaçlar" },
   { label: "Yapay Çiçekler", href: "/kategori/yapay-cicek", icon: Flower2, desc: "Sakura, begonvil, salkım ve çiçekli ağaçlar" },
   { label: "Saksılı Bitkiler", href: "/kategori/saksi", icon: Sprout, desc: "Tasarım saksılı bitkiler ve bonsai koleksiyonu" },
-  { label: "Dev Çiçekler", href: "/kategori/yapay-guller", icon: Sparkles, desc: "Dev ayaklı şakayık, lotus ve vitrin çiçekleri" },
+  { label: "Dev Çiçekler", href: "/kategori/dev-cicekler", icon: Sparkles, desc: "Dev ayaklı şakayık, lotus ve vitrin çiçekleri" },
 ];
 
 const B2B_SITE_URL = "https://dikeyyapaybahce.com/";
@@ -54,19 +54,19 @@ export function Header() {
 
   return (
     <>
-      {/* Announcement bar */}
+      {/* Announcement bar — P2-8: Türkiye geneli teslimat bilgisi */}
       <div className="bg-[#1e2426] text-white border-b border-accent/30 overflow-hidden">
         <div className="flex whitespace-nowrap marquee py-2 text-xs font-medium tracking-wide">
           {[...Array(2)].map((_, i) => (
             <div key={i} className="flex items-center gap-8 px-4">
-              <span>🚚 2000₺ üzeri ücretsiz kargo</span>
-              <span>📍 İstanbul içi kapıda ödeme</span>
-              <span>⚡ 1-3 iş gününde teslim</span>
-              <span className="text-accent-light">✦ 1. Sınıf Gerçek Dokulu Koleksiyon</span>
-              <span>🚚 2000₺ üzeri ücretsiz kargo</span>
-              <span>📍 İstanbul içi kapıda ödeme</span>
-              <span>⚡ 1-3 iş gününde teslim</span>
-              <span className="text-accent-light">✦ 1. Sınıf Gerçek Dokulu Koleksiyon</span>
+              <span>🚚 Türkiye Geneli Kargo · 2000₺ Üzeri Ücretsiz</span>
+              <span>⚡ İstanbul 1-3, Diğer İller 2-5 İş Gününde Teslim</span>
+              <span>📍 İstanbul İçi Kapıda Ödeme</span>
+              <span className="text-accent-light">✦ Doğal Gövdeli ve Gerçek Dokulu Koleksiyon</span>
+              <span>🚚 Türkiye Geneli Kargo · 2000₺ Üzeri Ücretsiz</span>
+              <span>⚡ İstanbul 1-3, Diğer İller 2-5 İş Gününde Teslim</span>
+              <span>📍 İstanbul İçi Kapıda Ödeme</span>
+              <span className="text-accent-light">✦ Doğal Gövdeli ve Gerçek Dokulu Koleksiyon</span>
             </div>
           ))}
         </div>
@@ -162,10 +162,10 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobil Yan Çekmece Menü */}
+      {/* Mobil Yan Çekmece Menü — P2-10: overflow-hidden ile mobilde yatay taşma önlenir */}
       <div
         className={cn(
-          "fixed inset-0 z-50 lg:hidden transition-all duration-300",
+          "fixed inset-0 z-50 overflow-hidden lg:hidden transition-all duration-300",
           mobileOpen ? "visible pointer-events-auto" : "invisible pointer-events-none"
         )}
         aria-hidden={!mobileOpen}

@@ -8,7 +8,7 @@ import { ProductDetail } from "@/components/product/product-detail";
 import { ProductCard } from "@/components/product/product-card";
 import { ProductJsonLd, BreadcrumbJsonLd } from "@/components/seo/json-ld";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cicekyapay.com";
 
 export const revalidate = 300;
 
@@ -19,17 +19,33 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
-  if (!product) return {};
+  // P1-3: Olmayan üründe generateMetadata içinde de notFound() çağrılarak gerçek HTTP 404 döndürülür
+  if (!product) {
+    notFound();
+  }
+  const canonicalUrl = `${SITE_URL}/urun/${product.slug}`;
+  const imgUrl = product.images[0]?.url
+    ? product.images[0].url.startsWith("http")
+      ? product.images[0].url
+      : `${SITE_URL}${product.images[0].url}`
+    : `${SITE_URL}/og-image.jpg`;
+
   return {
     title: product.name,
     description: product.shortDesc,
-    alternates: { canonical: `${SITE_URL}/urun/${product.slug}` },
+    alternates: { canonical: canonicalUrl },
     openGraph: {
-      title: product.name,
+      title: `${product.name} — Çiçek Yapay`,
       description: product.shortDesc,
       type: "website",
-      url: `${SITE_URL}/urun/${product.slug}`,
-      images: product.images[0] ? [{ url: product.images[0].url, width: 800, height: 800 }] : [],
+      url: canonicalUrl,
+      images: [{ url: imgUrl, width: 720, height: 1200, alt: product.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${product.name} — Çiçek Yapay`,
+      description: product.shortDesc,
+      images: [imgUrl],
     },
   };
 }
@@ -71,13 +87,13 @@ export default async function ProductPage({
 
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-sm text-muted mb-6 overflow-x-auto">
-        <Link href="/" className="hover:text-primary shrink-0">Anasayfa</Link>
+        <Link href="/" className="hover:text-accent shrink-0">Anasayfa</Link>
         <ChevronRight className="h-4 w-4 shrink-0" />
-        <Link href={`/kategori/${product.category.slug}`} className="hover:text-primary shrink-0">
+        <Link href={`/kategori/${product.category.slug}`} className="hover:text-accent shrink-0">
           {product.category.name}
         </Link>
         <ChevronRight className="h-4 w-4 shrink-0" />
-        <span className="text-primary font-medium truncate">{product.name}</span>
+        <span className="text-ink font-medium truncate">{product.name}</span>
       </nav>
 
       {/* Ürün detay */}

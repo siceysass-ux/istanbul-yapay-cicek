@@ -19,7 +19,6 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { ExitIntentModal } from "@/components/marketing/exit-intent-modal";
-import { SocialProof } from "@/components/marketing/social-proof";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { CookieBanner } from "@/components/legal/cookie-banner";
@@ -28,32 +27,33 @@ import { FlyingCart } from "@/components/shared/flying-cart";
 import { ViewTransitions } from "@/components/shared/view-transitions";
 import { CartHydration } from "@/components/shared/cart-hydration";
 import { LocalBusinessJsonLd } from "@/components/seo/json-ld";
+import { AnalyticsScripts } from "@/components/seo/analytics-scripts";
 import { Toaster } from "sonner";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cicekyapay.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Çiçek Yapay — Yapay Çiçek ve Ağaç Koleksiyonu",
+    default: "Çiçek Yapay — Yapay Ağaç, Saksılı Bitki ve Yapay Çiçek Koleksiyonu",
     template: "%s — Çiçek Yapay",
   },
   description:
-    "Yapay çiçek, ağaç ve dikey bahçe ürünleri. Bakım gerektirmez, ücretsiz kargo.",
-  keywords: ["yapay çiçek", "yapay ağaç", "dikey bahçe", "yapay bitki", "gelin buketi", "kuru çiçek"],
+    "Doğal ahşap gövdeli yapay ağaçlar, tasarım saksılı bitkiler, bonsai modelleri ve dev dekoratif çiçekler. 2.000₺ üzeri ücretsiz kargo ve 14 gün iade hakkı.",
   openGraph: {
-    title: "Çiçek Yapay",
-    description: "Yapay çiçek ve dikey bahçe ürünleri",
+    title: "Çiçek Yapay — Yapay Ağaç ve Bitki Koleksiyonu",
+    description:
+      "Doğal ahşap gövdeli yapay ağaçlar, tasarım saksılı bitkiler, bonsai modelleri ve dev dekoratif çiçekler.",
     type: "website",
     locale: "tr_TR",
-    url: SITE_URL,
     siteName: "Çiçek Yapay",
     images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "Çiçek Yapay" }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Çiçek Yapay",
-    description: "Yapay çiçek ve dikey bahçe ürünleri",
+    title: "Çiçek Yapay — Yapay Ağaç ve Bitki Koleksiyonu",
+    description:
+      "Doğal ahşap gövdeli yapay ağaçlar, tasarım saksılı bitkiler ve dev dekoratif çiçekler.",
     images: ["/og-image.jpg"],
   },
   robots: {
@@ -61,9 +61,10 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  alternates: { canonical: SITE_URL },
+  alternates: { canonical: "./" },
   icons: {
     icon: [
+      { url: "/favicon.ico", sizes: "any" },
       { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
       { url: "/favicon.png", sizes: "64x64", type: "image/png" },
@@ -76,13 +77,14 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="tr" className={`${playfair.variable} ${inter.variable}`} suppressHydrationWarning>
-      <body className="antialiased" suppressHydrationWarning>
+    <html lang="tr" className={`${playfair.variable} ${inter.variable} overflow-x-clip`} suppressHydrationWarning>
+      <body className="antialiased overflow-x-clip" suppressHydrationWarning>
+        <AnalyticsScripts />
         <LocalBusinessJsonLd
           data={{
             name: "Çiçek Yapay",
             phone: "0(507) 884 66 03",
-            email: "info@dikeyyapaybahce.com",
+            email: "info@cicekyapay.com",
             address: "Nuripaşa Mah. Merve Cad. No:73/A, Zeytinburnu / İstanbul",
             whatsapp: "905078846603",
           }}
@@ -94,7 +96,6 @@ export default function RootLayout({
         <Footer />
         <CartDrawer />
         <ExitIntentModal />
-        <SocialProof />
         <WhatsAppButton />
         <MobileNav />
         <CookieBanner />

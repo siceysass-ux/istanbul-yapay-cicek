@@ -1,12 +1,24 @@
 "use client";
 
-import { useState } from "react";
-import { ShoppingBag, Heart, Minus, Plus, Check, Star, BadgeCheck, Calendar, MapPin, ThumbsUp } from "lucide-react";
+import { useState, useEffect } from "react";
+import {
+  ShoppingBag,
+  Heart,
+  Minus,
+  Plus,
+  Check,
+  Star,
+  Calendar,
+  MapPin,
+  ThumbsUp,
+  MessageCircle,
+  Building2,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useCart } from "@/stores/cart";
+import { trackViewItem, trackAddToCart, trackWhatsAppClick } from "@/lib/analytics";
 import { formatPrice, cn } from "@/lib/utils";
 import { ReviewForm } from "@/components/product/review-form";
 import { TrustSeals } from "@/components/marketing/trust-seals";
@@ -14,13 +26,6 @@ import type { ProductWithRelations } from "@/lib/types";
 
 export function ProductDetail({ product }: { product: ProductWithRelations }) {
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
-  const addItem = useCart((s) => s.addItem);
-
-  const price = product.discountPrice ?? product.basePrice;
-  const discount = product.discountPrice
-    ? Math.round((1 - product.discountPrice / product.basePrice) * 100)
-    : 0;
 
   // Varyant tiplerini grupla
   const variantGroups = product.variants.reduce<Record<string, typeof product.variants>>((acc, v) => {
@@ -29,7 +34,17 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
     return acc;
   }, {});
 
-  // Seçili varyantın fiyat farkını uygula
+  // Varsayılan olarak her grubun ilk seçeneğini seçili getir
+  const initialSelected: Record<string, string> = {};
+  for (const [type, list] of Object.entries(variantGroups)) {
+    if (list[0]) initialSelected[type] = list[0].name;
+  }
+
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>(initialSelected);
+  const addItem = useCart((s) => s.addItem);
+
+  const price = product.discountPrice ?? product.basePrice;
+
   const selectedVariant = product.variants.find((v) =>
     Object.entries(selectedVariants).every(([type, name]) => v.type === type && v.name === name)
   );
@@ -37,8 +52,18 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
   const finalPrice = price + variantPriceDelta;
   const variantStock = selectedVariant?.stock ?? product.stock;
   const variantDesc = Object.entries(selectedVariants)
-    .map(([type, name]) => `${type === "color" ? "Renk" : type === "size" ? "Beden" : type}: ${name}`)
+    .map(([type, name]) => `${type === "color" ? "Renk" : type === "size" ? "Boy / Ölçü" : type}: ${name}`)
     .join(", ");
+
+  useEffect(() => {
+    trackViewItem({
+      id: product.id,
+      name: product.name,
+      price: finalPrice,
+      category: product.category?.name,
+      sku: product.sku,
+    });
+  }, [product.id, product.name, finalPrice, product.category?.name, product.sku]);
 
   const handleAddToCart = () => {
     addItem(
@@ -55,19 +80,33 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
       },
       quantity
     );
+    trackAddToCart({
+      id: product.id,
+      name: product.name,
+      price: finalPrice,
+      quantity,
+    });
     toast.success("Sepete eklendi!", { description: `${quantity} adet ${product.name}` });
   };
+
+  const productUrl = `https://cicekyapay.com/urun/${product.slug}`;
+  const whatsappProductMsg = encodeURIComponent(
+    `Merhaba, "${product.name}" (${productUrl}) ürünü hakkında bilgi almak istiyorum.`
+  );
+  const whatsappBulkMsg = encodeURIComponent(
+    `Merhaba, "${product.name}" (${productUrl}) ürünü için kurumsal / toplu alım fiyat teklifi almak istiyorum.`
+  );
 
   return (
     <div className="space-y-6">
       {/* Marka & isim */}
-      {product.brand && <p className="text-sm text-muted">{product.brand.name}</p>}
-      <h1 className="font-serif text-3xl font-semibold leading-tight sm:text-4xl text-balance">
+      {product.brand && <p className="text-sm font-medium text-accent">{product.brand.name}</p>}
+      <h1 className="font-serif text-2xl font-semibold leading-tight sm:text-3xl lg:text-4xl text-balance">
         {product.name}
       </h1>
 
-      {/* Puan */}
-      {product.rating > 0 && (
+      {/* Puan (Yalnızca gerçek onaylı yorum varsa gösterilir — P0-5) */}
+      {product.rating > 0 && product.reviewCount > 0 && (
         <div className="flex items-center gap-2 text-sm">
           <div className="flex">
             {[1, 2, 3, 4, 5].map((s) => (
@@ -82,49 +121,51 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
             ))}
           </div>
           <span className="text-muted">{product.rating.toFixed(1)} ({product.reviewCount} yorum)</span>
-          <span className="text-primary/30">·</span>
-          <span className="text-primary font-medium">Yüksek puan</span>
         </div>
       )}
 
       {/* Fiyat */}
       <div className="flex items-center gap-3">
-        <span className="font-serif text-3xl font-bold text-primary">{formatPrice(finalPrice)}</span>
+        <span className="font-serif text-3xl font-bold text-ink">{formatPrice(finalPrice)}</span>
+        <span className="rounded-full bg-primary/8 px-3 py-1 text-xs font-medium text-ink/75">
+          KDV Dahil
+        </span>
       </div>
 
       {/* Kısa açıklama */}
       <p className="text-muted leading-relaxed">{product.shortDesc}</p>
 
-      {/* Stok durumu */}
+      {/* Stok durumu — P0-8: Yapay kıtlık mesajı kaldırıldı */}
       <div className="flex items-center gap-2 text-sm">
         {variantStock > 0 ? (
           <>
-            <Check className="h-4 w-4 text-primary" />
-            <span className="text-primary font-medium">Stokta var</span>
-            <span className="text-muted">({variantStock} adet kaldı)</span>
+            <Check className="h-4 w-4 text-accent" />
+            <span className="text-ink font-medium">Stokta mevcut</span>
+            <span className="text-muted">· İstanbul içi 1-3, tüm Türkiye 2-5 iş gününde teslim</span>
           </>
         ) : (
           <span className="text-red-500 font-medium">Tükendi</span>
         )}
       </div>
 
-      {/* Varyantlar */}
+      {/* Varyantlar — P2-3: "Beden" yerine "Boy / Ölçü" */}
       {Object.entries(variantGroups).map(([type, variants]) => (
         <div key={type} className="space-y-2">
           <h3 className="text-sm font-medium">
-            {type === "color" ? "Renk" : type === "size" ? "Beden" : type}:{" "}
+            {type === "color" ? "Renk" : type === "size" ? "Boy / Ölçü" : type}:{" "}
             <span className="text-muted">{selectedVariants[type] ?? "Seçiniz"}</span>
           </h3>
           <div className="flex flex-wrap gap-2">
             {variants.map((v) => (
               <button
                 key={v.id}
+                type="button"
                 onClick={() => setSelectedVariants((s) => ({ ...s, [type]: v.name }))}
                 className={cn(
                   "rounded-full border px-4 py-2 text-sm transition-all",
                   selectedVariants[type] === v.name
-                    ? "border-primary bg-primary text-cream"
-                    : "border-primary/20 hover:border-primary/50"
+                    ? "border-accent bg-accent text-white font-medium"
+                    : "border-primary/20 hover:border-accent"
                 )}
               >
                 {v.name}
@@ -138,15 +179,19 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 rounded-full border border-primary/20 p-1">
           <button
+            type="button"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
             className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-primary/5"
+            aria-label="Adedi azalt"
           >
             <Minus className="h-4 w-4" />
           </button>
           <span className="w-10 text-center font-medium">{quantity}</span>
           <button
+            type="button"
             onClick={() => setQuantity((q) => q + 1)}
             className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-primary/5"
+            aria-label="Adedi artır"
           >
             <Plus className="h-4 w-4" />
           </button>
@@ -154,10 +199,44 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
         <Button size="lg" className="flex-1" onClick={handleAddToCart} disabled={variantStock === 0}>
           <ShoppingBag className="h-5 w-5" /> Sepete Ekle
         </Button>
-        <Button size="lg" variant="outline" onClick={() => toast.info("Favorilere eklendi")}>
+        <Button
+          type="button"
+          size="lg"
+          variant="outline"
+          onClick={() => toast.info("Favorilere eklendi")}
+          aria-label="Favorilere ekle"
+        >
           <Heart className="h-5 w-5" />
         </Button>
       </div>
+
+      {/* P3-2 & P3-3: Ürün Bazlı Hazır Mesajlı WhatsApp + Kurumsal / Toplu Alım Teklif Yolu */}
+      <div className="grid gap-3 sm:grid-cols-2">
+        <a
+          href={`https://wa.me/905078846603?text=${whatsappProductMsg}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackWhatsAppClick(`urun:${product.slug}`)}
+          className="flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-4 py-3 text-xs font-bold text-white shadow-sm transition-all hover:brightness-95"
+        >
+          <MessageCircle className="h-4 w-4 shrink-0" />
+          <span>WhatsApp ile Bilgi ve Sipariş</span>
+        </a>
+
+        <a
+          href={`https://wa.me/905078846603?text=${whatsappBulkMsg}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackWhatsAppClick(`toplu-teklif:${product.slug}`)}
+          className="flex items-center justify-center gap-2 rounded-2xl border border-primary/20 bg-cream-dark px-4 py-3 text-xs font-semibold text-ink transition-all hover:border-accent hover:text-accent"
+        >
+          <Building2 className="h-4 w-4 text-accent shrink-0" />
+          <span>Mekanınız İçin Toplu Teklif Alın</span>
+        </a>
+      </div>
+      <p className="text-[11px] text-muted">
+        * Otel, ofis, kafe, restoran ve proje alımlarında kurumsal fatura düzenlenir; çoklu adetlerde özel proje iskontosu uygulanır.
+      </p>
 
       {/* Güven rozetleri */}
       <TrustSeals />
@@ -168,7 +247,7 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
           <TabsTrigger value="description">Açıklama</TabsTrigger>
           <TabsTrigger value="specs">Özellikler</TabsTrigger>
           <TabsTrigger value="shipping">Kargo ve İade</TabsTrigger>
-          <TabsTrigger value="reviews">Yorumlar ({product.reviewCount})</TabsTrigger>
+          <TabsTrigger value="reviews">Yorumlar ({product.reviews.length})</TabsTrigger>
         </TabsList>
 
         <TabsContent value="description" className="prose prose-sm max-w-none">
@@ -178,17 +257,21 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
         <TabsContent value="specs">
           <ul className="space-y-2 text-sm">
             <li className="flex justify-between border-b border-primary/10 pb-2">
-              <span className="text-muted">SKU</span>
+              <span className="text-muted">Stok Kodu (SKU)</span>
               <span className="font-medium">{product.sku}</span>
             </li>
             <li className="flex justify-between border-b border-primary/10 pb-2">
-              <span className="text-muted">Para Birimi</span>
-              <span className="font-medium">{product.currency}</span>
+              <span className="text-muted">Marka</span>
+              <span className="font-medium">Çiçek Yapay</span>
+            </li>
+            <li className="flex justify-between border-b border-primary/10 pb-2">
+              <span className="text-muted">Fatura Tipi</span>
+              <span className="font-medium">Bireysel / Kurumsal E-Fatura</span>
             </li>
             {product.arEnabled && (
               <li className="flex justify-between border-b border-primary/10 pb-2">
-                <span className="text-muted">3D / AR Görünüm</span>
-                <span className="font-medium text-primary">Mevcut</span>
+                <span className="text-muted">Odamda Gör (AR)</span>
+                <span className="font-medium text-accent">Destekleniyor</span>
               </li>
             )}
           </ul>
@@ -196,73 +279,37 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
 
         <TabsContent value="shipping">
           <div className="space-y-3 text-sm text-ink/80">
-            <p>• Siparişleriniz 1-3 iş günü içinde kargoya verilir.</p>
-            <p>• 2000₺ üzeri siparişlerde kargo ücretsizdir.</p>
-            <p>• İstanbul içi kapıda ödeme seçeneği mevcuttur.</p>
-            <p>• 14 gün içinde koşulsuz iade hakkınız bulunmaktadır.</p>
-            <p>• Kredi kartına 3 taksit imkanı sunulmaktadır.</p>
+            <p>• Siparişleriniz özenli korumalı ambalajla 1-3 iş günü içinde kargoya teslim edilir.</p>
+            <p>• Teslimat süresi İstanbul içi 1-3 iş günü, diğer iller için 2-5 iş günüdür.</p>
+            <p>• 2.000₺ ve üzeri siparişlerde kargo ücretsizdir (2.000₺ altı standart kargo 49₺).</p>
+            <p>• İstanbul içi siparişlerde kapıda nakit ödeme seçeneği mevcuttur.</p>
+            <p>• Teslimattan itibaren 14 gün içinde kullanılmamış ve orijinal ambalajındaki ürünlerde cayma/iade hakkınız bulunmaktadır.</p>
           </div>
         </TabsContent>
 
         <TabsContent value="reviews">
           <div className="space-y-6">
-            {/* Özet */}
-            {product.reviewCount > 0 && (
-              <div className="rounded-2xl border border-primary/10 bg-primary/5 p-6">
-                <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-                  <div className="text-center sm:text-left">
-                    <div className="font-serif text-4xl font-bold text-primary">
-                      {product.rating.toFixed(1)}
-                    </div>
-                    <div className="mt-1 flex justify-center sm:justify-start">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <Star
-                          key={s}
-                          className={`h-4 w-4 ${
-                            s <= Math.round(product.rating)
-                              ? "fill-accent text-accent"
-                              : "fill-primary/10 text-primary/10"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <p className="mt-1 text-xs text-muted">{product.reviewCount} yorum</p>
-                  </div>
-                  <div className="text-sm text-muted text-center sm:text-right">
-                    <p className="flex items-center gap-1.5 justify-center sm:justify-end">
-                      <BadgeCheck className="h-4 w-4 text-primary" />
-                      Tüm yorumlar doğrulanmış alıcılar tarafından yazılmıştır
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Yorum listesi */}
+            {/* Yorum listesi — P0-4: Uydurma yorumlar kaldırıldı */}
             <div className="space-y-4">
               {product.reviews.length === 0 ? (
-                <div className="rounded-2xl border border-primary/10 bg-white/60 p-8 text-center">
-                  <p className="text-sm text-muted">
-                    Henüz yorum yapılmamış. İlk yorumu sen yap!
+                <div className="rounded-2xl border border-primary/10 bg-cream-dark/50 p-8 text-center">
+                  <p className="text-sm font-medium text-ink">
+                    Henüz bu ürün için değerlendirme yazılmamış.
+                  </p>
+                  <p className="mt-1 text-xs text-muted">
+                    Ürünü satın alıp deneyimlediyseniz aşağıdaki formdan yorumunuzu paylaşabilirsiniz; yorumlar editör onayından sonra yayınlanır.
                   </p>
                 </div>
               ) : (
                 product.reviews.map((review) => (
-                  <div key={review.id} className="rounded-2xl border border-primary/10 bg-white/60 p-5">
+                  <div key={review.id} className="rounded-2xl border border-primary/10 bg-white p-5">
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary-light font-serif text-sm font-bold text-cream">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary font-serif text-sm font-bold text-white">
                           {(review.authorName ?? "M").charAt(0)}
                         </div>
                         <div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium">{review.authorName ?? "Misafir"}</span>
-                            {review.verified && (
-                              <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                                <BadgeCheck className="h-3 w-3" /> Doğrulanmış
-                              </span>
-                            )}
-                          </div>
+                          <span className="text-sm font-medium">{review.authorName ?? "Müşteri"}</span>
                           <div className="mt-0.5 flex items-center gap-2 text-[11px] text-muted">
                             {review.authorLocation && (
                               <span className="flex items-center gap-0.5">

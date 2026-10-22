@@ -1,13 +1,30 @@
+import type { Metadata } from "next";
 import { Mail, Phone, MapPin, Clock, MessageCircle, Star, ExternalLink } from "lucide-react";
 import { ContactForm } from "@/components/home/contact-form";
 
-export const metadata = { title: "İletişim" };
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cicekyapay.com";
+
+export const metadata: Metadata = {
+  title: "İletişim ve Mağaza Adresimiz",
+  description:
+    "Çiçek Yapay Zeytinburnu / İstanbul mağaza adresi, telefon (0507 884 66 03), WhatsApp destek hattı ve kurumsal teklif iletişim formu.",
+  alternates: { canonical: `${SITE_URL}/iletisim` },
+  openGraph: {
+    title: "İletişim — Çiçek Yapay",
+    description:
+      "Çiçek Yapay Zeytinburnu / İstanbul mağaza adresi, telefon, WhatsApp hattı ve iletişim formu.",
+    url: `${SITE_URL}/iletisim`,
+  },
+};
 
 export default function IletisimPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 lg:px-8">
       <div className="mb-10">
         <h1 className="font-serif text-3xl font-semibold sm:text-4xl">İletişim</h1>
+        <p className="mt-2 text-sm text-muted">
+          Ürünlerimiz, sipariş süreciniz veya kurumsal/toplu alım talepleriniz için bizimle iletişime geçebilirsiniz.
+        </p>
       </div>
 
       <div className="grid gap-8 md:grid-cols-2">
@@ -18,7 +35,7 @@ export default function IletisimPage() {
             href="https://share.google/ZQqzGYtPI1D3XVqLp"
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex items-center gap-4 rounded-2xl border border-primary/10 bg-gradient-to-br from-white to-primary/5 p-5 transition-all hover:border-accent/30 hover:shadow-lg hover:shadow-primary/5"
+            className="group flex items-center gap-4 rounded-2xl border border-primary/10 bg-gradient-to-br from-white to-primary/5 p-5 transition-all hover:border-accent/40 hover:shadow-lg"
           >
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-primary/10">
               <svg viewBox="0 0 24 24" className="h-8 w-8" aria-hidden="true">
@@ -29,37 +46,37 @@ export default function IletisimPage() {
               </svg>
             </div>
             <div className="flex-1">
-              <h3 className="font-serif text-base font-semibold">Google Yorumları</h3>
+              <h3 className="font-serif text-base font-semibold">Google İşletme Yorumları</h3>
               <div className="mt-1 flex items-center gap-2">
-                <span className="font-serif text-2xl font-bold text-primary">4.9</span>
+                <span className="font-serif text-2xl font-bold text-ink">4.9</span>
                 <div className="flex">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <Star key={s} className="h-4 w-4 fill-accent text-accent" />
                   ))}
                 </div>
               </div>
-              <p className="mt-0.5 text-xs text-muted">Müşteri deneyimlerimizi okuyun</p>
+              <p className="mt-0.5 text-xs text-muted">Gerçek müşteri değerlendirmelerimizi okuyun</p>
             </div>
-            <ExternalLink className="h-5 w-5 text-muted transition-colors group-hover:text-primary" />
+            <ExternalLink className="h-5 w-5 text-muted transition-colors group-hover:text-accent" />
           </a>
 
           {[
-            { icon: Phone, title: "Telefon", value: "0(507) 884 66 03", sub: "Pazartesi - Cumartesi 09:00 - 18:00" },
-            { icon: MessageCircle, title: "WhatsApp", value: "0(507) 884 66 03", sub: "Hızlı yanıt için tıklayın", href: "https://wa.me/905078846603" },
-            { icon: Mail, title: "E-posta", value: "info@dikeyyapaybahce.com", sub: "24 saat içinde yanıt" },
-            { icon: MapPin, title: "Adres", value: "Nuripaşa Mah. Merve Cad. No:73/A", sub: "Zeytinburnu / İstanbul" },
+            { icon: Phone, title: "Telefon", value: "0(507) 884 66 03", sub: "Pazartesi - Cumartesi 09:00 - 18:00", href: "tel:+905078846603" },
+            { icon: MessageCircle, title: "WhatsApp Destek", value: "0(507) 884 66 03", sub: "Hızlı yanıt için tıklayın", href: "https://wa.me/905078846603?text=Merhaba,%20%C3%BCr%C3%BCnleriniz%20hakk%C4%B1nda%20bilgi%20almak%20istiyorum." },
+            { icon: Mail, title: "E-posta", value: "info@cicekyapay.com", sub: "24 saat içinde yanıt", href: "mailto:info@cicekyapay.com" },
+            { icon: MapPin, title: "Atölye ve Mağaza Adresi", value: "Nuripaşa Mah. Merve Cad. No:73/A", sub: "34025 Zeytinburnu / İstanbul" },
             { icon: Clock, title: "Çalışma Saatleri", value: "09:00 - 18:00", sub: "Pazartesi - Cumartesi" },
           ].map((item) => (
-            <div key={item.title} className="flex items-start gap-4 rounded-2xl border border-primary/10 bg-white/60 p-5">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+            <div key={item.title} className="flex items-start gap-4 rounded-2xl border border-primary/10 bg-white p-5 shadow-2xs">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-accent/10 text-accent">
                 <item.icon className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="font-medium">{item.title}</h3>
+                <h3 className="font-medium text-ink">{item.title}</h3>
                 {item.href ? (
-                  <a href={item.href} className="text-primary font-medium hover:underline">{item.value}</a>
+                  <a href={item.href} className="text-accent font-semibold hover:underline">{item.value}</a>
                 ) : (
-                  <p className="text-primary font-medium">{item.value}</p>
+                  <p className="text-ink font-semibold">{item.value}</p>
                 )}
                 <p className="text-sm text-muted">{item.sub}</p>
               </div>

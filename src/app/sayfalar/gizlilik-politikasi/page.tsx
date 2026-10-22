@@ -1,57 +1,58 @@
+import type { Metadata } from "next";
 import { LegalLayout } from "@/components/legal/legal-layout";
 
-export const metadata = { title: "Gizlilik Politikası" };
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cicekyapay.com";
+
+export const metadata: Metadata = {
+  title: "Gizlilik ve Güvenlik Politikası",
+  description:
+    "Çiçek Yapay müşteri gizliliği, 256-bit SSL ödeme güvenliği, kişisel verilerin korunması ve bilgi güvenliği politikası.",
+  alternates: { canonical: `${SITE_URL}/sayfalar/gizlilik-politikasi` },
+  openGraph: {
+    title: "Gizlilik ve Güvenlik Politikası — Çiçek Yapay",
+    description:
+      "Çiçek Yapay müşteri gizliliği, 256-bit SSL ödeme güvenliği ve bilgi güvenliği politikası.",
+    url: `${SITE_URL}/sayfalar/gizlilik-politikasi`,
+  },
+};
 
 export default function GizlilikPage() {
   return (
-    <LegalLayout title="Gizlilik Politikası" updatedAt="Eylül 2026">
-      <h2>1. Genel</h2>
+    <LegalLayout title="Gizlilik ve Güvenlik Politikası" updatedAt="Ekim 2026">
+      <h2>1. Genel İlkeler ve İşletme Bilgileri</h2>
       <p>
-        Çiçek Yapay olarak, ziyaretçilerimizin ve müşterilerimizin gizliliğini
-        korumayı taahhüt ederiz. Bu politika, web sitemiz üzerinden toplanan
-        kişisel verilerin nasıl işlendiğini açıklar.
+        <strong>Çiçek Yapay Botanik ve Dekorasyon</strong> (<em>Nuripaşa Mah. Merve Cad. No:73/A,
+        34025 Zeytinburnu / İstanbul</em>) olarak, <strong>cicekyapay.com</strong> ziyaretçilerimizin ve
+        müşterilerimizin bilgi güvenliğini ve gizliliğini en üst düzeyde korumayı taahhüt ederiz.
       </p>
 
-      <h2>2. Toplanan Veriler</h2>
-      <ul>
-        <li>İletişim bilgileri (ad, e-posta, telefon, adres)</li>
-        <li>Sipariş bilgileri (ürün, tutar, ödeme yöntemi)</li>
-        <li>Teknik veriler (IP adresi, tarayıcı bilgisi, ziyaret zamanı)</li>
-        <li>Çerezler (çerez politikası sayfasına bakınız)</li>
-      </ul>
-
-      <h2>3. Verilerin Kullanımı</h2>
-      <p>Kişisel verileriniz aşağıdaki amaçlarla işlenir:</p>
-      <ul>
-        <li>Siparişlerin işlenmesi ve teslimatı</li>
-        <li>Müşteri hizmetleri ve iletişim</li>
-        <li>Kampanya ve bülten gönderimi (onay vermeniz halinde)</li>
-        <li>Yasal yükümlülüklerin yerine getirilmesi</li>
-      </ul>
-
-      <h2>4. Veri Paylaşımı</h2>
+      <h2>2. Ödeme ve Kredi Kartı Güvenliği</h2>
       <p>
-        Kişisel verileriniz, sipariş teslimatı için kargo firmaları, ödeme işlemi
-        için ödeme sağlayıcılar ve yasal zorunluluklar halinde yetkili kurumlar
-        dışında üçüncü taraflarla paylaşılmaz.
+        Web sitemizde gerçekleştirilen tüm kredi kartı işlemleri 256-bit SSL sertifikası ile
+        şifrelenir ve BDDK lisanslı ödeme kuruluşu <strong>iyzico</strong> altyapısı üzerinden
+        doğrudan banka sistemlerine iletilir. Kredi kartı numaranız, son kullanma tarihiniz veya
+        CVV kodunuz hiçbir şekilde sitemizde görüntülenmez ve kaydedilmez.
       </p>
 
-      <h2>5. KVKK Hakları</h2>
-      <p>
-        6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında aşağıdaki
-        haklara sahipsiniz:
-      </p>
+      <h2>3. Toplanan Bilgiler ve Kullanım Amacı</h2>
       <ul>
-        <li>Verilerinizin işlenip işlendiğini öğrenme</li>
-        <li>İşlenen verilerinize erişme ve bunları talep etme</li>
-        <li>Verilerinizin düzeltilmesini veya silinmesini isteme</li>
-        <li>İşlemenin amacıyla sınırlı olarak aktarılmasını talep etme</li>
-        <li>Verilerin yanlış işlenmesi halinde düzeltilmesini isteme</li>
+        <li>Sipariş teslimatı ve faturalandırma için ad, soyad, adres, telefon, e-posta ve fatura vergi bilgileri,</li>
+        <li>Site güvenliği ve performans iyileştirmesi için anonim erişim kayıtları,</li>
+        <li>Çerez tercihleriniz doğrultusunda alışveriş sepeti ve reklam dönüşüm verileri.</li>
       </ul>
 
-      <h2>6. İletişim</h2>
+      <h2>4. Üçüncü Taraflarla Paylaşım Sınırları</h2>
       <p>
-        Gizlilik politikası ile ilgili sorularınız için: info@dikeyyapaybahce.com
+        Müşteri bilgileriniz; siparişin ulaştırılması amacıyla kargo firmaları, ödemenin
+        alınması amacıyla ödeme kuruluşu ve yasal zorunluluklar çerçevesinde yetkili resmi
+        merciler dışında üçüncü kişilere satılmaz veya kiralanmaz.
+      </p>
+
+      <h2>5. İletişim</h2>
+      <p>
+        Gizlilik politikamızla ilgili her türlü soru ve talebiniz için{" "}
+        <strong>info@cicekyapay.com</strong> e-posta adresimizden veya{" "}
+        <strong>0(507) 884 66 03</strong> numaralı telefonumuzdan bize ulaşabilirsiniz.
       </p>
     </LegalLayout>
   );
