@@ -25,16 +25,16 @@ const cities = [
 ];
 
 const products = [
-  "Doğal Gövdeli Meyveli Yapay Zeytin Ağacı – 185 cm",
-  "Gri Taş Saksıda Kıvrımlı Yapay Çam Bonsai – 155 cm",
-  "Doğal Gövdeli Pudra Pembe Sarkık Sakura Ağacı – 180 cm",
-  "Siyah Oluklu Saksıda Dev Yapraklı Starliçe – 180 cm",
-  "Gerçek Bambu Gövdeli Çok Dallı Yapay Bambu – 180 cm",
-  "Beyaz Geometrik Saksıda Alacalı Benjamin – 185 cm",
-  "Dev Ayaklı Somon Pembe Katmerli Gül Çiçeği – 170 cm",
-  "Yosunlu Sütun Gövdeli Yapay Monstera – 170 cm",
-  "Gold Şeritli Siyah Saksıda Araokarya Çam – 175 cm",
-  "Doğal Gövdeli Sarkık Beyaz Salkım Ağaç – 180 cm",
+  "Doğal Ahşap Gövdeli Yosun Tabanlı Meyveli Yapay Zeytin Ağacı – 185 cm",
+  "Gri Asimetrik Taş Saksıda Kıvrımlı Gövdeli Yapay Çam Bonsai Ağacı – 155 cm",
+  "Doğal Ahşap Gövdeli Sarkık Pudra Pembe Yapay Sakura (Kiraz Çiçeği) Ağacı – 180 cm",
+  "Siyah Oluklu Silindir Saksıda Dev Yapraklı Yapay Starliçe (Strelitzia) Ağacı – 180 cm",
+  "Gerçek Bambu Gövdeli Çok Dallı Sık Yapraklı Yapay Bambu Ağacı – 180 cm",
+  "Beyaz Geometrik Origami Saksıda Alacalı Yapay Ficus Benjamin Ağacı – 185 cm",
+  "Dev Ayaklı Somon Pembe Katmerli Gül ve Kamelya Çiçeği – 170 cm",
+  "Yosunlu Sütun Gövdeli Beyaz Saksılı Yapay Monstera (Deve Tabanı) Ağacı – 170 cm",
+  "Gold Şeritli Siyah Saksıda Doğal Gövdeli Yapay Araokarya (Çam) Ağacı – 175 cm",
+  "Doğal Ahşap Gövdeli Sarkık Beyaz Salkım (Wisteria) Çiçekli Yapay Ağaç – 180 cm",
 ];
 
 const times = [

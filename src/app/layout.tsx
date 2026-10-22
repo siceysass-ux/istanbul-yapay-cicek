@@ -18,6 +18,7 @@ const inter = Inter({
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { CartDrawer } from "@/components/cart/cart-drawer";
+import { SocialProof } from "@/components/marketing/social-proof";
 import { ExitIntentModal } from "@/components/marketing/exit-intent-modal";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { MobileNav } from "@/components/layout/mobile-nav";
@@ -95,6 +96,7 @@ export default function RootLayout({
         <main className="min-h-screen">{children}</main>
         <Footer />
         <CartDrawer />
+        <SocialProof />
         <ExitIntentModal />
         <WhatsAppButton />
         <MobileNav />
