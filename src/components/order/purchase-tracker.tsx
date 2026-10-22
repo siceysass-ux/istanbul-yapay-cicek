@@ -8,9 +8,9 @@ interface PurchaseTrackerProps {
   orderNumber: string;
   total: number;
   shipping: number;
-  email: string;
-  phone: string;
-  city: string;
+  email?: string | null;
+  phone?: string | null;
+  city?: string | null;
   items: { name: string; price: number; quantity: number }[];
 }
 
@@ -34,9 +34,9 @@ export function PurchaseTracker({
       orderNumber,
       total,
       shipping,
-      email,
-      phone,
-      city,
+      email: email ?? undefined,
+      phone: phone ?? undefined,
+      city: city ?? undefined,
       items,
     });
   }, [orderNumber, total, shipping, email, phone, city, items, clear]);
