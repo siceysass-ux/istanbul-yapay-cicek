@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import { CheckCircle2, MapPin, X } from "lucide-react";
+import { CheckCircle2, X } from "lucide-react";
 
 type ProductItem = {
   name: string;
@@ -136,10 +137,16 @@ function pickDifferent<T>(arr: T[], lastIndex: number): { item: T; index: number
 }
 
 export function SocialProof() {
+  const pathname = usePathname();
   const [current, setCurrent] = useState<Notification | null>(null);
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const productsRef = useRef<ProductItem[]>(catalogProducts);
+
+  const isCheckoutOrCart =
+    pathname?.startsWith("/odeme") ||
+    pathname?.startsWith("/sepet") ||
+    pathname?.startsWith("/admin");
 
   const lastNameIdx = useRef(-1);
   const lastCityIdx = useRef(-1);
@@ -213,10 +220,10 @@ export function SocialProof() {
     return () => clearInterval(interval);
   }, [dismissed]);
 
-  if (dismissed) return null;
+  if (dismissed || isCheckoutOrCart) return null;
 
   return (
-    <div className="fixed bottom-20 left-3 z-40 lg:bottom-4 lg:left-4">
+    <div className="fixed bottom-20 left-2.5 z-30 lg:bottom-4 lg:left-4">
       <AnimatePresence mode="wait">
         {visible && current && (
           <motion.div
@@ -225,7 +232,7 @@ export function SocialProof() {
             animate={{ opacity: 1, x: 0, y: 0 }}
             exit={{ opacity: 0, x: -40, y: 10 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="relative max-w-[325px] overflow-hidden rounded-2xl border border-primary/15 bg-white/95 p-3 shadow-2xl shadow-primary/15 backdrop-blur-lg"
+            className="relative w-[calc(100vw-5rem)] max-w-[310px] overflow-hidden rounded-2xl border border-primary/15 bg-white/95 p-2.5 sm:p-3 shadow-2xl shadow-primary/15 backdrop-blur-lg"
           >
             {/* Kapat */}
             <button

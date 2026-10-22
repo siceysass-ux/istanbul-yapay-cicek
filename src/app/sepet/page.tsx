@@ -30,31 +30,31 @@ export default function CartPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8">
-      <h1 className="font-serif text-3xl font-semibold mb-8">Sepetim</h1>
+    <div className="mx-auto max-w-7xl px-3.5 py-6 pb-24 sm:px-4 sm:py-12 lg:px-8">
+      <h1 className="font-serif text-2xl sm:text-3xl font-semibold mb-5 sm:mb-8">Sepetim</h1>
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
+      <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1fr_360px]">
         {/* Ürünler */}
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-3 sm:space-y-4">
           {items.map((item) => {
             const key = item.variantId ? `${item.id}__${item.variantId}` : item.id;
             return (
             <div
               key={key}
-              className="flex gap-4 rounded-2xl border border-primary/10 bg-white/60 p-4"
+              className="flex gap-3 sm:gap-4 rounded-2xl border border-primary/10 bg-white p-3 sm:p-4 shadow-2xs"
             >
-              <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-primary/5">
+              <div className="h-20 w-18 sm:h-24 sm:w-24 shrink-0 overflow-hidden rounded-xl bg-primary/5">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
               </div>
-              <div className="flex flex-1 flex-col">
+              <div className="flex min-w-0 flex-1 flex-col">
                 <div className="flex items-start justify-between gap-2">
-                  <Link href={`/urun/${item.slug}`} className="font-medium hover:text-primary">
+                  <Link href={`/urun/${item.slug}`} className="text-sm sm:text-base font-medium leading-snug line-clamp-2 hover:text-accent">
                     {item.name}
                   </Link>
                   <button
                     onClick={() => removeItem(item.id, item.variantId)}
-                    className="text-muted hover:text-red-500"
+                    className="text-muted hover:text-red-500 p-1 shrink-0"
                     aria-label="Ürünü sepetten kaldır"
                   >
                     <Trash2 className="h-4 w-4" />

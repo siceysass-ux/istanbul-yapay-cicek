@@ -101,10 +101,10 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
         transition={{ duration: 0.5, delay: index * 0.05, ease: [0.22, 1, 0.36, 1] }}
         className="transform-gpu will-change-transform"
       >
-        <Link href={`/urun/${product.slug}`} className="group block">
-          <div className="relative aspect-[3/5] overflow-hidden rounded-2xl bg-[#f7f8f9] ring-1 ring-primary/10 transition-all duration-500 group-hover:ring-accent/60 group-hover:shadow-xl group-hover:shadow-accent/10">
+        <Link href={`/urun/${product.slug}`} className="group block min-w-0">
+          <div className="relative aspect-[3/4] sm:aspect-[3/5] overflow-hidden rounded-2xl bg-[#f7f8f9] ring-1 ring-primary/10 transition-all duration-500 group-hover:ring-accent/60 group-hover:shadow-xl group-hover:shadow-accent/10">
             {/* Rozetler — P2-4: Tek kaynaklı tutarlı rozet mantığı */}
-            <div className="absolute left-3 top-3 z-10 flex flex-col gap-1.5">
+            <div className="absolute left-2 top-2 sm:left-3 sm:top-3 z-10 flex flex-col gap-1">
               {product.isFeatured ? (
                 <Badge variant="new">ÖNE ÇIKAN</Badge>
               ) : product.isNew ? (
@@ -156,23 +156,28 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
           </div>
 
           {/* Bilgi */}
-          <div className="mt-3 space-y-1.5">
+          <div className="mt-2.5 sm:mt-3 space-y-1 sm:space-y-1.5">
             {product.brand && (
-              <p className="text-[11px] font-medium uppercase tracking-wide text-accent">
+              <p className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wide text-accent">
                 {product.brand.name}
               </p>
             )}
-            <h3 className="font-serif text-sm font-medium leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+            <h3 className="font-serif text-xs sm:text-sm font-medium leading-snug line-clamp-2 group-hover:text-primary transition-colors">
               {product.name}
             </h3>
 
             {/* Fiyat + stok */}
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-ink">{formatPrice(price)}</span>
-              </div>
-              {inStock && product.stock <= 5 && (
-                <span className="text-[10px] font-medium text-accent">Son {product.stock} adet</span>
+            <div className="flex items-center justify-between gap-2 pt-0.5">
+              <span className="font-bold text-sm sm:text-base text-ink">{formatPrice(price)}</span>
+              {inStock && (
+                <button
+                  type="button"
+                  onClick={handleAdd}
+                  aria-label="Sepete Ekle"
+                  className="flex sm:hidden items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-[10px] font-semibold text-white shadow-2xs active:scale-95"
+                >
+                  <ShoppingBag className="h-3 w-3" /> Ekle
+                </button>
               )}
             </div>
 

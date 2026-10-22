@@ -214,26 +214,26 @@ export default function CheckoutPage() {
   ];
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 lg:px-8">
-      <h1 className="font-serif text-3xl font-semibold mb-8">Güvenli Ödeme</h1>
+    <div className="mx-auto max-w-5xl px-3.5 py-6 pb-24 sm:px-4 sm:py-10 lg:px-8">
+      <h1 className="font-serif text-2xl sm:text-3xl font-semibold mb-5 sm:mb-8">Güvenli Ödeme</h1>
 
-      {/* Adımlar */}
-      <div className="mb-10 flex items-center justify-center gap-2 sm:gap-4">
+      {/* Adımlar — Mobilde de başlıklarıyla net görünür */}
+      <div className="mb-6 sm:mb-10 grid grid-cols-3 gap-2 sm:flex sm:items-center sm:justify-center sm:gap-4">
         {steps.map((s, i) => (
-          <div key={s.num} className="flex items-center gap-2 sm:gap-4">
-            <div className={`flex items-center gap-2 ${step >= s.num ? "text-ink" : "text-muted"}`}>
-              <div className={`flex h-10 w-10 items-center justify-center rounded-full ${step >= s.num ? "bg-accent text-white" : "bg-primary/10"}`}>
-                {step > s.num ? <Check className="h-5 w-5" /> : <s.icon className="h-5 w-5" />}
+          <div key={s.num} className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-3 text-center sm:text-left">
+            <div className={`flex flex-col sm:flex-row items-center gap-1 sm:gap-2 ${step >= s.num ? "text-ink" : "text-muted"}`}>
+              <div className={`flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full ${step >= s.num ? "bg-accent text-white shadow-xs" : "bg-primary/10"}`}>
+                {step > s.num ? <Check className="h-4 w-4 sm:h-5 sm:w-5" /> : <s.icon className="h-4 w-4 sm:h-5 sm:w-5" />}
               </div>
-              <span className="hidden sm:block text-sm font-medium">{s.label}</span>
+              <span className="text-[11px] sm:text-sm font-medium leading-tight">{s.label}</span>
             </div>
-            {i < steps.length - 1 && <div className={`h-px w-8 sm:w-16 ${step > s.num ? "bg-accent" : "bg-primary/20"}`} />}
+            {i < steps.length - 1 && <div className={`hidden sm:block h-px w-8 sm:w-16 ${step > s.num ? "bg-accent" : "bg-primary/20"}`} />}
           </div>
         ))}
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
-        <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-primary/10 bg-white p-6 shadow-xs">
+      <div className="grid gap-6 sm:gap-8 lg:grid-cols-[1fr_360px]">
+        <form onSubmit={handleSubmit} className="min-w-0 space-y-5 rounded-2xl border border-primary/10 bg-white p-4 sm:p-6 shadow-xs">
           {step === 1 && (
             <>
               <h2 className="font-serif text-xl font-semibold">1. Teslimat ve Fatura Bilgileri</h2>

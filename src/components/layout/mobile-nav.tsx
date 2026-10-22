@@ -20,7 +20,7 @@ export function MobileNav() {
   const toggleCart = useCart((s) => s.toggleCart);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 flex h-16 items-center justify-around border-t border-primary/10 bg-cream/95 px-2 backdrop-blur-lg lg:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 flex h-16 items-center justify-around border-t border-primary/10 bg-white/95 px-2 pb-safe backdrop-blur-lg lg:hidden">
       {items.map((item) => {
         const active = pathname === item.href;
         const isCart = "isCart" in item && item.isCart;
@@ -33,12 +33,12 @@ export function MobileNav() {
               className="relative flex flex-1 flex-col items-center justify-center gap-1 py-1 text-[11px]"
               aria-label={item.label}
             >
-              <item.icon className={cn("h-5 w-5", active ? "text-primary" : "text-ink/65")} />
-              <span className={active ? "text-primary font-semibold" : "text-muted"}>
+              <item.icon className={cn("h-5 w-5", active ? "text-accent" : "text-ink/70")} />
+              <span className={active ? "text-accent font-semibold" : "text-muted"}>
                 {item.label}
               </span>
               {count > 0 && (
-                <span className="absolute top-0 right-1/4 flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[9px] font-bold text-ink">
+                <span className="absolute top-0 right-1/4 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-accent text-[9px] font-bold text-white">
                   {count}
                 </span>
               )}

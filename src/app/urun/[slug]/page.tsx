@@ -62,7 +62,7 @@ export default async function ProductPage({
   const related = await getRelatedProducts(product.categoryId, product.id, 4);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
+    <div className="mx-auto max-w-7xl px-3.5 py-4 sm:px-4 sm:py-8 lg:px-8">
       <ProductJsonLd
         product={{
           name: product.name,
@@ -86,18 +86,18 @@ export default async function ProductPage({
       />
 
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1 text-sm text-muted mb-6 overflow-x-auto">
+      <nav className="mb-3 sm:mb-6 flex items-center gap-1 text-xs sm:text-sm text-muted min-w-0">
         <Link href="/" className="hover:text-accent shrink-0">Anasayfa</Link>
-        <ChevronRight className="h-4 w-4 shrink-0" />
+        <ChevronRight className="h-3.5 w-3.5 shrink-0" />
         <Link href={`/kategori/${product.category.slug}`} className="hover:text-accent shrink-0">
           {product.category.name}
         </Link>
-        <ChevronRight className="h-4 w-4 shrink-0" />
-        <span className="text-ink font-medium truncate">{product.name}</span>
+        <ChevronRight className="h-3.5 w-3.5 shrink-0" />
+        <span className="text-ink font-medium truncate min-w-0">{product.name}</span>
       </nav>
 
       {/* Ürün detay */}
-      <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
+      <div className="grid gap-5 sm:gap-8 lg:grid-cols-2 lg:gap-12">
         <ProductGallery
           images={product.images}
           productName={product.name}
@@ -108,9 +108,9 @@ export default async function ProductPage({
 
       {/* İlgili ürünler */}
       {related.length > 0 && (
-        <section className="mt-20">
-          <h2 className="font-serif text-2xl font-semibold mb-6">Benzer Ürünler</h2>
-          <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-4">
+        <section className="mt-12 sm:mt-20">
+          <h2 className="font-serif text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">Benzer Ürünler</h2>
+          <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-4">
             {related.map((p, i) => (
               <ProductCard key={p.id} product={p} index={i} />
             ))}

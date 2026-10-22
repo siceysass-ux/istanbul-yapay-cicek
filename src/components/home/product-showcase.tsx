@@ -67,11 +67,11 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
         </motion.p>
       </div>
 
-      {/* Kategori filtre çipi — ortalanmış, wrap */}
-      <div className="mb-10 flex flex-wrap justify-center gap-2">
+      {/* Kategori filtre çipi — Mobilde yatay kaydırılabilir, masaüstünde ortalanmış */}
+      <div className="mb-7 sm:mb-10 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 sm:flex-wrap sm:justify-center">
         <button
           onClick={() => handleCategoryChange("all")}
-          className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
+          className={`shrink-0 rounded-full px-4 py-2 sm:px-5 text-xs sm:text-sm font-medium transition-all ${
             activeCategory === "all"
               ? "bg-accent text-white shadow-sm"
               : "bg-primary/6 text-ink hover:bg-accent/10 hover:text-accent"
@@ -86,7 +86,7 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
             <button
               key={cat.id}
               onClick={() => handleCategoryChange(cat.id)}
-              className={`rounded-full px-5 py-2 text-sm font-medium transition-all ${
+              className={`shrink-0 rounded-full px-4 py-2 sm:px-5 text-xs sm:text-sm font-medium transition-all ${
                 activeCategory === cat.id
                   ? "bg-accent text-white shadow-sm"
                   : "bg-primary/6 text-ink hover:bg-accent/10 hover:text-accent"
@@ -119,7 +119,7 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
           >
             {paginated.length > 0 ? (
-              <div className="grid grid-cols-2 gap-5 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+              <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
                 {paginated.map((product, i) => (
                   <ProductCard key={product.id} product={product} index={i} />
                 ))}

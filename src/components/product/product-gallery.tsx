@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, ZoomIn, Box, Camera } from "lucide-react";
+import { ChevronLeft, ChevronRight, ZoomIn, Camera, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Product3DViewer } from "@/components/product/product-3d-viewer";
 import type { ProductImage } from "@prisma/client";
@@ -17,7 +17,6 @@ interface ProductGalleryProps {
 export function ProductGallery({
   images,
   productName = "Ürün",
-  model3dUrl,
 }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
@@ -25,17 +24,17 @@ export function ProductGallery({
 
   if (images.length === 0) {
     return (
-      <div className="aspect-[3/5] rounded-3xl bg-primary/5 flex items-center justify-center">
+      <div className="aspect-[4/5] sm:aspect-[3/5] rounded-2xl sm:rounded-3xl bg-primary/5 flex items-center justify-center">
         <p className="text-muted">Görsel yok</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      {/* Ana görsel */}
+    <div className="min-w-0 space-y-3 sm:space-y-4">
+      {/* Ana görsel — Mobilde ekrana tam sığan ve başlığı da gösteren ideal oran */}
       <div
-        className="relative aspect-[3/5] overflow-hidden rounded-3xl bg-[#f7f8f9] cursor-zoom-in group"
+        className="relative mx-auto w-full aspect-[4/5] max-h-[52vh] sm:max-h-none sm:aspect-[3/5] overflow-hidden rounded-2xl sm:rounded-3xl bg-[#f4f3ef] border border-primary/8 cursor-zoom-in group"
         onClick={() => setZoomOpen(true)}
       >
         <AnimatePresence mode="wait">
@@ -44,7 +43,7 @@ export function ProductGallery({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25 }}
             className="h-full w-full"
           >
             <Image
@@ -52,7 +51,7 @@ export function ProductGallery({
               alt={images[activeIndex].alt}
               fill
               sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
+              className="object-contain sm:object-cover"
               priority
             />
           </motion.div>
@@ -60,13 +59,13 @@ export function ProductGallery({
 
         {/* Sol üst: Odamda Gör (AR) Butonu */}
         <div
-          className="absolute top-4 left-4 z-10 flex items-center"
+          className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 flex items-center"
           onClick={(e) => e.stopPropagation()}
         >
           <button
             type="button"
             onClick={() => setViewer3DOpen(true)}
-            className="flex items-center gap-1.5 rounded-full bg-accent px-4 py-2 text-xs font-bold text-white shadow-lg backdrop-blur transition-all hover:bg-[#d9560b] hover:scale-105"
+            className="flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-2 sm:px-4 text-xs font-bold text-white shadow-lg backdrop-blur transition-all active:scale-95 hover:bg-[#d9560b]"
           >
             <Camera className="h-3.5 w-3.5" />
             Odamda Gör (AR)
@@ -74,28 +73,32 @@ export function ProductGallery({
         </div>
 
         {/* Zoom hint */}
-        <div className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-full bg-ink/60 px-3 py-1.5 text-xs text-cream opacity-0 transition-opacity group-hover:opacity-100">
+        <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex items-center gap-1 rounded-full bg-ink/65 px-2.5 py-1 text-[11px] text-cream backdrop-blur-xs sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100">
           <ZoomIn className="h-3 w-3" /> Büyüt
         </div>
 
-        {/* Navigasyon okları */}
+        {/* Navigasyon okları — Mobilde de her zaman görünür */}
         {images.length > 1 && (
           <>
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 setActiveIndex((i) => (i - 1 + images.length) % images.length);
               }}
-              className="absolute left-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-cream/80 backdrop-blur opacity-0 transition-opacity group-hover:opacity-100"
+              aria-label="Önceki görsel"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/90 text-ink shadow-md backdrop-blur sm:opacity-0 transition-opacity sm:group-hover:opacity-100"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 setActiveIndex((i) => (i + 1) % images.length);
               }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-cream/80 backdrop-blur opacity-0 transition-opacity group-hover:opacity-100"
+              aria-label="Sonraki görsel"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-white/90 text-ink shadow-md backdrop-blur sm:opacity-0 transition-opacity sm:group-hover:opacity-100"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -105,16 +108,17 @@ export function ProductGallery({
 
       {/* Thumbnail galeri */}
       {images.length > 1 && (
-        <div className="flex gap-3 overflow-x-auto pb-2">
+        <div className="flex gap-2.5 overflow-x-auto pb-1 no-scrollbar">
           {images.map((img, i) => (
             <button
               key={img.id}
+              type="button"
               onClick={() => setActiveIndex(i)}
               className={cn(
-                "relative h-20 w-16 shrink-0 overflow-hidden rounded-xl border-2 transition-all",
+                "relative h-16 w-14 sm:h-20 sm:w-16 shrink-0 overflow-hidden rounded-xl border-2 transition-all",
                 activeIndex === i
-                  ? "border-primary ring-2 ring-primary/20"
-                  : "border-transparent opacity-60 hover:opacity-100"
+                  ? "border-accent ring-2 ring-accent/20"
+                  : "border-transparent opacity-65 hover:opacity-100"
               )}
             >
               <Image src={img.url} alt={img.alt} fill sizes="80px" className="object-cover" />
@@ -139,20 +143,28 @@ export function ProductGallery({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setZoomOpen(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-ink/90 p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-ink/95 p-3 sm:p-4"
           >
+            <button
+              type="button"
+              onClick={() => setZoomOpen(false)}
+              aria-label="Görseli kapat"
+              className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur"
+            >
+              <X className="h-5 w-5" />
+            </button>
             <motion.div
-              initial={{ scale: 0.9 }}
+              initial={{ scale: 0.92 }}
               animate={{ scale: 1 }}
-              exit={{ scale: 0.9 }}
-              className="relative h-full max-h-[90vh] w-full max-w-4xl"
+              exit={{ scale: 0.92 }}
+              className="relative h-full max-h-[88vh] w-full max-w-4xl"
               onClick={(e) => e.stopPropagation()}
             >
               <Image
                 src={images[activeIndex].url}
                 alt={images[activeIndex].alt}
                 fill
-                sizes="90vw"
+                sizes="95vw"
                 className="object-contain"
               />
             </motion.div>

@@ -226,8 +226,8 @@ export default async function CategoryPage({
           </div>
         </div>
 
-        {/* Hızlı kategori geçiş hapları */}
-        <div className="flex flex-wrap items-center gap-1.5">
+        {/* Hızlı kategori geçiş hapları — Mobilde yatay kaydırılabilir */}
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:flex-wrap">
           {[
             { label: "Yapay Ağaçlar", slug: "yapay-agac" },
             { label: "Yapay Çiçekler", slug: "yapay-cicek" },
@@ -239,7 +239,7 @@ export default async function CategoryPage({
               <Link
                 key={cat.slug}
                 href={`/kategori/${cat.slug}`}
-                className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
+                className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
                   isCurrent
                     ? "bg-accent text-white shadow-xs"
                     : "border border-primary/15 bg-white text-ink/80 hover:border-accent hover:text-accent"
@@ -261,7 +261,7 @@ export default async function CategoryPage({
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
               {products.map((product, i) => (
                 <ProductCard key={product.id} product={product} index={i} imagePriority={i < 8} />
               ))}

@@ -98,10 +98,10 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-4 sm:space-y-6">
       {/* Marka & isim */}
-      {product.brand && <p className="text-sm font-medium text-accent">{product.brand.name}</p>}
-      <h1 className="font-serif text-2xl font-semibold leading-tight sm:text-3xl lg:text-4xl text-balance">
+      {product.brand && <p className="text-xs sm:text-sm font-medium text-accent">{product.brand.name}</p>}
+      <h1 className="font-serif text-xl font-semibold leading-snug sm:text-3xl lg:text-4xl text-balance">
         {product.name}
       </h1>
 
@@ -125,23 +125,23 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
       )}
 
       {/* Fiyat */}
-      <div className="flex items-center gap-3">
-        <span className="font-serif text-3xl font-bold text-ink">{formatPrice(finalPrice)}</span>
-        <span className="rounded-full bg-primary/8 px-3 py-1 text-xs font-medium text-ink/75">
+      <div className="flex items-center gap-2.5 sm:gap-3">
+        <span className="font-serif text-2xl sm:text-3xl font-bold text-ink">{formatPrice(finalPrice)}</span>
+        <span className="rounded-full bg-primary/8 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-ink/75">
           KDV Dahil
         </span>
       </div>
 
       {/* Kısa açıklama */}
-      <p className="text-muted leading-relaxed">{product.shortDesc}</p>
+      <p className="text-sm sm:text-base text-muted leading-relaxed">{product.shortDesc}</p>
 
       {/* Stok durumu — P0-8: Yapay kıtlık mesajı kaldırıldı */}
-      <div className="flex items-center gap-2 text-sm">
+      <div className="flex flex-wrap items-center gap-1.5 text-xs sm:text-sm">
         {variantStock > 0 ? (
           <>
-            <Check className="h-4 w-4 text-accent" />
+            <Check className="h-4 w-4 text-accent shrink-0" />
             <span className="text-ink font-medium">Stokta mevcut</span>
-            <span className="text-muted">· İstanbul içi 1-3, tüm Türkiye 2-5 iş gününde teslim</span>
+            <span className="text-muted">· İstanbul 1-3, tüm Türkiye 2-5 iş günü teslim</span>
           </>
         ) : (
           <span className="text-red-500 font-medium">Tükendi</span>
@@ -176,37 +176,38 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
       ))}
 
       {/* Miktar + Sepete ekle */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2 rounded-full border border-primary/20 p-1">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1 sm:gap-2 rounded-full border border-primary/20 p-1">
           <button
             type="button"
             onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-primary/5"
+            className="flex h-9 w-8 sm:w-9 items-center justify-center rounded-full hover:bg-primary/5"
             aria-label="Adedi azalt"
           >
             <Minus className="h-4 w-4" />
           </button>
-          <span className="w-10 text-center font-medium">{quantity}</span>
+          <span className="w-7 sm:w-10 text-center text-sm font-medium">{quantity}</span>
           <button
             type="button"
             onClick={() => setQuantity((q) => q + 1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-primary/5"
+            className="flex h-9 w-8 sm:w-9 items-center justify-center rounded-full hover:bg-primary/5"
             aria-label="Adedi artır"
           >
             <Plus className="h-4 w-4" />
           </button>
         </div>
-        <Button size="lg" className="flex-1" onClick={handleAddToCart} disabled={variantStock === 0}>
-          <ShoppingBag className="h-5 w-5" /> Sepete Ekle
+        <Button size="lg" className="flex-1 min-w-0 px-4 text-sm sm:text-base" onClick={handleAddToCart} disabled={variantStock === 0}>
+          <ShoppingBag className="h-4 w-4 sm:h-5 sm:w-5 shrink-0" /> <span className="truncate">Sepete Ekle</span>
         </Button>
         <Button
           type="button"
           size="lg"
           variant="outline"
+          className="px-3 sm:px-4 shrink-0"
           onClick={() => toast.info("Favorilere eklendi")}
           aria-label="Favorilere ekle"
         >
-          <Heart className="h-5 w-5" />
+          <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
         </Button>
       </div>
 
