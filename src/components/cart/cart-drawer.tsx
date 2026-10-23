@@ -124,7 +124,7 @@ export function CartDrawer() {
               <div className="border-t border-primary/10 p-5 space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-muted">Ara toplam</span>
-                  <span className="font-serif text-xl font-semibold">{formatPrice(total)}</span>
+                  <span className="font-price text-xl font-extrabold text-ink">{formatPrice(total)}</span>
                 </div>
                 {total < 2000 && (
                   <p className="text-xs text-accent bg-accent/10 rounded-lg p-2 text-center">

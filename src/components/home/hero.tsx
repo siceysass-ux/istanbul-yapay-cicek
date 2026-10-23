@@ -237,7 +237,7 @@ export function Hero() {
                       <p className="mt-1 font-serif text-xs font-semibold leading-tight text-white line-clamp-2 sm:text-sm">
                         {item.title}
                       </p>
-                      <p className="mt-0.5 text-xs font-bold text-[#ff8a47]">
+                      <p className="mt-0.5 font-price text-xs font-extrabold text-[#ff8a47]">
                         {item.price}
                       </p>
                     </div>

@@ -111,7 +111,7 @@ export default function CartPage() {
             )}
             <div className="border-t border-primary/10 pt-3 flex justify-between text-base">
               <span className="font-semibold">Toplam</span>
-              <span className="font-serif text-xl font-bold text-primary">{formatPrice(grandTotal)}</span>
+              <span className="font-price text-xl font-extrabold text-ink">{formatPrice(grandTotal)}</span>
             </div>
           </div>
           <Button size="lg" className="w-full mt-6" asChild>

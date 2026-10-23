@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ShoppingBag, Heart, Check, Star } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +25,25 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
   const price = product.discountPrice ?? product.basePrice;
   const image = product.images[0]?.url ?? "/placeholder.svg";
   const inStock = product.stock > 0;
+
+  // 3D Tilt efekt (üzerine gelince eğilip bükülme)
+  const cardRef = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [9, -9]), { stiffness: 220, damping: 20 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-9, 9]), { stiffness: 220, damping: 20 });
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    x.set((e.clientX - rect.left) / rect.width - 0.5);
+    y.set((e.clientY - rect.top) / rect.height - 0.5);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -58,13 +77,17 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
 
   return (
     <motion.div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateX, rotateY, transformPerspective: 1000 }}
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.4, delay: Math.min(index * 0.04, 0.24), ease: [0.22, 1, 0.36, 1] }}
-      className="h-full min-w-0"
+      className="h-full min-w-0 transform-gpu will-change-transform"
     >
-      <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary/10 bg-white p-2 sm:p-2.5 shadow-2xs transition-all duration-300 hover:border-accent/50 hover:shadow-lg">
+      <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-primary/10 bg-white p-2 sm:p-2.5 shadow-2xs transition-all duration-300 hover:border-accent/50 hover:shadow-xl hover:shadow-accent/10">
         {/* Görsel Alanı — Saksı altını kapatmayan tam görünüm */}
         <Link
           href={`/urun/${product.slug}`}
@@ -139,13 +162,13 @@ export function ProductCard({ product, index = 0, imagePriority = false }: Produ
             )}
           </div>
 
-          {/* Fiyat + Her Zaman Görünür Sepete Ekle Butonu */}
+          {/* Fiyat (Net Okunaklı font-price) + Her Zaman Görünür Sepete Ekle Butonu */}
           <div className="mt-auto pt-2.5 space-y-2">
             <div className="flex items-baseline justify-between">
-              <span className="font-serif text-base sm:text-lg font-bold text-ink">
+              <span className="font-price text-base sm:text-xl font-extrabold text-ink">
                 {formatPrice(price)}
               </span>
-              <span className="text-[10px] text-muted">KDV Dahil</span>
+              <span className="text-[10px] font-medium text-muted">KDV Dahil</span>
             </div>
 
             <button

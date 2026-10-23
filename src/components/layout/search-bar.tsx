@@ -243,7 +243,7 @@ export function SearchBar({
                       <p className="text-[11px] text-muted">{p.categoryName}</p>
                     </div>
                     <div className="shrink-0 text-right">
-                      <span className="font-serif text-xs sm:text-sm font-bold text-accent">
+                      <span className="font-price text-xs sm:text-sm font-extrabold text-accent">
                         {formatPrice(p.price)}
                       </span>
                     </div>

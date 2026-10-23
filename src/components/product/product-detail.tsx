@@ -126,7 +126,7 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
 
       {/* Fiyat */}
       <div className="flex items-center gap-2.5 sm:gap-3">
-        <span className="font-serif text-2xl sm:text-3xl font-bold text-ink">{formatPrice(finalPrice)}</span>
+        <span className="font-price text-2xl sm:text-3xl font-extrabold text-ink">{formatPrice(finalPrice)}</span>
         <span className="rounded-full bg-primary/8 px-2.5 py-1 text-[11px] sm:text-xs font-medium text-ink/75">
           KDV Dahil
         </span>

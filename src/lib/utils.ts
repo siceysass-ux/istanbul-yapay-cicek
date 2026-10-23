@@ -5,13 +5,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatPrice(price: number, currency = "TRY") {
-  return new Intl.NumberFormat("tr-TR", {
-    style: "currency",
-    currency,
+export function formatPrice(price: number, _currency = "TRY") {
+  const num = new Intl.NumberFormat("tr-TR", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(price);
+  }).format(Number(price || 0));
+  return `${num} ₺`;
 }
 
 export function slugify(text: string) {
