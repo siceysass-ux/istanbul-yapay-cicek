@@ -70,7 +70,11 @@ export async function getProductBySlug(slug: string) {
       brand: true,
       images: { orderBy: { order: "asc" } },
       variants: true,
-      reviews: { orderBy: { createdAt: "desc" }, take: 10 },
+      reviews: {
+        where: { status: "APPROVED" },
+        orderBy: { createdAt: "desc" },
+        take: 20,
+      },
     },
   }) as Promise<ProductWithRelations | null>;
 }

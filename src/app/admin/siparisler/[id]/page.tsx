@@ -48,7 +48,12 @@ export default async function AdminOrderDetailPage({
               {new Date(order.createdAt).toLocaleString("tr-TR")}
             </p>
           </div>
-          <OrderStatusUpdater orderNumber={order.orderNumber} currentStatus={order.status} />
+          <OrderStatusUpdater
+            orderNumber={order.orderNumber}
+            currentStatus={order.status}
+            currentCargoProvider={order.cargoProvider}
+            currentCargoCode={order.cargoCode}
+          />
         </div>
       </div>
 

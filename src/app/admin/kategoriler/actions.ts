@@ -14,7 +14,10 @@ export async function createCategoryAction(formData: FormData): Promise<{ error?
     await prisma.category.create({
       data: { name, slug, parentId: parentId || null },
     });
+    revalidatePath("/");
+    revalidatePath("/kategori/[slug]", "page");
     revalidatePath("/admin/kategoriler");
+    revalidatePath("/admin/urunler");
     return {};
   } catch (err) {
     console.error(err);
@@ -22,13 +25,40 @@ export async function createCategoryAction(formData: FormData): Promise<{ error?
   }
 }
 
-export async function deleteCategoryAction(id: string): Promise<{ error?: string }> {
+export async function updateCategoryAction(
+  id: string,
+  patch: { name?: string; slug?: string; order?: number }
+): Promise<{ error?: string }> {
   try {
-    await prisma.category.delete({ where: { id } });
+    await prisma.category.update({
+      where: { id },
+      data: {
+        ...(patch.name?.trim() ? { name: patch.name.trim() } : {}),
+        ...(patch.slug?.trim() ? { slug: slugify(patch.slug.trim()) } : {}),
+        ...(patch.order !== undefined ? { order: Number(patch.order) } : {}),
+      },
+    });
+    revalidatePath("/");
+    revalidatePath("/kategori/[slug]", "page");
     revalidatePath("/admin/kategoriler");
+    revalidatePath("/admin/urunler");
     return {};
   } catch (err) {
     console.error(err);
-    return { error: "Kategori silinemedi (ürün bağlı olabilir)." };
+    return { error: "Kategori güncellenemedi." };
+  }
+}
+
+export async function deleteCategoryAction(id: string): Promise<{ error?: string }> {
+  try {
+    await prisma.category.delete({ where: { id } });
+    revalidatePath("/");
+    revalidatePath("/kategori/[slug]", "page");
+    revalidatePath("/admin/kategoriler");
+    revalidatePath("/admin/urunler");
+    return {};
+  } catch (err) {
+    console.error(err);
+    return { error: "Kategori silinemedi (bu kategoriye bağlı ürünler var)." };
   }
 }

@@ -2,12 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { hashPassword } from "@/lib/auth";
 
-export async function updateSettingsAction(formData: FormData): Promise<{ error?: string }> {
-  const keys = [
-    "site_name", "phone", "email", "address", "whatsapp",
-    "free_shipping_threshold", "shipping_cost",
-  ];
+export async function updateSettingsAction(
+  formData: FormData
+): Promise<{ ok?: boolean; error?: string }> {
+  const keys = ["site_name", "phone", "email", "address", "whatsapp"];
 
   try {
     for (const key of keys) {
@@ -20,9 +20,22 @@ export async function updateSettingsAction(formData: FormData): Promise<{ error?
         });
       }
     }
+
+    const newPassword = (formData.get("new_admin_password") as string)?.trim() ?? "";
+    if (newPassword) {
+      if (newPassword.length < 6) {
+        return { error: "Yeni yönetici şifresi en az 6 karakter olmalıdır." };
+      }
+      const passwordHash = await hashPassword(newPassword);
+      await prisma.user.updateMany({
+        where: { role: "ADMIN" },
+        data: { passwordHash },
+      });
+    }
+
     revalidatePath("/admin/ayarlar");
     revalidatePath("/");
-    return {};
+    return { ok: true };
   } catch (err) {
     console.error(err);
     return { error: "Ayarlar güncellenemedi." };
