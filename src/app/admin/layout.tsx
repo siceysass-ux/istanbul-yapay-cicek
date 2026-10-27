@@ -1,9 +1,11 @@
-import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { AdminSidebar } from "@/components/admin/sidebar";
 import { AdminHeader } from "@/components/admin/header";
 
-export const metadata = { title: "Admin Panel" };
+export const metadata = {
+  title: "Yönetim Paneli",
+  robots: { index: false, follow: false },
+};
 
 export const dynamic = "force-dynamic";
 
@@ -14,16 +16,19 @@ export default async function AdminLayout({
 }) {
   const session = await getSession();
 
+  // /admin/login sayfasında sonsuz yönlendirme döngüsünü önlemek için
+  // oturum yoksa doğrudan alt sayfayı (login formunu) render et.
+  // Diğer tüm /admin/* rotaları zaten middleware.ts tarafından /admin/login'e yönlendirilir.
   if (!session || session.role !== "ADMIN") {
-    redirect("/admin/login");
+    return <>{children}</>;
   }
 
   return (
-    <div className="min-h-screen bg-cream">
+    <div className="min-h-screen bg-[#f5f6f8] text-ink">
       <AdminSidebar />
       <div className="lg:pl-64">
         <AdminHeader email={session.email} />
-        <main className="p-6">{children}</main>
+        <main className="p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

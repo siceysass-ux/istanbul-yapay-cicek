@@ -1,10 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { trackWhatsAppClick } from "@/lib/analytics";
 
 export function WhatsAppButton() {
+  const pathname = usePathname();
+  if (pathname?.startsWith("/admin")) return null;
+
   return (
     <motion.a
       href="https://wa.me/905078846603?text=Merhaba,%20cicekyapay.com%20%C3%BCzerinden%20bilgi%20almak%20istiyorum."

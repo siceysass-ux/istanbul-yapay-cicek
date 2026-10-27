@@ -4,13 +4,11 @@ import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import {
   SESSION_COOKIE,
+  getSessionSecretKey,
   verifySessionToken,
   type SessionPayload,
 } from "@/lib/session";
 
-const SESSION_SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET ?? "dev-secret-change-in-production-min-32-chars"
-);
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7; // 7 gün
 
 export type { SessionPayload };
@@ -31,7 +29,7 @@ export async function createSession(payload: SessionPayload): Promise<void> {
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${SESSION_MAX_AGE}s`)
-    .sign(SESSION_SECRET);
+    .sign(getSessionSecretKey());
 
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE, token, {
@@ -66,10 +64,15 @@ export async function authenticateAdmin(
   email: string,
   password: string
 ): Promise<SessionPayload | null> {
-  const user = await prisma.user.findUnique({ where: { email } });
+  const normalized = email.trim().toLowerCase();
+  // Hem admin@cicekyapay.com hem admin@dikeyyapaybahce.com ile giriş yapılabilsin
+  let user = await prisma.user.findUnique({ where: { email: normalized } });
+  if (!user && (normalized === "admin@cicekyapay.com" || normalized === "admin@dikeyyapaybahce.com")) {
+    user = await prisma.user.findFirst({ where: { role: "ADMIN" } });
+  }
   if (!user || !user.passwordHash || !user.isActive) return null;
   if (user.role !== "ADMIN") return null;
   const valid = await verifyPassword(password, user.passwordHash);
   if (!valid) return null;
-  return { userId: user.id, email: user.email, role: user.role };
+  return { userId: user.id, email: normalized, role: user.role };
 }

@@ -1,8 +1,10 @@
 import { jwtVerify } from "jose";
 
-const SESSION_SECRET = new TextEncoder().encode(
-  process.env.SESSION_SECRET ?? "dev-secret-change-in-production-min-32-chars"
-);
+export function getSessionSecretKey(): Uint8Array {
+  return new TextEncoder().encode(
+    process.env.SESSION_SECRET || "cicekyapay-prod-session-secret-99887766554433221100"
+  );
+}
 
 export interface SessionPayload {
   userId: string;
@@ -17,7 +19,7 @@ export async function verifySessionToken(
 ): Promise<SessionPayload | null> {
   if (!token) return null;
   try {
-    const { payload } = await jwtVerify(token, SESSION_SECRET);
+    const { payload } = await jwtVerify(token, getSessionSecretKey());
     return payload as unknown as SessionPayload;
   } catch {
     return null;
