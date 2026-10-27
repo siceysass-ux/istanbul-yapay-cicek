@@ -33,20 +33,15 @@ export async function getCategoryBySlug(slug: string) {
   });
 }
 
-export async function getProductsByCategory(categoryIds: string[], page = 1, pageSize = 12) {
+export async function getProductsByCategory(categoryIds: string[], _page = 1, _pageSize = 200) {
   const where = { categoryId: { in: categoryIds }, isActive: true };
-  const [products, total] = await Promise.all([
-    prisma.product.findMany({
-      where,
-      select: productListSelect,
-      orderBy: { createdAt: "desc" },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    }) as Promise<ProductListItem[]>,
-    prisma.product.count({ where }),
-  ]);
+  const products = (await prisma.product.findMany({
+    where,
+    select: productListSelect,
+    orderBy: { createdAt: "desc" },
+  })) as ProductListItem[];
 
-  return { products, total };
+  return { products, total: products.length };
 }
 
 export async function getFeaturedProducts(limit = 8) {

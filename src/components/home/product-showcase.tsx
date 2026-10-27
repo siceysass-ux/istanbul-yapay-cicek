@@ -2,13 +2,13 @@
 
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { ProductCard } from "@/components/product/product-card";
 import { ProductGridSkeleton } from "@/components/shared/skeletons";
 import type { ProductListItem } from "@/lib/types";
 import type { Category } from "@prisma/client";
 
-const PAGE_SIZE = 12;
+const STEP_SIZE = 12;
 
 interface ProductShowcaseProps {
   products: ProductListItem[];
@@ -17,7 +17,7 @@ interface ProductShowcaseProps {
 
 export function ProductShowcase({ products, categories }: ProductShowcaseProps) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
-  const [page, setPage] = useState(1);
+  const [visibleCount, setVisibleCount] = useState(STEP_SIZE);
   const [loading, setLoading] = useState(false);
 
   const filtered = useMemo(() => {
@@ -25,27 +25,21 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
     return products.filter((p) => p.categoryId === activeCategory);
   }, [products, activeCategory]);
 
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const visibleProducts = filtered.slice(0, visibleCount);
+  const remaining = Math.max(0, filtered.length - visibleProducts.length);
+  const progressPct =
+    filtered.length > 0 ? Math.min(100, Math.round((visibleProducts.length / filtered.length) * 100)) : 100;
 
   const handleCategoryChange = (catId: string) => {
     setLoading(true);
     setActiveCategory(catId);
-    setPage(1);
-    // Kısa süreli skeleton göster
-    setTimeout(() => setLoading(false), 300);
-  };
-
-  const handlePageChange = (newPage: number) => {
-    setLoading(true);
-    setPage(newPage);
-    window.scrollTo({ top: document.getElementById("urunler")?.offsetTop ?? 0 - 80, behavior: "smooth" });
-    setTimeout(() => setLoading(false), 300);
+    setVisibleCount(STEP_SIZE);
+    setTimeout(() => setLoading(false), 200);
   };
 
   return (
     <section id="urunler" className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
-      {/* Başlık — ortalanmış, sade */}
+      {/* Başlık */}
       <div className="mb-6 text-center">
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -67,9 +61,10 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
         </motion.p>
       </div>
 
-      {/* Kategori filtre çipi — Mobilde yatay kaydırılabilir, masaüstünde ortalanmış */}
+      {/* Kategori filtre çipi */}
       <div className="mb-7 sm:mb-10 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 sm:flex-wrap sm:justify-center">
         <button
+          type="button"
           onClick={() => handleCategoryChange("all")}
           className={`shrink-0 rounded-full px-4 py-2 sm:px-5 text-xs sm:text-sm font-medium transition-all ${
             activeCategory === "all"
@@ -85,6 +80,7 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
           return (
             <button
               key={cat.id}
+              type="button"
               onClick={() => handleCategoryChange(cat.id)}
               className={`shrink-0 rounded-full px-4 py-2 sm:px-5 text-xs sm:text-sm font-medium transition-all ${
                 activeCategory === cat.id
@@ -98,7 +94,7 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
         })}
       </div>
 
-      {/* Ürün grid — skeleton veya ürünler */}
+      {/* Ürün grid */}
       <AnimatePresence mode="wait">
         {loading ? (
           <motion.div
@@ -108,19 +104,19 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
           >
-            <ProductGridSkeleton count={PAGE_SIZE} />
+            <ProductGridSkeleton count={STEP_SIZE} />
           </motion.div>
         ) : (
           <motion.div
-            key={`${activeCategory}-${page}`}
-            initial={{ opacity: 0, y: 20 }}
+            key={activeCategory}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           >
-            {paginated.length > 0 ? (
+            {visibleProducts.length > 0 ? (
               <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
-                {paginated.map((product, i) => (
+                {visibleProducts.map((product, i) => (
                   <ProductCard key={product.id} product={product} index={i} />
                 ))}
               </div>
@@ -133,59 +129,31 @@ export function ProductShowcase({ products, categories }: ProductShowcaseProps) 
         )}
       </AnimatePresence>
 
-      {/* Sayfalama */}
-      {totalPages > 1 && !loading && (
-        <div className="mt-12 flex items-center justify-center gap-2">
-          <button
-            onClick={() => handlePageChange(Math.max(1, page - 1))}
-            disabled={page === 1}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/15 transition-colors hover:bg-primary/5 disabled:opacity-30 disabled:hover:bg-transparent"
-            aria-label="Önceki sayfa"
-          >
-            <ChevronLeft className="h-5 w-5" />
-          </button>
+      {/* Daha Fazla Ürün Göster */}
+      {!loading && filtered.length > STEP_SIZE && (
+        <div className="mt-10 flex flex-col items-center gap-3">
+          <div className="w-48 overflow-hidden rounded-full bg-primary/10 h-1.5">
+            <div
+              className="h-full rounded-full bg-accent transition-all duration-300"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
+          <p className="text-xs text-muted">
+            Toplam <strong className="text-ink">{filtered.length}</strong> üründen{" "}
+            <strong className="text-ink">{visibleProducts.length}</strong> tanesi gösteriliyor
+          </p>
 
-          {Array.from({ length: totalPages }).map((_, i) => {
-            const pageNum = i + 1;
-            // Çok sayfa varsa sadece yakını göster
-            if (totalPages > 7 && Math.abs(pageNum - page) > 2 && pageNum !== 1 && pageNum !== totalPages) {
-              // İlk ve son sayfa ile aktif sayfa arasında ... göster
-              if (pageNum === 2 || pageNum === totalPages - 1) {
-                return <span key={pageNum} className="px-1 text-muted">...</span>;
-              }
-              return null;
-            }
-            return (
-              <button
-                key={pageNum}
-                onClick={() => handlePageChange(pageNum)}
-                className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-medium transition-all ${
-                  page === pageNum
-                    ? "bg-primary text-cream"
-                    : "border border-primary/15 hover:bg-primary/5"
-                }`}
-              >
-                {pageNum}
-              </button>
-            );
-          })}
-
-          <button
-            onClick={() => handlePageChange(Math.min(totalPages, page + 1))}
-            disabled={page === totalPages}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/15 transition-colors hover:bg-primary/5 disabled:opacity-30 disabled:hover:bg-transparent"
-            aria-label="Sonraki sayfa"
-          >
-            <ChevronRight className="h-5 w-5" />
-          </button>
+          {remaining > 0 && (
+            <button
+              type="button"
+              onClick={() => setVisibleCount((prev) => Math.min(filtered.length, prev + STEP_SIZE))}
+              className="mt-1 inline-flex items-center gap-2 rounded-full border-2 border-accent bg-white px-7 py-3 text-sm font-bold text-accent shadow-xs transition-all hover:bg-accent hover:text-white active:scale-98 cursor-pointer"
+            >
+              <span>Daha Fazla Ürün Göster (+{Math.min(STEP_SIZE, remaining)})</span>
+              <ChevronDown className="h-4 w-4" />
+            </button>
+          )}
         </div>
-      )}
-
-      {/* Sayfa bilgisi */}
-      {totalPages > 1 && !loading && (
-        <p className="mt-4 text-center text-xs text-muted">
-          Sayfa {page} / {totalPages} · {filtered.length} ürün
-        </p>
       )}
     </section>
   );

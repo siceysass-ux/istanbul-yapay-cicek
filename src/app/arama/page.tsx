@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { ProductCard } from "@/components/product/product-card";
+import { LoadMoreProductGrid } from "@/components/product/load-more-product-grid";
 import { SearchBar } from "@/components/layout/search-bar";
 
 export const dynamic = "force-dynamic";
@@ -93,11 +93,7 @@ export default async function SearchPage({
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
-          {matched.map((p, i) => (
-            <ProductCard key={p.id} product={p} index={i} imagePriority={i < 8} />
-          ))}
-        </div>
+        <LoadMoreProductGrid products={matched} step={12} />
       )}
     </div>
   );

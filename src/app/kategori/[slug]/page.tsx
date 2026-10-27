@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { getCategoryBySlug, getProductsByCategory } from "@/lib/queries";
-import { ProductCard } from "@/components/product/product-card";
+import { LoadMoreProductGrid } from "@/components/product/load-more-product-grid";
 import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/seo/json-ld";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cicekyapay.com";
@@ -252,7 +252,7 @@ export default async function CategoryPage({
         </div>
       </div>
 
-      {/* Ürünler — Tam genişlik 4 sütun vitrin */}
+      {/* Ürünler — Daha Fazla Göster destekli 4 sütun vitrin */}
       <div>
         {products.length === 0 ? (
           <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-primary/20 py-20 text-center">
@@ -260,31 +260,7 @@ export default async function CategoryPage({
             <p className="mt-2 text-sm text-muted">Yakında yeni ürünler eklenecek</p>
           </div>
         ) : (
-          <>
-            <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
-              {products.map((product, i) => (
-                <ProductCard key={product.id} product={product} index={i} imagePriority={i < 8} />
-              ))}
-            </div>
-            {totalPages > 1 && (
-              <nav className="mt-12 flex flex-wrap items-center justify-center gap-2" aria-label="Ürün sayfaları">
-                {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
-                  <Link
-                    key={pageNumber}
-                    href={pageNumber === 1 ? `/kategori/${slug}` : `/kategori/${slug}?page=${pageNumber}`}
-                    className={`flex h-10 min-w-10 items-center justify-center rounded-full border px-3 text-sm font-medium transition-colors ${
-                      pageNumber === page
-                        ? "border-accent bg-accent text-white"
-                        : "border-primary/15 bg-white hover:border-accent hover:text-accent"
-                    }`}
-                    aria-current={pageNumber === page ? "page" : undefined}
-                  >
-                    {pageNumber}
-                  </Link>
-                ))}
-              </nav>
-            )}
-          </>
+          <LoadMoreProductGrid products={products} step={12} />
         )}
       </div>
 
