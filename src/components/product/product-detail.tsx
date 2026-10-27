@@ -269,12 +269,6 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
               <span className="text-muted">Fatura Tipi</span>
               <span className="font-medium">Bireysel / Kurumsal E-Fatura</span>
             </li>
-            {product.arEnabled && (
-              <li className="flex justify-between border-b border-primary/10 pb-2">
-                <span className="text-muted">Odamda Gör (AR)</span>
-                <span className="font-medium text-accent">Destekleniyor</span>
-              </li>
-            )}
           </ul>
         </TabsContent>
 

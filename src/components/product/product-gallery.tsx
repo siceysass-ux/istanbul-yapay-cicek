@@ -3,9 +3,8 @@
 import { useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight, ZoomIn, Camera, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ZoomIn, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Product3DViewer } from "@/components/product/product-3d-viewer";
 import type { ProductImage } from "@prisma/client";
 
 interface ProductGalleryProps {
@@ -16,11 +15,9 @@ interface ProductGalleryProps {
 
 export function ProductGallery({
   images,
-  productName = "Ürün",
 }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [zoomOpen, setZoomOpen] = useState(false);
-  const [viewer3DOpen, setViewer3DOpen] = useState(false);
 
   if (images.length === 0) {
     return (
@@ -32,7 +29,7 @@ export function ProductGallery({
 
   return (
     <div className="min-w-0 space-y-3 sm:space-y-4">
-      {/* Ana görsel — Mobilde ekrana tam sığan ve başlığı da gösteren ideal oran */}
+      {/* Ana görsel */}
       <div
         className="relative mx-auto w-full aspect-[4/5] max-h-[52vh] sm:max-h-none sm:aspect-[3/5] overflow-hidden rounded-2xl sm:rounded-3xl bg-[#f4f3ef] border border-primary/8 cursor-zoom-in group"
         onClick={() => setZoomOpen(true)}
@@ -57,27 +54,12 @@ export function ProductGallery({
           </motion.div>
         </AnimatePresence>
 
-        {/* Sol üst: Odamda Gör (AR) Butonu */}
-        <div
-          className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 flex items-center"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <button
-            type="button"
-            onClick={() => setViewer3DOpen(true)}
-            className="flex items-center gap-1.5 rounded-full bg-accent px-3.5 py-2 sm:px-4 text-xs font-bold text-white shadow-lg backdrop-blur transition-all active:scale-95 hover:bg-[#d9560b]"
-          >
-            <Camera className="h-3.5 w-3.5" />
-            Odamda Gör (AR)
-          </button>
-        </div>
-
         {/* Zoom hint */}
         <div className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex items-center gap-1 rounded-full bg-ink/65 px-2.5 py-1 text-[11px] text-cream backdrop-blur-xs sm:opacity-0 sm:transition-opacity sm:group-hover:opacity-100">
           <ZoomIn className="h-3 w-3" /> Büyüt
         </div>
 
-        {/* Navigasyon okları — Mobilde de her zaman görünür */}
+        {/* Navigasyon okları */}
         {images.length > 1 && (
           <>
             <button
@@ -126,14 +108,6 @@ export function ProductGallery({
           ))}
         </div>
       )}
-
-      {/* Odamda Gör (AR) Modal */}
-      <Product3DViewer
-        isOpen={viewer3DOpen}
-        onClose={() => setViewer3DOpen(false)}
-        productName={productName}
-        images={images}
-      />
 
       {/* Zoom modal */}
       <AnimatePresence>

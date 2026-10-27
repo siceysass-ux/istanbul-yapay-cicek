@@ -159,33 +159,6 @@ export function ProductForm({ action, categories, brands, initial, submitLabel =
         )}
       </div>
 
-      {/* 3D & AR Stüdyo Ayarları */}
-      <div className="rounded-2xl border border-primary/10 bg-white/60 p-6">
-        <h2 className="font-serif text-lg font-semibold mb-1">3D ve 360° Stüdyo / AR (Odamda Gör)</h2>
-        <p className="text-xs text-muted mb-4">
-          Yüklenen ürün fotoğraflarından otomatik olarak gerçek fotoğraf dokulu 3D derinlik sahnesi ve canlı kamera AR (Odamda Gör) modeli oluşturulur.
-        </p>
-        <div className="space-y-4">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              name="arEnabled"
-              defaultChecked={initial?.arEnabled ?? true}
-              className="h-4 w-4 rounded border-primary/30 text-primary"
-            />
-            <span className="text-sm font-medium">Otomatik 3D / 360° Sahne ve Odamda Gör (AR) Aktif</span>
-          </label>
-          <div>
-            <label className="block text-sm font-medium mb-1.5">Özel 3D Model (.glb / .usdz) URL (Opsiyonel)</label>
-            <Input
-              name="model3dUrl"
-              defaultValue={initial?.model3dUrl ?? ""}
-              placeholder="Boş bırakılırsa ürün fotoğraflarından otomatik 3D/AR oluşturulur (veya /models/urun.glb)"
-            />
-          </div>
-        </div>
-      </div>
-
       {/* Durum */}
       <div className="rounded-2xl border border-primary/10 bg-white/60 p-6">
         <h2 className="font-serif text-lg font-semibold mb-4">Durum</h2>
