@@ -85,12 +85,16 @@ export async function createProductAction(formData: FormData): Promise<{ error?:
         },
       },
     });
-    revalidatePath("/admin/urunler");
-    redirect("/admin/urunler");
   } catch (err) {
     console.error(err);
     return { error: "Ürün oluşturulurken hata oluştu." };
   }
+
+  revalidatePath("/");
+  revalidatePath("/kategori/[slug]", "page");
+  revalidatePath(`/urun/${slug}`);
+  revalidatePath("/admin/urunler");
+  redirect("/admin/urunler");
 }
 
 export async function updateProductAction(id: string, formData: FormData): Promise<{ error?: string }> {
@@ -120,8 +124,9 @@ export async function updateProductAction(id: string, formData: FormData): Promi
   if (!categoryId) return { error: "Kategori seçin." };
   if (!sku) return { error: "SKU gerekli." };
 
+  let updatedSlug = "";
   try {
-    await prisma.product.update({
+    const updated = await prisma.product.update({
       where: { id },
       data: {
         name,
@@ -141,6 +146,7 @@ export async function updateProductAction(id: string, formData: FormData): Promi
         tags,
       },
     });
+    updatedSlug = updated.slug;
 
     // Görselleri yenile
     if (images.length > 0) {
@@ -150,24 +156,31 @@ export async function updateProductAction(id: string, formData: FormData): Promi
           productId: id,
           url: img.url,
           alt: img.alt || name,
-          width: 800,
-          height: 800,
+          width: 720,
+          height: 1200,
           order: i,
         })),
       });
     }
-
-    revalidatePath("/admin/urunler");
-    redirect("/admin/urunler");
   } catch (err) {
     console.error(err);
     return { error: "Ürün güncellenirken hata oluştu." };
   }
+
+  revalidatePath("/");
+  revalidatePath("/kategori/[slug]", "page");
+  if (updatedSlug) {
+    revalidatePath(`/urun/${updatedSlug}`);
+  }
+  revalidatePath("/admin/urunler");
+  redirect("/admin/urunler");
 }
 
 export async function deleteProductAction(id: string): Promise<{ error?: string }> {
   try {
     await prisma.product.delete({ where: { id } });
+    revalidatePath("/");
+    revalidatePath("/kategori/[slug]", "page");
     revalidatePath("/admin/urunler");
     return {};
   } catch (err) {
