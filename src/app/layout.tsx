@@ -86,7 +86,7 @@ export default function RootLayout({
         <StorefrontChrome>{children}</StorefrontChrome>
         <ViewTransitions />
         <Toaster
-          position="bottom-right"
+          position="top-center"
           toastOptions={{
             style: {
               background: "#ffffff",
