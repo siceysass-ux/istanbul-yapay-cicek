@@ -15,16 +15,8 @@ const inter = Inter({
   variable: "--font-inter",
   display: "optional",
 });
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { CartDrawer } from "@/components/cart/cart-drawer";
-import { SocialProof } from "@/components/marketing/social-proof";
-import { ExitIntentModal } from "@/components/marketing/exit-intent-modal";
-import { WhatsAppButton } from "@/components/layout/whatsapp-button";
-import { MobileNav } from "@/components/layout/mobile-nav";
-import { CookieBanner } from "@/components/legal/cookie-banner";
-import { ScrollProgress } from "@/components/shared/scroll-progress";
-import { FlyingCart } from "@/components/shared/flying-cart";
+
+import { StorefrontChrome } from "@/components/layout/storefront-chrome";
 import { ViewTransitions } from "@/components/shared/view-transitions";
 import { CartHydration } from "@/components/shared/cart-hydration";
 import { LocalBusinessJsonLd } from "@/components/seo/json-ld";
@@ -90,18 +82,8 @@ export default function RootLayout({
             whatsapp: "905078846603",
           }}
         />
-        <ScrollProgress />
         <CartHydration />
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
-        <CartDrawer />
-        <SocialProof />
-        <ExitIntentModal />
-        <WhatsAppButton />
-        <MobileNav />
-        <CookieBanner />
-        <FlyingCart />
+        <StorefrontChrome>{children}</StorefrontChrome>
         <ViewTransitions />
         <Toaster
           position="bottom-right"
