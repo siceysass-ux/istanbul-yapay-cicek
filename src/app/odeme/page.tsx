@@ -3,7 +3,19 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Check, CreditCard, Truck, MapPin, Tag, X, Loader2, Building2, UserCheck } from "lucide-react";
+import {
+  Check,
+  CreditCard,
+  Truck,
+  MapPin,
+  Tag,
+  X,
+  Loader2,
+  Building2,
+  UserCheck,
+  ShieldCheck,
+  AlertCircle,
+} from "lucide-react";
 import { useCart } from "@/stores/cart";
 import { trackBeginCheckout } from "@/lib/analytics";
 import { formatPrice } from "@/lib/utils";
@@ -17,7 +29,7 @@ import { TrustSeals } from "@/components/marketing/trust-seals";
 const TURKISH_CITIES = [
   "İstanbul", "Ankara", "İzmir", "Bursa", "Antalya", "Adana", "Konya", "Gaziantep",
   "Kocaeli", "Mersin", "Kayseri", "Eskişehir", "Samsun", "Denizli", "Şanlıurfa",
-  "Sakarya", "uğla".replace("uğla", "Muğla"), "Tekirdağ", "Balıkesir", "Manisa", "Trabzon", "Diyarbakır",
+  "Sakarya", "Muğla", "Tekirdağ", "Balıkesir", "Manisa", "Trabzon", "Diyarbakır",
   "Hatay", "Aydın", "Kahramanmaraş", "Van", "Malatya", "Erzurum", "Ordu", "Afyonkarahisar",
   "Sivas", "Zonguldak", "Tokat", "Çanakkale", "Elazığ", "Çorum", "Kütahya", "Giresun",
   "Isparta", "Edirne", "Düzce", "Yalova", "Kırklareli", "Bolu", "Aksaray", "Kastamonu",
@@ -27,6 +39,25 @@ const TURKISH_CITIES = [
   "Bitlis", "Muş", "Ağrı", "Kars", "Bingöl", "Hakkari", "Iğdır", "Ardahan", "Tunceli",
   "Gümüşhane", "Bayburt",
 ];
+
+interface InstallmentOption {
+  installmentNumber: number;
+  installmentPrice: number;
+  totalPrice: number;
+}
+
+interface BinInfo {
+  bankName?: string;
+  cardFamilyName?: string;
+  cardAssociation?: string;
+  cardType?: string;
+  installmentPrices: InstallmentOption[];
+}
+
+function formatCardNumberDisplay(val: string): string {
+  const digits = val.replace(/\D/g, "").slice(0, 16);
+  return digits.replace(/(\d{4})(?=\d)/g, "$1 ");
+}
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -40,12 +71,15 @@ export default function CheckoutPage() {
 
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
+  const [urlError, setUrlError] = useState<string | null>(null);
   const [couponInput, setCouponInput] = useState(couponCode ?? "");
   const [couponLoading, setCouponLoading] = useState(false);
   const [shippingMethod, setShippingMethod] = useState("standart");
   const [paymentMethod, setPaymentMethod] = useState("card");
   const [invoiceType, setInvoiceType] = useState<"individual" | "corporate">("individual");
   const [contractAccepted, setContractAccepted] = useState(false);
+  const [binInfo, setBinInfo] = useState<BinInfo | null>(null);
+  const [binLoading, setBinLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -81,7 +115,28 @@ export default function CheckoutPage() {
   const codFee = paymentMethod === "cod" && isIstanbul ? 49 : 0;
   const shippingCost = baseShippingCost + codFee;
   const discountedTotal = Math.max(0, total - couponDiscount);
-  const grandTotal = discountedTotal + shippingCost;
+  const baseGrandTotal = discountedTotal + shippingCost;
+
+  // Seçilen taksitin toplam tutarı (iyzico BIN sorgusundan geldiyse)
+  const selectedInstallmentObj = binInfo?.installmentPrices?.find(
+    (o) => o.installmentNumber === card.installment
+  );
+  const grandTotal =
+    paymentMethod === "card" && selectedInstallmentObj && card.installment > 1
+      ? selectedInstallmentObj.totalPrice
+      : baseGrandTotal;
+
+  // 3DS callback'ten hata ile dönüldüyse yakala ve 3. adıma al
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const err = params.get("error");
+    if (err) {
+      setUrlError(err);
+      setStep(3);
+      toast.error(err);
+    }
+  }, []);
 
   // P0-9: begin_checkout etkinliği
   const trackedRef = useRef(false);
@@ -102,6 +157,50 @@ export default function CheckoutPage() {
       if (paymentMethod === "cod") setPaymentMethod("card");
     }
   }, [isIstanbul, shippingMethod, paymentMethod]);
+
+  // Kart numarasının ilk 6 hanesi (BIN) girildiğinde iyzico'dan canlı banka ve taksit tablosunu çek
+  const cleanDigits = card.cardNumber.replace(/\D/g, "");
+  const binPrefix = cleanDigits.slice(0, 6);
+  useEffect(() => {
+    if (binPrefix.length < 6 || baseGrandTotal <= 0) {
+      setBinInfo(null);
+      setCard((c) => (c.installment !== 1 ? { ...c, installment: 1 } : c));
+      return;
+    }
+
+    let cancelled = false;
+    setBinLoading(true);
+    fetch("/api/iyzico/bin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ binNumber: binPrefix, price: baseGrandTotal }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (cancelled) return;
+        if (data.status === "success" && Array.isArray(data.installmentPrices)) {
+          setBinInfo({
+            bankName: data.bankName,
+            cardFamilyName: data.cardFamilyName,
+            cardAssociation: data.cardAssociation,
+            cardType: data.cardType,
+            installmentPrices: data.installmentPrices,
+          });
+        } else {
+          setBinInfo(null);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setBinInfo(null);
+      })
+      .finally(() => {
+        if (!cancelled) setBinLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [binPrefix, baseGrandTotal]);
 
   if (items.length === 0) {
     return (
@@ -154,6 +253,7 @@ export default function CheckoutPage() {
     }
 
     setSubmitting(true);
+    setUrlError(null);
     const fullAddress = `${form.address} (${form.district} / ${form.city})`;
     const invoiceNotes =
       invoiceType === "corporate"
@@ -170,6 +270,7 @@ export default function CheckoutPage() {
       address: fullAddress,
       city: form.city,
       postalCode: form.postalCode,
+      tcIdentity: form.tcIdentity || undefined,
       notes: combinedNotes,
       shippingMethod,
       shippingCost,
@@ -198,12 +299,29 @@ export default function CheckoutPage() {
       const formData = new FormData();
       formData.set("payload", JSON.stringify(payload));
       const result = await createOrderAction(formData);
+
       if (result?.error) {
+        setUrlError(result.error);
         toast.error(result.error);
         setSubmitting(false);
+        return;
+      }
+
+      // iyzico 3D Secure HTML formu döndüyse tarayıcıda çalıştır (Banka SMS ekranına yönlendirir)
+      if (result?.threeDSHtmlContent) {
+        document.open();
+        document.write(result.threeDSHtmlContent);
+        document.close();
+        return;
+      }
+
+      if (result?.redirectUrl) {
+        router.push(result.redirectUrl);
+        return;
       }
     } catch {
-      // redirect
+      toast.error("Sipariş işlenirken beklenmeyen bir hata oluştu.");
+      setSubmitting(false);
     }
   };
 
@@ -213,9 +331,21 @@ export default function CheckoutPage() {
     { num: 3, label: "Ödeme ve Onay", icon: CreditCard },
   ];
 
+  const installmentList: InstallmentOption[] =
+    binInfo?.installmentPrices && binInfo.installmentPrices.length > 0
+      ? binInfo.installmentPrices
+      : [{ installmentNumber: 1, installmentPrice: baseGrandTotal, totalPrice: baseGrandTotal }];
+
   return (
     <div className="mx-auto max-w-5xl px-3.5 py-6 pb-24 sm:px-4 sm:py-10 lg:px-8">
       <h1 className="font-serif text-2xl sm:text-3xl font-semibold mb-5 sm:mb-8">Güvenli Ödeme</h1>
+
+      {urlError && (
+        <div className="mb-6 flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+          <div className="flex-1">{urlError}</div>
+        </div>
+      )}
 
       {/* Adımlar — Mobilde de başlıklarıyla net görünür */}
       <div className="mb-6 sm:mb-10 grid grid-cols-3 gap-2 sm:flex sm:items-center sm:justify-center sm:gap-4">
@@ -407,7 +537,7 @@ export default function CheckoutPage() {
                       <div className="font-medium text-sm">{opt.name}</div>
                       <div className="text-xs text-muted">{opt.desc}</div>
                     </div>
-                    <span className="font-semibold text-sm">
+                    <span className="font-price font-bold text-sm">
                       {opt.price === 0 ? "Ücretsiz" : formatPrice(opt.price)}
                     </span>
                   </label>
@@ -427,13 +557,13 @@ export default function CheckoutPage() {
                 {[
                   {
                     id: "card",
-                    name: "Kredi / Banka Kartı (iyzico Güvencesiyle Tek Çekim veya 3 Taksit)",
-                    desc: "Mastercard, Visa, American Express, Troy kartlarla 256-bit SSL güvenli ödeme",
+                    name: "Kredi / Banka Kartı (iyzico 3D Secure Güvencesi — 12 Taksite Kadar)",
+                    desc: "Mastercard, Visa, American Express, Troy kartlarla 256-bit SSL ve 3D Secure SMS doğrulamalı ödeme",
                     enabled: true,
                   },
                   {
                     id: "cod",
-                    name: "Kapıda Nakit Ödeme (+49₺ Hizmet Bedeli)",
+                    name: "Kapıda Nakit Ödeme (+49 ₺ Hizmet Bedeli)",
                     desc: isIstanbul
                       ? "İstanbul içi teslimatlarda ürünü teslim alırken nakit ödeme"
                       : "Kapıda ödeme yalnızca İstanbul içi teslimatlarda geçerlidir",
@@ -467,9 +597,12 @@ export default function CheckoutPage() {
               </div>
 
               {paymentMethod === "card" && (
-                <div className="space-y-4 rounded-2xl bg-cream-dark/70 p-5 border border-primary/10">
+                <div className="space-y-4 rounded-2xl bg-cream-dark/70 p-4 sm:p-5 border border-primary/10">
                   <div className="flex flex-wrap items-center justify-between gap-3 border-b border-primary/10 pb-3">
-                    <p className="text-xs text-muted">Kart bilgileriniz 256-bit SSL ve iyzico güvencesiyle şifrelenir.</p>
+                    <div className="flex items-center gap-1.5 text-xs text-ink/80 font-medium">
+                      <ShieldCheck className="h-4 w-4 text-accent shrink-0" />
+                      <span>iyzico 3D Secure Korumalı Ödeme</span>
+                    </div>
                     <div className="rounded-lg bg-white px-3 py-1.5 shadow-2xs">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
@@ -479,11 +612,25 @@ export default function CheckoutPage() {
                       />
                     </div>
                   </div>
+
+                  {/* Canlı tespit edilen Banka ve Kart Ailesi rozeti */}
+                  {binInfo && (
+                    <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-accent/25 bg-white px-3.5 py-2 text-xs">
+                      <span className="font-semibold text-ink">
+                        {[binInfo.bankName, binInfo.cardFamilyName].filter(Boolean).join(" · ") || "Kart Algılandı"}
+                      </span>
+                      <span className="rounded-full bg-accent/10 px-2.5 py-0.5 text-[10px] font-bold text-accent">
+                        {binInfo.cardType === "DEBIT_CARD" ? "Banka Kartı" : "Kredi Kartı"} · {binInfo.cardAssociation}
+                      </span>
+                    </div>
+                  )}
+
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="sm:col-span-2">
                       <label className="block text-xs font-medium mb-1">Kart Üzerindeki Ad Soyad *</label>
                       <Input
                         required
+                        autoComplete="cc-name"
                         value={card.cardHolderName}
                         onChange={(e) => setCard({ ...card, cardHolderName: e.target.value })}
                         placeholder="Kart sahibinin adı soyadı"
@@ -493,9 +640,13 @@ export default function CheckoutPage() {
                       <label className="block text-xs font-medium mb-1">Kart Numarası *</label>
                       <Input
                         required
+                        inputMode="numeric"
+                        autoComplete="cc-number"
                         maxLength={19}
                         value={card.cardNumber}
-                        onChange={(e) => setCard({ ...card, cardNumber: e.target.value })}
+                        onChange={(e) =>
+                          setCard({ ...card, cardNumber: formatCardNumberDisplay(e.target.value) })
+                        }
                         placeholder="0000 0000 0000 0000"
                       />
                     </div>
@@ -504,6 +655,8 @@ export default function CheckoutPage() {
                         <label className="block text-xs font-medium mb-1">Ay (AA) *</label>
                         <Input
                           required
+                          inputMode="numeric"
+                          autoComplete="cc-exp-month"
                           maxLength={2}
                           value={card.expireMonth}
                           onChange={(e) => setCard({ ...card, expireMonth: e.target.value.replace(/\D/g, "") })}
@@ -514,6 +667,8 @@ export default function CheckoutPage() {
                         <label className="block text-xs font-medium mb-1">Yıl (YY) *</label>
                         <Input
                           required
+                          inputMode="numeric"
+                          autoComplete="cc-exp-year"
                           maxLength={4}
                           value={card.expireYear}
                           onChange={(e) => setCard({ ...card, expireYear: e.target.value.replace(/\D/g, "") })}
@@ -525,23 +680,67 @@ export default function CheckoutPage() {
                       <label className="block text-xs font-medium mb-1">CVV / CVC *</label>
                       <Input
                         required
+                        inputMode="numeric"
+                        autoComplete="cc-csc"
                         maxLength={4}
                         value={card.cvc}
                         onChange={(e) => setCard({ ...card, cvc: e.target.value.replace(/\D/g, "") })}
                         placeholder="000"
                       />
                     </div>
+
+                    {/* Canlı iyzico Taksit Seçenekleri */}
                     <div className="sm:col-span-2">
-                      <label className="block text-xs font-medium mb-1">Taksit Seçeneği</label>
-                      <select
-                        value={card.installment}
-                        onChange={(e) => setCard({ ...card, installment: Number(e.target.value) })}
-                        className="h-10 w-full rounded-xl border border-primary/15 bg-white px-3 text-xs font-medium"
-                      >
-                        <option value={1}>Tek Çekim — {formatPrice(grandTotal)}</option>
-                        <option value={2}>2 Taksit — 2 × {formatPrice(Math.round(grandTotal / 2))}</option>
-                        <option value={3}>3 Taksit — 3 × {formatPrice(Math.round(grandTotal / 3))}</option>
-                      </select>
+                      <div className="mb-1.5 flex items-center justify-between">
+                        <label className="text-xs font-medium">Taksit Seçeneği</label>
+                        {binLoading && (
+                          <span className="text-[11px] text-accent animate-pulse">
+                            Kartınıza özel taksitler yükleniyor...
+                          </span>
+                        )}
+                      </div>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        {installmentList.map((opt) => {
+                          const selected = card.installment === opt.installmentNumber;
+                          return (
+                            <label
+                              key={opt.installmentNumber}
+                              className={`flex items-center justify-between rounded-xl border px-3 py-2.5 text-xs cursor-pointer transition-all ${
+                                selected
+                                  ? "border-accent bg-white font-semibold text-ink shadow-2xs ring-1 ring-accent"
+                                  : "border-primary/15 bg-white/70 text-ink/80 hover:border-accent/40"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="radio"
+                                  name="installment"
+                                  checked={selected}
+                                  onChange={() => setCard({ ...card, installment: opt.installmentNumber })}
+                                  className="h-3.5 w-3.5 text-accent"
+                                />
+                                <span>
+                                  {opt.installmentNumber === 1
+                                    ? "Tek Çekim"
+                                    : `${opt.installmentNumber} Taksit`}
+                                </span>
+                              </div>
+                              <div className="text-right font-price">
+                                {opt.installmentNumber === 1 ? (
+                                  <span className="font-bold">{formatPrice(opt.totalPrice)}</span>
+                                ) : (
+                                  <span>
+                                    {opt.installmentNumber} × {formatPrice(Math.round(opt.installmentPrice))}{" "}
+                                    <span className="text-[10px] text-muted">
+                                      ({formatPrice(Math.round(opt.totalPrice))})
+                                    </span>
+                                  </span>
+                                )}
+                              </div>
+                            </label>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -575,13 +774,13 @@ export default function CheckoutPage() {
 
               <div className="flex gap-3 pt-2">
                 <Button type="button" variant="outline" size="lg" onClick={() => setStep(2)}>Geri</Button>
-                <Button type="submit" size="lg" className="flex-1" disabled={submitting}>
+                <Button type="submit" size="lg" className="flex-1 font-price" disabled={submitting}>
                   {submitting ? (
                     <>
-                      <Loader2 className="h-4 w-4 animate-spin" /> Sipariş işleniyor...
+                      <Loader2 className="h-4 w-4 animate-spin" /> 3D Secure Başlatılıyor...
                     </>
                   ) : (
-                    `Siparişi Tamamla — ${formatPrice(grandTotal)}`
+                    `Siparişi Tamamla — ${formatPrice(Math.round(grandTotal))}`
                   )}
                 </Button>
               </div>
@@ -590,7 +789,7 @@ export default function CheckoutPage() {
         </form>
 
         {/* Özet */}
-        <div className="rounded-2xl border border-primary/10 bg-white p-6 h-fit shadow-xs">
+        <div className="rounded-2xl border border-primary/10 bg-white p-5 sm:p-6 h-fit shadow-xs">
           <h2 className="font-serif text-lg font-semibold mb-4">Sipariş Özeti</h2>
           <div className="space-y-3 max-h-60 overflow-y-auto mb-4">
             {items.map((item) => {
@@ -598,13 +797,13 @@ export default function CheckoutPage() {
               return (
                 <div key={key} className="flex gap-3 text-sm">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={item.image} alt={item.name} className="h-14 w-14 rounded-lg object-cover" />
+                  <img src={item.image} alt={item.name} className="h-14 w-14 rounded-lg object-cover shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="font-medium line-clamp-1">{item.name}</p>
                     {item.variant && <p className="text-xs text-muted truncate">{item.variant}</p>}
-                    <p className="text-xs text-muted">{item.quantity} adet × {formatPrice(item.price)}</p>
+                    <p className="text-xs text-muted font-price">{item.quantity} adet × {formatPrice(item.price)}</p>
                   </div>
-                  <span className="font-semibold">{formatPrice(item.price * item.quantity)}</span>
+                  <span className="font-price font-bold shrink-0">{formatPrice(item.price * item.quantity)}</span>
                 </div>
               );
             })}
@@ -617,7 +816,7 @@ export default function CheckoutPage() {
                 <div className="flex items-center gap-2 text-sm">
                   <Tag className="h-4 w-4 text-accent" />
                   <span className="font-medium">{couponCode}</span>
-                  <span className="text-muted">-{formatPrice(couponDiscount)}</span>
+                  <span className="text-muted font-price">-{formatPrice(couponDiscount)}</span>
                 </div>
                 <button
                   type="button"
@@ -650,22 +849,39 @@ export default function CheckoutPage() {
           </div>
 
           <div className="border-t border-primary/10 pt-4 space-y-2 text-sm">
-            <div className="flex justify-between"><span className="text-muted">Ara toplam</span><span className="font-medium">{formatPrice(total)}</span></div>
+            <div className="flex justify-between">
+              <span className="text-muted">Ara toplam</span>
+              <span className="font-price font-semibold">{formatPrice(total)}</span>
+            </div>
             {couponDiscount > 0 && (
-              <div className="flex justify-between text-accent"><span>İndirim</span><span>-{formatPrice(couponDiscount)}</span></div>
+              <div className="flex justify-between text-accent">
+                <span>İndirim</span>
+                <span className="font-price font-semibold">-{formatPrice(couponDiscount)}</span>
+              </div>
             )}
             <div className="flex justify-between">
               <span className="text-muted">Kargo</span>
-              <span className="font-medium">{baseShippingCost === 0 ? "Ücretsiz" : formatPrice(baseShippingCost)}</span>
+              <span className="font-price font-semibold">
+                {baseShippingCost === 0 ? "Ücretsiz" : formatPrice(baseShippingCost)}
+              </span>
             </div>
             {codFee > 0 && (
               <div className="flex justify-between">
                 <span className="text-muted">Kapıda Ödeme Hizmet Bedeli</span>
-                <span className="font-medium">{formatPrice(codFee)}</span>
+                <span className="font-price font-semibold">{formatPrice(codFee)}</span>
+              </div>
+            )}
+            {paymentMethod === "card" && card.installment > 1 && grandTotal > baseGrandTotal && (
+              <div className="flex justify-between text-xs text-muted">
+                <span>Taksit Vade Farkı ({card.installment} Taksit)</span>
+                <span className="font-price">+{formatPrice(Math.round(grandTotal - baseGrandTotal))}</span>
               </div>
             )}
             <div className="flex justify-between text-base font-bold border-t border-primary/10 pt-2">
-              <span>Toplam</span><span className="text-ink">{formatPrice(grandTotal)}</span>
+              <span>Toplam</span>
+              <span className="font-price text-lg font-extrabold text-ink">
+                {formatPrice(Math.round(grandTotal))}
+              </span>
             </div>
           </div>
 

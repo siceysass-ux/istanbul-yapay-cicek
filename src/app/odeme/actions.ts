@@ -1,10 +1,16 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { prisma } from "@/lib/prisma";
-import { createIyzicoPayment, isIyzicoConfigured } from "@/lib/iyzico";
+import {
+  initializeIyzico3DSPayment,
+  checkIyzicoInstallments,
+  isIyzicoConfigured,
+} from "@/lib/iyzico";
 import { sendOrderConfirmationEmail } from "@/lib/email";
 import { sendOrderSms } from "@/lib/sms";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cicekyapay.com";
 
 export interface CheckoutItemInput {
   id: string;
@@ -23,6 +29,7 @@ export interface CheckoutFormInput {
   address: string;
   city: string;
   postalCode?: string;
+  tcIdentity?: string;
   shippingMethod: string;
   shippingCost: number;
   paymentMethod: string;
@@ -43,6 +50,8 @@ export interface CheckoutFormInput {
 export interface CheckoutResult {
   error?: string;
   orderNumber?: string;
+  threeDSHtmlContent?: string;
+  redirectUrl?: string;
 }
 
 export async function createOrderAction(
@@ -163,8 +172,8 @@ export async function createOrderAction(
         : coupon.value;
   }
 
-  const shipping = data.shippingCost;
-  const total = Math.max(0, serverSubtotal + shipping - discount);
+  const shipping = Number(data.shippingCost || 0);
+  const baseTotal = Math.max(1, serverSubtotal + shipping - discount);
 
   // Sipariş numarası oluştur
   const orderNumber = `DYC${Date.now().toString().slice(-8)}${Math.floor(
@@ -173,33 +182,87 @@ export async function createOrderAction(
     .toString()
     .padStart(2, "0")}`;
 
-  // Kart ile ödeme — Iyzico
-  let iyzicoPaymentId: string | null = null;
+  // Kredi/Banka Kartı ile ödeme — iyzico 3D Secure
   if (data.paymentMethod === "card") {
     if (!isIyzicoConfigured()) {
       return {
-        error: "Kart ile ödeme şu anda devre dışı. Lütfen kapıda ödeme seçin.",
+        error: "Kart ile ödeme şu anda yapılandırılmamış. Lütfen bizimle iletişime geçin.",
       };
     }
 
-    if (!data.cardHolderName || !data.cardNumber || !data.expireMonth || !data.expireYear || !data.cvc) {
-      return { error: "Kart bilgileri eksik." };
+    const cleanCardNum = (data.cardNumber ?? "").replace(/\D/g, "");
+    if (
+      !data.cardHolderName ||
+      cleanCardNum.length < 15 ||
+      !data.expireMonth ||
+      !data.expireYear ||
+      !data.cvc
+    ) {
+      return { error: "Lütfen tüm kart bilgilerini eksiksiz girin." };
     }
 
-    // Iyzico ödeme iste
-    const [name, ...surnameParts] = data.name.split(" ");
+    const selectedInstallment = Math.max(1, Number(data.installment ?? 1));
+    let paidPrice = baseTotal;
+
+    // Taksit seçildiyse iyzico'dan güncel taksitli toplam tutarı doğrula
+    if (selectedInstallment > 1) {
+      const binRes = await checkIyzicoInstallments(cleanCardNum.slice(0, 6), baseTotal);
+      const matchedOpt = binRes.installmentPrices?.find(
+        (opt) => opt.installmentNumber === selectedInstallment
+      );
+      if (matchedOpt && matchedOpt.totalPrice > 0) {
+        paidPrice = matchedOpt.totalPrice;
+      }
+    }
+
+    const hdrs = await headers();
+    const clientIp =
+      hdrs.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      hdrs.get("x-real-ip") ||
+      "85.34.78.112";
+
+    const [name, ...surnameParts] = data.name.trim().split(/\s+/);
     const surname = surnameParts.join(" ") || name;
 
-    const iyzicoResult = await createIyzicoPayment({
-      price: serverSubtotal - discount,
-      paidPrice: total,
+    // 3DS callback geldiğinde eşleşmesi için siparişi PENDING olarak kaydet
+    let createdOrderId: string | null = null;
+    try {
+      const pendingOrder = await prisma.order.create({
+        data: {
+          orderNumber,
+          status: "PENDING",
+          items: JSON.stringify(orderItems),
+          subtotal: serverSubtotal,
+          shipping,
+          discount,
+          total: paidPrice,
+          currency: "TRY",
+          address: data.address,
+          city: data.city,
+          postalCode: data.postalCode,
+          phone: data.phone,
+          email: data.email,
+          notes: data.notes,
+          paymentMethod: "card",
+          cargoProvider: data.shippingMethod,
+        },
+      });
+      createdOrderId = pendingOrder.id;
+    } catch (err) {
+      console.error("Sipariş ön kaydı hatası:", err);
+      return { error: "Sipariş başlatılırken bir hata oluştu." };
+    }
+
+    const iyzico3DS = await initializeIyzico3DSPayment({
+      price: serverSubtotal,
+      paidPrice,
       currency: "TRY",
-      installment: data.installment ?? 1,
+      installment: selectedInstallment,
       paymentChannel: "WEB",
       paymentGroup: "PRODUCT",
       paymentCard: {
         cardHolderName: data.cardHolderName,
-        cardNumber: data.cardNumber.replace(/\s/g, ""),
+        cardNumber: cleanCardNum,
         expireMonth: data.expireMonth,
         expireYear: data.expireYear,
         cvc: data.cvc,
@@ -210,11 +273,12 @@ export async function createOrderAction(
         surname,
         email: data.email,
         phone: data.phone,
-        identityNumber: "11111111111",
+        identityNumber: data.tcIdentity || "11111111111",
         address: data.address,
         city: data.city,
-        country: "TR",
-        zipCode: data.postalCode ?? "34000",
+        country: "Turkey",
+        zipCode: data.postalCode || "34000",
+        ip: clientIp,
       },
       shippingAddress: {
         id: orderNumber,
@@ -222,11 +286,11 @@ export async function createOrderAction(
         surname,
         email: data.email,
         phone: data.phone,
-        identityNumber: "11111111111",
+        identityNumber: data.tcIdentity || "11111111111",
         address: data.address,
         city: data.city,
-        country: "TR",
-        zipCode: data.postalCode ?? "34000",
+        country: "Turkey",
+        zipCode: data.postalCode || "34000",
       },
       billingAddress: {
         id: orderNumber,
@@ -234,43 +298,51 @@ export async function createOrderAction(
         surname,
         email: data.email,
         phone: data.phone,
-        identityNumber: "11111111111",
+        identityNumber: data.tcIdentity || "11111111111",
         address: data.address,
         city: data.city,
-        country: "TR",
-        zipCode: data.postalCode ?? "34000",
+        country: "Turkey",
+        zipCode: data.postalCode || "34000",
       },
       basketItems: orderItems.map((item) => ({
         id: item.productId,
         name: item.name,
-        category1: "Yapay Çiçek",
+        category1: "Yapay Çiçek ve Ağaç",
         itemType: "PHYSICAL" as const,
         price: item.price * item.quantity,
       })),
       conversationId: orderNumber,
+      callbackUrl: `${SITE_URL}/api/iyzico/callback`,
     });
 
-    if (iyzicoResult.status !== "success" || !iyzicoResult.paymentId) {
+    if (iyzico3DS.status !== "success" || !iyzico3DS.threeDSHtmlContent) {
+      // Başlatılamayan ön siparişi temizle
+      if (createdOrderId) {
+        await prisma.order.delete({ where: { id: createdOrderId } }).catch(() => {});
+      }
       return {
-        error: `Ödeme başarısız: ${iyzicoResult.errorMessage ?? "Bilinmeyen hata"}`,
+        error: `Ödeme başlatılamadı: ${iyzico3DS.errorMessage ?? "Kart bilgilerinizi kontrol edin."}`,
       };
     }
 
-    iyzicoPaymentId = iyzicoResult.paymentId;
+    return {
+      orderNumber,
+      threeDSHtmlContent: iyzico3DS.threeDSHtmlContent,
+    };
   }
 
-  // Transaction: sipariş oluştur + stok düş + kupon kullanım sayısı artır
+  // Kapıda ödeme — doğrudan sipariş oluştur
   try {
     const order = await prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
         data: {
           orderNumber,
-          status: data.paymentMethod === "cod" ? "PENDING" : "PAID",
+          status: "PENDING",
           items: JSON.stringify(orderItems),
           subtotal: serverSubtotal,
           shipping,
           discount,
-          total,
+          total: baseTotal,
           currency: "TRY",
           address: data.address,
           city: data.city,
@@ -280,30 +352,22 @@ export async function createOrderAction(
           notes: data.notes,
           paymentMethod: data.paymentMethod,
           cargoProvider: data.shippingMethod,
-          paymentRef: iyzicoPaymentId,
         },
       });
 
-      // Stok düş
       for (const item of orderItems) {
         if (item.variantId) {
           await tx.variant.update({
             where: { id: item.variantId },
             data: { stock: { decrement: item.quantity } },
           });
-          await tx.product.update({
-            where: { id: item.productId },
-            data: { stock: { decrement: item.quantity } },
-          });
-        } else {
-          await tx.product.update({
-            where: { id: item.productId },
-            data: { stock: { decrement: item.quantity } },
-          });
         }
+        await tx.product.update({
+          where: { id: item.productId },
+          data: { stock: { decrement: item.quantity } },
+        });
       }
 
-      // Kupon kullanım sayısı
       if (couponCode) {
         await tx.coupon.update({
           where: { code: couponCode },
@@ -314,21 +378,22 @@ export async function createOrderAction(
       return order;
     });
 
-    // E-posta bildirimi (async, siparişi engellemez)
     if (order.email) {
-      sendOrderConfirmationEmail(order.email, orderNumber, total, orderItems).catch(
+      sendOrderConfirmationEmail(order.email, orderNumber, baseTotal, orderItems).catch(
         (err) => console.error("E-posta gönderilemedi:", err)
       );
     }
 
-    // SMS bildirimi (async, siparişi engellemez)
     if (order.phone) {
-      sendOrderSms(order.phone, orderNumber, total).catch(
+      sendOrderSms(order.phone, orderNumber, baseTotal).catch(
         (err) => console.error("SMS gönderilemedi:", err)
       );
     }
 
-    redirect(`/siparis/${orderNumber}`);
+    return {
+      orderNumber,
+      redirectUrl: `/siparis/${orderNumber}`,
+    };
   } catch (err) {
     console.error("Sipariş oluşturma hatası:", err);
     return { error: "Sipariş oluşturulurken bir hata oluştu. Lütfen tekrar deneyin." };
