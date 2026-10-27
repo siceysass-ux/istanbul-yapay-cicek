@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE, verifySessionToken } from "@/lib/session";
 
 export async function middleware(request: NextRequest) {
+  // CVE-2025-29927 savunması: dışarıdan gelen x-middleware-subrequest başlığını reddet
+  if (request.headers.get("x-middleware-subrequest")) {
+    return new NextResponse("Forbidden", { status: 403 });
+  }
+
   const { pathname } = request.nextUrl;
 
   // Yalnızca /admin altındaki rotaları koru

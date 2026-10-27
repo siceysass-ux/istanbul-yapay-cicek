@@ -16,6 +16,7 @@ const inter = Inter({
   display: "optional",
 });
 
+import { prisma } from "@/lib/prisma";
 import { StorefrontChrome } from "@/components/layout/storefront-chrome";
 import { ViewTransitions } from "@/components/shared/view-transitions";
 import { CartHydration } from "@/components/shared/cart-hydration";
@@ -66,24 +67,46 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  let settingsMap: Record<string, string> = {};
+  try {
+    const rows = await prisma.setting.findMany();
+    for (const r of rows) settingsMap[r.key] = r.value;
+  } catch {
+    settingsMap = {};
+  }
+
+  const socialProofEnabled = (settingsMap.social_proof_enabled ?? "true") !== "false";
+
   return (
     <html lang="tr" className={`${playfair.variable} ${inter.variable} overflow-x-clip`} suppressHydrationWarning>
       <body className="antialiased overflow-x-clip" suppressHydrationWarning>
-        <AnalyticsScripts />
+        <AnalyticsScripts
+          config={{
+            googleAdsId: settingsMap.google_ads_id || "AW-4312107150",
+            googleAdsPurchaseLabel: settingsMap.google_ads_purchase_label,
+            googleAdsWhatsappLabel: settingsMap.google_ads_whatsapp_label,
+            ga4Id: settingsMap.ga4_id,
+            metaPixelId: settingsMap.meta_pixel_id,
+          }}
+        />
         <LocalBusinessJsonLd
           data={{
-            name: "Çiçek Yapay",
-            phone: "0(507) 884 66 03",
-            email: "info@cicekyapay.com",
-            address: "Nuripaşa Mah. Merve Cad. No:73/A, Zeytinburnu / İstanbul",
-            whatsapp: "905078846603",
+            name: settingsMap.site_name || "Çiçek Yapay",
+            phone: settingsMap.phone || "0(507) 884 66 03",
+            email: settingsMap.email || "info@cicekyapay.com",
+            address:
+              settingsMap.address ||
+              "Nuripaşa Mah. Merve Cad. No:73/A, Zeytinburnu / İstanbul",
+            whatsapp: settingsMap.whatsapp || "905078846603",
           }}
         />
         <CartHydration />
-        <StorefrontChrome>{children}</StorefrontChrome>
+        <StorefrontChrome socialProofEnabled={socialProofEnabled}>
+          {children}
+        </StorefrontChrome>
         <ViewTransitions />
         <Toaster
           position="top-center"

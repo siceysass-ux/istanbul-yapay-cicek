@@ -11,9 +11,29 @@ import {
   trackPhoneClick,
 } from "@/lib/analytics";
 
-export function AnalyticsScripts() {
-  // Sayfadaki tüm tel: ve wa.me link tıklamalarını otomatik yakala
+export interface TrackingConfigProps {
+  googleAdsId?: string;
+  googleAdsPurchaseLabel?: string;
+  googleAdsWhatsappLabel?: string;
+  ga4Id?: string;
+  metaPixelId?: string;
+}
+
+export function AnalyticsScripts({ config }: { config?: TrackingConfigProps }) {
+  const adsId = config?.googleAdsId || GOOGLE_ADS_ID;
+  const ga4Id = config?.ga4Id || GA4_ID;
+  const pixelId = config?.metaPixelId || META_PIXEL_ID;
+  const primaryGtagId = ga4Id || adsId;
+
   useEffect(() => {
+    window.__DYC_TRACKING__ = {
+      googleAdsId: adsId,
+      googleAdsPurchaseLabel: config?.googleAdsPurchaseLabel,
+      googleAdsWhatsappLabel: config?.googleAdsWhatsappLabel,
+      ga4Id,
+      metaPixelId: pixelId,
+    };
+
     const handleClick = (e: MouseEvent) => {
       const target = (e.target as HTMLElement | null)?.closest("a");
       if (!target) return;
@@ -26,9 +46,7 @@ export function AnalyticsScripts() {
     };
     document.addEventListener("click", handleClick);
     return () => document.removeEventListener("click", handleClick);
-  }, []);
-
-  const primaryGtagId = GA4_ID || GOOGLE_ADS_ID;
+  }, [adsId, ga4Id, pixelId, config?.googleAdsPurchaseLabel, config?.googleAdsWhatsappLabel]);
 
   return (
     <>
@@ -52,26 +70,30 @@ export function AnalyticsScripts() {
           });
           gtag('set', 'ads_data_redaction', true);
           gtag('js', new Date());
-          gtag('config', '${GOOGLE_ADS_ID}', { 'allow_enhanced_conversions': true });
-          ${GA4_ID ? `gtag('config', '${GA4_ID}');` : ""}
+          ${adsId ? `gtag('config', '${adsId}', { 'allow_enhanced_conversions': true });` : ""}
+          ${ga4Id ? `gtag('config', '${ga4Id}');` : ""}
 
           !function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
           n.callMethod.apply(n,arguments):n.queue.push(arguments)};
           if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-          n.queue=[];}(window, document,'script',
+          n.queue=[];t=b.createElement(e);t.async=!0;
+          t.src=v;s=b.getElementsByTagName(e)[0];
+          s.parentNode.insertBefore(t,s)}(window, document,'script',
           'https://connect.facebook.net/en_US/fbevents.js');
-          ${META_PIXEL_ID ? `fbq('init', '${META_PIXEL_ID}'); fbq('track', 'PageView');` : ""}
+          ${pixelId ? `fbq('init', '${pixelId}'); fbq('track', 'PageView');` : ""}
         `}
       </Script>
 
       {/* Google Tag (gtag.js) */}
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${primaryGtagId}`}
-        strategy="afterInteractive"
-      />
+      {primaryGtagId && (
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${primaryGtagId}`}
+          strategy="afterInteractive"
+        />
+      )}
 
-      {/* Google Tag Manager (eğer tanımlıysa) */}
+      {/* Google Tag Manager */}
       {GTM_ID && (
         <Script id="gtm-init" strategy="afterInteractive">
           {`

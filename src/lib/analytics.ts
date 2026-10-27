@@ -5,6 +5,13 @@ declare global {
     dataLayer: Record<string, unknown>[];
     gtag: (...args: unknown[]) => void;
     fbq: (...args: unknown[]) => void;
+    __DYC_TRACKING__?: {
+      googleAdsId?: string;
+      googleAdsPurchaseLabel?: string;
+      googleAdsWhatsappLabel?: string;
+      ga4Id?: string;
+      metaPixelId?: string;
+    };
   }
 }
 
@@ -12,6 +19,13 @@ export const GOOGLE_ADS_ID = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID ?? "AW-431210
 export const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID ?? "";
 export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID ?? "";
 export const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID ?? "";
+
+function getTrackingConfig() {
+  if (typeof window !== "undefined" && window.__DYC_TRACKING__) {
+    return window.__DYC_TRACKING__;
+  }
+  return {};
+}
 
 export function pushDataLayer(event: string, params: Record<string, unknown> = {}) {
   if (typeof window === "undefined") return;
@@ -147,6 +161,14 @@ export function trackPurchase(order: {
   items: { name: string; price: number; quantity: number }[];
 }) {
   if (typeof window === "undefined") return;
+  const cfg = getTrackingConfig();
+  const adsId = cfg.googleAdsId || GOOGLE_ADS_ID;
+  const sendTo = cfg.googleAdsPurchaseLabel
+    ? cfg.googleAdsPurchaseLabel.includes("/")
+      ? cfg.googleAdsPurchaseLabel
+      : `${adsId}/${cfg.googleAdsPurchaseLabel}`
+    : adsId;
+
   const payload = {
     transaction_id: order.orderNumber,
     currency: "TRY",
@@ -169,7 +191,7 @@ export function trackPurchase(order: {
     }
     window.gtag("event", "purchase", payload);
     window.gtag("event", "conversion", {
-      send_to: GOOGLE_ADS_ID,
+      send_to: sendTo,
       value: order.total,
       currency: "TRY",
       transaction_id: order.orderNumber,
@@ -191,8 +213,16 @@ export function trackPurchase(order: {
 
 export function trackWhatsAppClick(context = "genel") {
   if (typeof window === "undefined") return;
+  const cfg = getTrackingConfig();
+  const adsId = cfg.googleAdsId || GOOGLE_ADS_ID;
   if (typeof window.gtag === "function") {
     window.gtag("event", "whatsapp_click", { event_category: "engagement", event_label: context });
+    if (cfg.googleAdsWhatsappLabel) {
+      const sendTo = cfg.googleAdsWhatsappLabel.includes("/")
+        ? cfg.googleAdsWhatsappLabel
+        : `${adsId}/${cfg.googleAdsWhatsappLabel}`;
+      window.gtag("event", "conversion", { send_to: sendTo });
+    }
   }
   if (typeof window.fbq === "function") {
     window.fbq("track", "Contact", { content_name: `WhatsApp: ${context}` });

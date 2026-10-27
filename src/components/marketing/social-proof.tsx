@@ -269,7 +269,7 @@ export function SocialProof() {
                 </p>
                 <p className="mt-0.5 flex items-center gap-1 text-[10px] text-muted">
                   <CheckCircle2 className="h-3 w-3 text-green-600 shrink-0" />
-                  <span>{current.time} · Doğrulanmış sipariş</span>
+                  <span>{current.time}</span>
                 </p>
               </div>
             </Link>

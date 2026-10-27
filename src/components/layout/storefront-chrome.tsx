@@ -12,7 +12,13 @@ import { CookieBanner } from "@/components/legal/cookie-banner";
 import { ScrollProgress } from "@/components/shared/scroll-progress";
 import { FlyingCart } from "@/components/shared/flying-cart";
 
-export function StorefrontChrome({ children }: { children: React.ReactNode }) {
+export function StorefrontChrome({
+  children,
+  socialProofEnabled = true,
+}: {
+  children: React.ReactNode;
+  socialProofEnabled?: boolean;
+}) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
 
@@ -27,7 +33,7 @@ export function StorefrontChrome({ children }: { children: React.ReactNode }) {
       <main className="min-h-screen">{children}</main>
       <Footer />
       <CartDrawer />
-      <SocialProof />
+      {socialProofEnabled && <SocialProof />}
       <ExitIntentModal />
       <WhatsAppButton />
       <MobileNav />

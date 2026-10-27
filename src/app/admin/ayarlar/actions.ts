@@ -2,17 +2,36 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { hashPassword } from "@/lib/auth";
+import { hashPassword, requireAdmin } from "@/lib/auth";
 
 export async function updateSettingsAction(
   formData: FormData
 ): Promise<{ ok?: boolean; error?: string }> {
-  const keys = ["site_name", "phone", "email", "address", "whatsapp"];
+  try {
+    await requireAdmin();
+  } catch {
+    return { error: "Yetkisiz işlem." };
+  }
+
+  const keys = [
+    "site_name",
+    "phone",
+    "email",
+    "address",
+    "whatsapp",
+    "google_ads_id",
+    "google_ads_purchase_label",
+    "google_ads_whatsapp_label",
+    "ga4_id",
+    "meta_pixel_id",
+    "social_proof_enabled",
+  ];
 
   try {
     for (const key of keys) {
-      const value = (formData.get(key) as string)?.trim() ?? "";
-      if (value) {
+      const raw = formData.get(key);
+      if (raw !== null) {
+        const value = String(raw).trim();
         await prisma.setting.upsert({
           where: { key },
           update: { value },
@@ -34,7 +53,7 @@ export async function updateSettingsAction(
     }
 
     revalidatePath("/admin/ayarlar");
-    revalidatePath("/");
+    revalidatePath("/", "layout");
     return { ok: true };
   } catch (err) {
     console.error(err);
