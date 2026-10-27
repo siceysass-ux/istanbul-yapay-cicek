@@ -40,7 +40,7 @@ export async function GET() {
         })
         .join("\n");
       const availability = p.stock > 0 ? "in_stock" : "out_of_stock";
-      const shippingPrice = Number(price) >= 2000 ? "0.00 TRY" : "49.00 TRY";
+      const shippingPrice = "0.00 TRY";
 
       return `    <item>
       <g:id>${escapeXml(p.sku)}</g:id>

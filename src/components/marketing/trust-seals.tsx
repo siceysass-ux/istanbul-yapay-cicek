@@ -115,7 +115,7 @@ export function TrustSeals({ variant = "light" }: { variant?: "light" | "dark" }
               isDark ? "text-cream/60" : "text-muted"
             }`}
           >
-            Kredi Kartı (Tek Çekim / 3 Taksit) · İstanbul İçi Kapıda Nakit Ödeme
+            Kredi / Banka Kartı (Tek Çekim veya 12 Taksite Kadar) · Tüm Türkiye Ücretsiz Kargo
           </span>
         </div>
       </div>

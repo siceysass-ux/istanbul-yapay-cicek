@@ -298,10 +298,10 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
 
         <TabsContent value="shipping">
           <div className="space-y-3 text-sm text-ink/80">
+            <p>• Tüm ürünlerimizde Türkiye geneli <strong>kargo ücretsizdir</strong>.</p>
             <p>• Siparişleriniz özenli korumalı ambalajla 1-3 iş günü içinde kargoya teslim edilir.</p>
             <p>• Teslimat süresi İstanbul içi 1-3 iş günü, diğer iller için 2-5 iş günüdür.</p>
-            <p>• 2.000₺ ve üzeri siparişlerde kargo ücretsizdir (2.000₺ altı standart kargo 49₺).</p>
-            <p>• İstanbul içi siparişlerde kapıda nakit ödeme seçeneği mevcuttur.</p>
+            <p>• iyzico 3D Secure güvencesiyle kredi kartına 12 taksite kadar ödeme imkanı sunulmaktadır.</p>
             <p>• Teslimattan itibaren 14 gün içinde kullanılmamış ve orijinal ambalajındaki ürünlerde cayma/iade hakkınız bulunmaktadır.</p>
           </div>
         </TabsContent>

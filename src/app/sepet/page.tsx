@@ -16,8 +16,8 @@ export default function CartPage() {
   const [catalog, setCatalog] = useState<UpsellProduct[]>([]);
 
   const total = items.reduce((sum, i) => sum + Number(i.price || 0) * Number(i.quantity || 0), 0);
-  const shipping = total >= 2000 ? 0 : 49;
-  const grandTotal = total + shipping;
+  const shipping = 0;
+  const grandTotal = total;
 
   useEffect(() => {
     fetch("/api/social-proof")
@@ -196,15 +196,11 @@ export default function CartPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-muted">Kargo</span>
-              <span className="font-price font-semibold">
-                {shipping === 0 ? <span className="text-emerald-700">Ücretsiz</span> : formatPrice(shipping)}
-              </span>
+              <span className="font-semibold text-emerald-700">Ücretsiz Kargo</span>
             </div>
-            {total < 2000 && (
-              <p className="text-xs text-accent bg-accent/10 rounded-lg p-2">
-                {formatPrice(2000 - total)} daha ekleyin, ücretsiz kargo kazanın!
-              </p>
-            )}
+            <p className="text-xs text-emerald-700 bg-emerald-500/10 rounded-lg p-2 text-center font-medium">
+              🚚 Tüm ürünlerde Türkiye geneli ücretsiz kargo!
+            </p>
             <div className="border-t border-primary/10 pt-3 flex justify-between text-base">
               <span className="font-semibold">Toplam</span>
               <span className="font-price text-xl font-extrabold text-ink">{formatPrice(grandTotal)}</span>

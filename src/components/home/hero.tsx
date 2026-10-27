@@ -154,13 +154,13 @@ export function Hero() {
             <div className="pt-3 space-y-3 border-t border-white/12">
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-medium text-white/80">
                 <span className="inline-flex items-center gap-1.5">
-                  <Truck className="h-3.5 w-3.5 text-[#f26816]" /> 2000₺ Üzeri Ücretsiz Kargo
+                  <Truck className="h-3.5 w-3.5 text-[#f26816]" /> Tüm Türkiye Ücretsiz Kargo
                 </span>
                 <span className="inline-flex items-center gap-1.5">
                   <RotateCcw className="h-3.5 w-3.5 text-[#f26816]" /> 14 Gün İade Hakkı
                 </span>
                 <span className="inline-flex items-center gap-1.5">
-                  <ShieldCheck className="h-3.5 w-3.5 text-[#f26816]" /> İstanbul İçi Kapıda Ödeme
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#f26816]" /> iyzico 3D Secure Güvenli Ödeme
                 </span>
               </div>
 

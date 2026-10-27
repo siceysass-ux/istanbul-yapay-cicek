@@ -17,10 +17,10 @@ import {
 const year = new Date().getFullYear();
 
 const trustItems = [
-  { icon: Truck, title: "Ücretsiz Kargo", desc: "2000₺ ve üzeri" },
+  { icon: Truck, title: "Ücretsiz Kargo", desc: "Tüm Türkiye geneli" },
   { icon: RotateCcw, title: "14 Gün İade Hakkı", desc: "Orijinal ambalajda" },
-  { icon: CreditCard, title: "3 Taksit", desc: "Kredi kartına" },
-  { icon: HandCoins, title: "Kapıda Ödeme", desc: "İstanbul içi nakit" },
+  { icon: CreditCard, title: "12 Taksite Kadar", desc: "Tüm kredi kartlarına" },
+  { icon: HandCoins, title: "3D Secure Ödeme", desc: "iyzico güvencesiyle" },
 ];
 
 const linkGroups = [
@@ -225,7 +225,7 @@ export function Footer() {
               />
             </div>
             <span className="rounded-lg bg-cream/10 px-3 py-1.5 text-[10px] font-semibold tracking-wider text-cream ring-1 ring-cream/15">
-              İSTANBUL İÇİ KAPIDA ÖDEME
+              TÜM ÜRÜNLERDE ÜCRETSİZ KARGO
             </span>
           </div>
         </div>

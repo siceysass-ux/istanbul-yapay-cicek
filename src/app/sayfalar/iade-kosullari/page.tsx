@@ -6,7 +6,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://cicekyapay.com";
 export const metadata: Metadata = {
   title: "İade ve Değişim Koşulları",
   description:
-    "Çiçek Yapay 14 gün iade ve değişim koşulları, iade adresi, kargo süreci ve kredi kartı / kapıda ödeme geri ödeme prosedürleri.",
+    "Çiçek Yapay 14 gün iade ve değişim koşulları, iade adresi, kargo süreci ve iyzico kredi/banka kartı geri ödeme prosedürleri.",
   alternates: { canonical: `${SITE_URL}/sayfalar/iade-kosullari` },
   openGraph: {
     title: "İade ve Değişim Koşulları — Çiçek Yapay",
@@ -46,19 +46,13 @@ export default function IadeKosullariPage() {
         </li>
       </ul>
 
-      <h2>4. Geri Ödeme Süreci (Kredi Kartı ve Kapıda Ödeme)</h2>
+      <h2>4. Geri Ödeme Süreci</h2>
       <ul>
         <li>
           <strong>Kredi / Banka Kartı ile Ödemeler:</strong> Ürün iade adresimize ulaşıp kontrol
           edildikten sonra en geç <strong>7 iş günü</strong> içinde iade tutarı iyzico üzerinden
           ödemeyi yaptığınız karta iade edilir. Banka süreçlerine bağlı olarak ekstrenize yansıması
           2-5 iş günü sürebilir.
-        </li>
-        <li>
-          <strong>Kapıda Ödeme ile Alınan Siparişler:</strong> Kapıda nakit ödeme ile teslim alınan
-          siparişlerin iadesinde, sipariş sahibi Alıcı&apos;nın yazılı olarak bildireceği kendi adına
-          kayıtlı <strong>TR IBAN</strong> hesabına ürün kabulünden itibaren en geç{" "}
-          <strong>7 iş günü</strong> içinde Havale/EFT yoluyla geri ödeme yapılır.
         </li>
       </ul>
 

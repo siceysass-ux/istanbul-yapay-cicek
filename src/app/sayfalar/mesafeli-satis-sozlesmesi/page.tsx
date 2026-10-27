@@ -46,20 +46,15 @@ export default function MesafeliSatisPage() {
         <li>Satıcı, sipariş onayını Alıcı&apos;nın bildirdiği e-posta ve/veya SMS adresine iletir.</li>
         <li>Ürünler, ödemenin onaylanmasından itibaren 1-3 iş günü içinde anlaşmalı kargo firmasına teslim edilir.</li>
         <li>Teslimat süresi İstanbul içi 1-3 iş günü, Türkiye genelindeki diğer iller için 2-5 iş günüdür.</li>
-        <li>2.000₺ ve üzeri siparişlerde standart kargo ücretsizdir. 2.000₺ altı siparişlerde standart kargo ücreti 49₺&apos;dir.</li>
+        <li>Tüm ürün ve siparişlerde Türkiye geneli standart kargo ücretsizdir.</li>
       </ul>
 
       <h2>4. Ödeme ve Taksit Koşulları</h2>
       <ul>
         <li>
-          <strong>Kredi / Banka Kartı (iyzico Güvencesi):</strong> Ödemeler 256-bit SSL şifreli iyzico
-          altyapısı üzerinden tek çekim veya anlaşmalı banka kredi kartlarına 3 taksit seçeneği ile
+          <strong>Kredi / Banka Kartı (iyzico 3D Secure Güvencesi):</strong> Ödemeler 256-bit SSL şifreli iyzico
+          altyapısı üzerinden tek çekim veya anlaşmalı banka kredi kartlarına 12 taksite kadar
           yapılabilir. Kart bilgileri sitemizde saklanmaz.
-        </li>
-        <li>
-          <strong>Kapıda Ödeme (Yalnızca İstanbul İçi):</strong> İstanbul il sınırları içerisindeki
-          teslimatlarda kapıda nakit ödeme seçeneği mevcuttur. Kapıda ödeme hizmet bedeli 49₺ olup
-          sipariş özetinde açıkça gösterilir.
         </li>
         <li>
           <strong>Fatura:</strong> Alıcı&apos;nın ödeme adımında seçtiği fatura tipine göre Bireysel (TCKN)

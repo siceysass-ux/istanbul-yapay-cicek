@@ -245,19 +245,17 @@ export function CartDrawer() {
             {/* Footer */}
             {items.length > 0 && (
               <div className="border-t border-primary/10 bg-white p-4 sm:p-5 space-y-3">
+                <div className="flex items-center justify-between text-xs text-muted">
+                  <span>Kargo</span>
+                  <span className="font-semibold text-emerald-700">Ücretsiz Kargo</span>
+                </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted">Ara toplam</span>
+                  <span className="text-sm font-medium text-ink">Toplam</span>
                   <span className="font-price text-xl font-extrabold text-ink">{formatPrice(total)}</span>
                 </div>
-                {total < 2000 ? (
-                  <p className="text-xs text-accent bg-accent/10 rounded-xl p-2 text-center font-medium">
-                    🚚 {formatPrice(2000 - total)} daha ekleyin, ücretsiz kargo kazanın!
-                  </p>
-                ) : (
-                  <p className="text-xs text-emerald-700 bg-emerald-500/10 rounded-xl p-2 text-center font-medium">
-                    ✓ Ücretsiz kargo kazandınız!
-                  </p>
-                )}
+                <p className="text-xs text-emerald-700 bg-emerald-500/10 rounded-xl p-2 text-center font-medium">
+                  🚚 Tüm ürünlerde Türkiye geneli ücretsiz kargo!
+                </p>
                 <div className="grid grid-cols-2 gap-2.5">
                   <Button variant="outline" className="w-full" onClick={closeCart} asChild>
                     <Link href="/sepet">Sepete Git</Link>

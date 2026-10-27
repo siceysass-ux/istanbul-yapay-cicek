@@ -172,8 +172,9 @@ export async function createOrderAction(
         : coupon.value;
   }
 
-  const shipping = Number(data.shippingCost || 0);
-  const baseTotal = Math.max(1, serverSubtotal + shipping - discount);
+  // Kargo tüm siparişlerde ücretsizdir (fiyata dahildir)
+  const shipping = 0;
+  const baseTotal = Math.max(1, serverSubtotal - discount);
 
   // Sipariş numarası oluştur
   const orderNumber = `DYC${Date.now().toString().slice(-8)}${Math.floor(

@@ -73,7 +73,7 @@ const CATEGORY_SEO: Record<
       },
       {
         q: "Kargo süresi ve paketleme nasıldır?",
-        a: "Siparişleriniz darbeye dayanıklı özel uzun koli içerisinde 1-3 iş günü içinde kargoya verilir. 2.000₺ üzeri siparişlerde kargo ücretsizdir.",
+        a: "Siparişleriniz darbeye dayanıklı özel uzun koli içerisinde 1-3 iş günü içinde kargoya verilir. Tüm ürünlerimizde Türkiye geneli kargo ücretsizdir.",
       },
     ],
   },
@@ -157,7 +157,7 @@ export async function generateMetadata({
   const seoInfo = CATEGORY_SEO[category.slug];
   const description =
     seoInfo?.metaDesc ??
-    `${category.name} koleksiyonundaki doğal gövdeli yapay ağaç, saksılı bitki ve dekoratif yapay çiçek modelleri. 2.000₺ üzeri ücretsiz kargo.`;
+    `${category.name} koleksiyonundaki doğal gövdeli yapay ağaç, saksılı bitki ve dekoratif yapay çiçek modelleri. Tüm ürünlerde ücretsiz kargo.`;
   const pageTitle = isPaginated
     ? `${category.name} (Sayfa ${pageNum})`
     : `${category.name} Modelleri ve Fiyatları`;

@@ -58,18 +58,18 @@ export function Header() {
 
   return (
     <>
-      {/* Announcement bar — P2-8: Türkiye geneli teslimat bilgisi */}
+      {/* Announcement bar */}
       <div className="bg-[#1e2426] text-white border-b border-accent/30 overflow-hidden">
         <div className="flex whitespace-nowrap marquee py-2 text-xs font-medium tracking-wide">
           {[...Array(2)].map((_, i) => (
             <div key={i} className="flex items-center gap-8 px-4">
-              <span>🚚 Türkiye Geneli Kargo · 2000₺ Üzeri Ücretsiz</span>
+              <span>🚚 Tüm Ürünlerde Türkiye Geneli Ücretsiz Kargo</span>
               <span>⚡ İstanbul 1-3, Diğer İller 2-5 İş Gününde Teslim</span>
-              <span>📍 İstanbul İçi Kapıda Ödeme</span>
+              <span>� iyzico 3D Secure Güvenli Ödeme ve 12 Taksit İmkanı</span>
               <span className="text-accent-light">✦ Doğal Gövdeli ve Gerçek Dokulu Koleksiyon</span>
-              <span>🚚 Türkiye Geneli Kargo · 2000₺ Üzeri Ücretsiz</span>
+              <span>🚚 Tüm Ürünlerde Türkiye Geneli Ücretsiz Kargo</span>
               <span>⚡ İstanbul 1-3, Diğer İller 2-5 İş Gününde Teslim</span>
-              <span>📍 İstanbul İçi Kapıda Ödeme</span>
+              <span>� iyzico 3D Secure Güvenli Ödeme ve 12 Taksit İmkanı</span>
               <span className="text-accent-light">✦ Doğal Gövdeli ve Gerçek Dokulu Koleksiyon</span>
             </div>
           ))}

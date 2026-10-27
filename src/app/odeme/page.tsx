@@ -106,16 +106,11 @@ export default function CheckoutPage() {
   });
 
   const isIstanbul = form.city === "İstanbul";
-  const baseShippingCost =
-    shippingMethod === "hizli" && isIstanbul
-      ? 99
-      : total >= 2000
-      ? 0
-      : 49;
-  const codFee = paymentMethod === "cod" && isIstanbul ? 49 : 0;
-  const shippingCost = baseShippingCost + codFee;
+  const baseShippingCost = 0;
+  const codFee = 0;
+  const shippingCost = 0;
   const discountedTotal = Math.max(0, total - couponDiscount);
-  const baseGrandTotal = discountedTotal + shippingCost;
+  const baseGrandTotal = discountedTotal;
 
   // Seçilen taksitin toplam tutarı (iyzico BIN sorgusundan geldiyse)
   const selectedInstallmentObj = binInfo?.installmentPrices?.find(
@@ -493,55 +488,28 @@ export default function CheckoutPage() {
 
           {step === 2 && (
             <>
-              <h2 className="font-serif text-xl font-semibold mb-4">2. Kargo Seçimi ({form.city})</h2>
+              <h2 className="font-serif text-xl font-semibold mb-4">2. Kargo Bilgisi ({form.city})</h2>
               <div className="space-y-3">
-                {[
-                  {
-                    id: "standart",
-                    name: "Standart Kargo (Yurtiçi / Aras Kargo)",
-                    desc: isIstanbul
-                      ? "İstanbul içi 1-3 iş gününde teslim"
-                      : "Türkiye geneli 2-5 iş gününde teslim",
-                    price: total >= 2000 ? 0 : 49,
-                    enabled: true,
-                  },
-                  {
-                    id: "hizli",
-                    name: "İstanbul İçi Özel Kurye Teslimatı",
-                    desc: isIstanbul
-                      ? "Aynı gün veya ertesi iş günü özel araçla teslimat"
-                      : "Yalnızca İstanbul içi adreslerde geçerlidir",
-                    price: 99,
-                    enabled: isIstanbul,
-                  },
-                ].map((opt) => (
-                  <label
-                    key={opt.id}
-                    className={`flex items-center gap-3 rounded-2xl border p-4 transition-colors ${
-                      !opt.enabled
-                        ? "opacity-45 cursor-not-allowed border-primary/10"
-                        : shippingMethod === opt.id
-                        ? "border-accent bg-accent/5 cursor-pointer"
-                        : "border-primary/15 hover:border-accent/40 cursor-pointer"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="shipping"
-                      disabled={!opt.enabled}
-                      checked={shippingMethod === opt.id}
-                      onChange={() => setShippingMethod(opt.id)}
-                      className="h-4 w-4 text-accent"
-                    />
-                    <div className="flex-1">
-                      <div className="font-medium text-sm">{opt.name}</div>
-                      <div className="text-xs text-muted">{opt.desc}</div>
+                <label className="flex items-center gap-3 rounded-2xl border border-accent bg-accent/5 p-4 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="shipping"
+                    checked
+                    readOnly
+                    className="h-4 w-4 text-accent"
+                  />
+                  <div className="flex-1">
+                    <div className="font-medium text-sm">Türkiye Geneli Ücretsiz Kargo (Yurtiçi / Aras Kargo)</div>
+                    <div className="text-xs text-muted">
+                      {isIstanbul
+                        ? "İstanbul içi 1-3 iş gününde korumalı özel kolide ücretsiz teslimat"
+                        : "Türkiye geneli 2-5 iş gününde korumalı özel kolide ücretsiz teslimat"}
                     </div>
-                    <span className="font-price font-bold text-sm">
-                      {opt.price === 0 ? "Ücretsiz" : formatPrice(opt.price)}
-                    </span>
-                  </label>
-                ))}
+                  </div>
+                  <span className="font-semibold text-sm text-emerald-700">
+                    Ücretsiz
+                  </span>
+                </label>
               </div>
               <div className="flex gap-3 pt-2">
                 <Button type="button" variant="outline" size="lg" onClick={() => setStep(1)}>Geri</Button>
@@ -552,49 +520,7 @@ export default function CheckoutPage() {
 
           {step === 3 && (
             <>
-              <h2 className="font-serif text-xl font-semibold mb-4">3. Ödeme Yöntemi ve Sözleşme Onayı</h2>
-              <div className="space-y-3 mb-5">
-                {[
-                  {
-                    id: "card",
-                    name: "Kredi / Banka Kartı (iyzico 3D Secure Güvencesi — 12 Taksite Kadar)",
-                    desc: "Mastercard, Visa, American Express, Troy kartlarla 256-bit SSL ve 3D Secure SMS doğrulamalı ödeme",
-                    enabled: true,
-                  },
-                  {
-                    id: "cod",
-                    name: "Kapıda Nakit Ödeme (+49 ₺ Hizmet Bedeli)",
-                    desc: isIstanbul
-                      ? "İstanbul içi teslimatlarda ürünü teslim alırken nakit ödeme"
-                      : "Kapıda ödeme yalnızca İstanbul içi teslimatlarda geçerlidir",
-                    enabled: isIstanbul,
-                  },
-                ].map((method) => (
-                  <label
-                    key={method.id}
-                    className={`flex items-start gap-3 rounded-2xl border p-4 transition-colors ${
-                      !method.enabled
-                        ? "opacity-45 cursor-not-allowed border-primary/10"
-                        : paymentMethod === method.id
-                        ? "border-accent bg-accent/5 cursor-pointer"
-                        : "border-primary/15 hover:border-accent/40 cursor-pointer"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      name="payment"
-                      disabled={!method.enabled}
-                      checked={paymentMethod === method.id}
-                      onChange={() => setPaymentMethod(method.id)}
-                      className="mt-1 h-4 w-4 text-accent"
-                    />
-                    <div className="flex-1">
-                      <div className="font-medium text-sm">{method.name}</div>
-                      <div className="text-xs text-muted mt-0.5">{method.desc}</div>
-                    </div>
-                  </label>
-                ))}
-              </div>
+              <h2 className="font-serif text-xl font-semibold mb-4">3. Kart Bilgileri ve Sözleşme Onayı</h2>
 
               {paymentMethod === "card" && (
                 <div className="space-y-4 rounded-2xl bg-cream-dark/70 p-4 sm:p-5 border border-primary/10">
@@ -861,16 +787,10 @@ export default function CheckoutPage() {
             )}
             <div className="flex justify-between">
               <span className="text-muted">Kargo</span>
-              <span className="font-price font-semibold">
-                {baseShippingCost === 0 ? "Ücretsiz" : formatPrice(baseShippingCost)}
+              <span className="font-semibold text-emerald-700">
+                Ücretsiz Kargo
               </span>
             </div>
-            {codFee > 0 && (
-              <div className="flex justify-between">
-                <span className="text-muted">Kapıda Ödeme Hizmet Bedeli</span>
-                <span className="font-price font-semibold">{formatPrice(codFee)}</span>
-              </div>
-            )}
             {paymentMethod === "card" && card.installment > 1 && grandTotal > baseGrandTotal && (
               <div className="flex justify-between text-xs text-muted">
                 <span>Taksit Vade Farkı ({card.installment} Taksit)</span>

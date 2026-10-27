@@ -70,7 +70,6 @@ interface ProductData {
 
 export function ProductJsonLd({ product }: { product: ProductData }) {
   const effectivePrice = product.discountPrice ?? product.price;
-  const isFreeShipping = effectivePrice >= 2000;
 
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -95,7 +94,7 @@ export function ProductJsonLd({ product }: { product: ProductData }) {
         "@type": "OfferShippingDetails",
         shippingRate: {
           "@type": "MonetaryAmount",
-          value: isFreeShipping ? 0 : 49,
+          value: 0,
           currency: "TRY",
         },
         shippingDestination: {

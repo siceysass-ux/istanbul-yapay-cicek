@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     template: "%s — Çiçek Yapay",
   },
   description:
-    "Doğal ahşap gövdeli yapay ağaçlar, tasarım saksılı bitkiler, bonsai modelleri ve dev dekoratif çiçekler. 2.000₺ üzeri ücretsiz kargo ve 14 gün iade hakkı.",
+    "Doğal ahşap gövdeli yapay ağaçlar, tasarım saksılı bitkiler, bonsai modelleri ve dev dekoratif çiçekler. Tüm ürünlerde ücretsiz kargo ve 14 gün iade hakkı.",
   openGraph: {
     title: "Çiçek Yapay — Yapay Ağaç ve Bitki Koleksiyonu",
     description:
