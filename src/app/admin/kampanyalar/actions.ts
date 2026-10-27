@@ -21,7 +21,29 @@ export async function createCouponAction(formData: FormData): Promise<{ error?: 
     return {};
   } catch (err) {
     console.error(err);
-    return { error: "Kupon oluşturulamadı (kod çakışması olabilir)." };
+    return { error: "Kupon oluşturulamadı (bu kod zaten mevcut olabilir)." };
+  }
+}
+
+export async function updateCouponAction(
+  id: string,
+  patch: { value?: number; minOrder?: number; maxUses?: number; type?: string }
+): Promise<{ error?: string }> {
+  try {
+    await prisma.coupon.update({
+      where: { id },
+      data: {
+        ...(patch.value !== undefined ? { value: Number(patch.value) } : {}),
+        ...(patch.minOrder !== undefined ? { minOrder: Number(patch.minOrder) } : {}),
+        ...(patch.maxUses !== undefined ? { maxUses: Number(patch.maxUses) } : {}),
+        ...(patch.type !== undefined ? { type: patch.type } : {}),
+      },
+    });
+    revalidatePath("/admin/kampanyalar");
+    return {};
+  } catch (err) {
+    console.error(err);
+    return { error: "Kupon güncellenemedi." };
   }
 }
 
@@ -44,5 +66,30 @@ export async function toggleCouponAction(id: string, isActive: boolean): Promise
   } catch (err) {
     console.error(err);
     return { error: "Durum güncellenemedi." };
+  }
+}
+
+export async function updateExitPopupSettingsAction(params: {
+  enabled: boolean;
+  couponCode: string;
+}): Promise<{ error?: string }> {
+  try {
+    await Promise.all([
+      prisma.setting.upsert({
+        where: { key: "exit_popup_enabled" },
+        update: { value: params.enabled ? "true" : "false" },
+        create: { key: "exit_popup_enabled", value: params.enabled ? "true" : "false" },
+      }),
+      prisma.setting.upsert({
+        where: { key: "exit_popup_coupon_code" },
+        update: { value: params.couponCode.trim().toUpperCase() },
+        create: { key: "exit_popup_coupon_code", value: params.couponCode.trim().toUpperCase() },
+      }),
+    ]);
+    revalidatePath("/admin/kampanyalar");
+    return {};
+  } catch (err) {
+    console.error(err);
+    return { error: "Ayarlar kaydedilemedi." };
   }
 }
