@@ -15,7 +15,10 @@ export default async function EditProductPage({
   const { id } = await params;
   const product = await prisma.product.findUnique({
     where: { id },
-    include: { images: { orderBy: { order: "asc" } } },
+    include: {
+      images: { orderBy: { order: "asc" } },
+      variants: { orderBy: { id: "asc" } },
+    },
   });
 
   if (!product) notFound();
@@ -56,6 +59,12 @@ export default async function EditProductPage({
           isNew: product.isNew,
           tags: product.tags,
           images: product.images.map((img) => ({ url: img.url, alt: img.alt })),
+          variants: product.variants.map((v) => ({
+            type: v.type === "size" ? "Boy / Ölçü" : v.type === "color" ? "Renk" : v.type,
+            name: v.name,
+            priceDelta: v.priceDelta ?? 0,
+            stock: v.stock,
+          })),
         }}
         submitLabel="Değişiklikleri Kaydet"
       />

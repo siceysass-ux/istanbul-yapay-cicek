@@ -5,12 +5,19 @@ import { Eye } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
+interface OrderItemSummary {
+  name: string;
+  price: number;
+  quantity: number;
+  variant?: string;
+}
+
 const statusColors: Record<string, string> = {
   PENDING: "bg-accent/20 text-accent",
-  PAID: "bg-primary/10 text-primary",
+  PAID: "bg-emerald-500/15 text-emerald-700",
   PROCESSING: "bg-blue-100 text-blue-700",
   SHIPPED: "bg-blue-100 text-blue-700",
-  DELIVERED: "bg-primary/10 text-primary",
+  DELIVERED: "bg-emerald-500/15 text-emerald-700",
   CANCELLED: "bg-red-100 text-red-700",
   REFUNDED: "bg-red-100 text-red-700",
 };
@@ -78,29 +85,29 @@ export default async function AdminOrdersPage({
           <Link
             key={s}
             href={`/admin/siparisler?status=${s}`}
-            className={`rounded-2xl border p-4 transition-colors hover:border-primary/30 ${
-              status === s ? "border-primary bg-primary/5" : "border-primary/10 bg-white/60"
+            className={`rounded-2xl border p-4 transition-colors hover:border-accent/40 ${
+              status === s ? "border-accent bg-accent/5" : "border-primary/10 bg-white"
             }`}
           >
             <div className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${statusColors[s]} mb-2`}>
               {statusLabels[s]}
             </div>
-            <div className="font-serif text-2xl font-bold">{countMap[s] ?? 0}</div>
+            <div className="font-price text-2xl font-bold">{countMap[s] ?? 0}</div>
           </Link>
         ))}
       </div>
 
       {/* Filtre */}
-      <form className="flex flex-wrap items-center gap-3 rounded-2xl border border-primary/10 bg-white/60 p-4">
+      <form className="flex flex-wrap items-center gap-3 rounded-2xl border border-primary/10 bg-white p-4">
         <input
           name="q"
           defaultValue={q ?? ""}
           placeholder="Sipariş no, e-posta, telefon ara..."
-          className="flex-1 min-w-[200px] rounded-full border border-primary/15 bg-white/60 px-4 py-2 text-sm focus:border-primary focus:outline-none"
+          className="flex-1 min-w-[200px] rounded-full border border-primary/15 bg-white px-4 py-2 text-sm focus:border-accent focus:outline-none"
         />
         <button
           type="submit"
-          className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-cream hover:bg-primary-dark"
+          className="rounded-full bg-[#1e2426] px-5 py-2 text-sm font-medium text-white hover:bg-accent"
         >
           Ara
         </button>
@@ -115,56 +122,82 @@ export default async function AdminOrdersPage({
       </form>
 
       {/* Tablo */}
-      <div className="overflow-x-auto rounded-2xl border border-primary/10 bg-white/60">
+      <div className="overflow-x-auto rounded-2xl border border-primary/10 bg-white shadow-2xs">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-primary/10 text-left text-muted text-xs">
-              <th className="p-4 font-medium">Sipariş No</th>
-              <th className="p-4 font-medium">Müşteri</th>
-              <th className="p-4 font-medium">Tutar</th>
-              <th className="p-4 font-medium">Durum</th>
-              <th className="p-4 font-medium">Tarih</th>
-              <th className="p-4 font-medium">İşlem</th>
+            <tr className="border-b border-primary/10 bg-cream-dark/40 text-left text-muted text-xs">
+              <th className="p-4 font-semibold">Sipariş No</th>
+              <th className="p-4 font-semibold">Müşteri</th>
+              <th className="p-4 font-semibold">Sipariş Edilen Ürünler ve Varyasyonlar</th>
+              <th className="p-4 font-semibold">Tutar</th>
+              <th className="p-4 font-semibold">Durum</th>
+              <th className="p-4 font-semibold">Tarih</th>
+              <th className="p-4 font-semibold">İşlem</th>
             </tr>
           </thead>
           <tbody>
             {orders.length === 0 ? (
               <tr>
-                <td colSpan={6} className="p-8 text-center text-muted">
+                <td colSpan={7} className="p-8 text-center text-muted">
                   Sipariş bulunamadı.
                 </td>
               </tr>
             ) : (
-              orders.map((o) => (
-                <tr key={o.id} className="border-b border-primary/5 hover:bg-primary/5">
-                  <td className="p-4 font-medium">
-                    <Link href={`/admin/siparisler/${o.orderNumber}`} className="hover:text-primary">
-                      {o.orderNumber}
-                    </Link>
-                  </td>
-                  <td className="p-4">
-                    <div>{o.email ?? "Misafir"}</div>
-                    <div className="text-xs text-muted">{o.phone}</div>
-                  </td>
-                  <td className="p-4 font-medium">{formatPrice(o.total)}</td>
-                  <td className="p-4">
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${statusColors[o.status] ?? "bg-gray-200"}`}>
-                      {statusLabels[o.status] ?? o.status}
-                    </span>
-                  </td>
-                  <td className="p-4 text-muted text-xs">
-                    {new Date(o.createdAt).toLocaleDateString("tr-TR")}
-                  </td>
-                  <td className="p-4">
-                    <Link
-                      href={`/admin/siparisler/${o.orderNumber}`}
-                      className="flex items-center gap-1 text-primary hover:underline text-xs font-medium"
-                    >
-                      <Eye className="h-3 w-3" /> Detay
-                    </Link>
-                  </td>
-                </tr>
-              ))
+              orders.map((o) => {
+                let parsedItems: OrderItemSummary[] = [];
+                try {
+                  parsedItems = JSON.parse(o.items) as OrderItemSummary[];
+                } catch {
+                  parsedItems = [];
+                }
+                return (
+                  <tr key={o.id} className="border-b border-primary/5 hover:bg-primary/[0.03]">
+                    <td className="p-4 font-semibold">
+                      <Link href={`/admin/siparisler/${o.orderNumber}`} className="text-ink hover:text-accent">
+                        {o.orderNumber}
+                      </Link>
+                    </td>
+                    <td className="p-4">
+                      <div className="font-medium">{o.email ?? "Misafir"}</div>
+                      <div className="text-xs text-muted">{o.phone}</div>
+                      <div className="text-[11px] text-muted">{o.city}</div>
+                    </td>
+                    <td className="p-4">
+                      <div className="space-y-1.5 max-w-sm">
+                        {parsedItems.map((it, idx) => (
+                          <div key={idx} className="text-xs">
+                            <span className="font-medium text-ink">
+                              {it.quantity}× {it.name}
+                            </span>
+                            {it.variant && (
+                              <span className="ml-1.5 inline-block rounded-md bg-accent/15 px-2 py-0.5 text-[11px] font-bold text-accent">
+                                {it.variant}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="p-4 font-price font-extrabold text-ink">{formatPrice(o.total)}</td>
+                    <td className="p-4">
+                      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statusColors[o.status] ?? "bg-gray-200"}`}>
+                        {statusLabels[o.status] ?? o.status}
+                      </span>
+                    </td>
+                    <td className="p-4 text-muted text-xs">
+                      {new Date(o.createdAt).toLocaleString("tr-TR")}
+                    </td>
+                    <td className="p-4">
+                      <Link
+                        href={`/admin/siparisler/${o.orderNumber}`}
+                        className="inline-flex items-center gap-1 rounded-lg border border-primary/15 px-3 py-1.5 text-xs font-semibold text-ink hover:border-accent hover:text-accent"
+                      >
+                        <Eye className="h-3.5 w-3.5" /> Detay
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

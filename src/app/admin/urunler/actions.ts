@@ -5,6 +5,13 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils";
 
+export interface ProductVariantInput {
+  type: string;
+  name: string;
+  priceDelta: number;
+  stock: number;
+}
+
 export interface ProductFormInput {
   name: string;
   shortDesc: string;
@@ -22,6 +29,7 @@ export interface ProductFormInput {
   model3dUrl?: string | null;
   tags: string;
   images: { url: string; alt: string }[];
+  variants?: ProductVariantInput[];
 }
 
 export async function createProductAction(formData: FormData): Promise<{ error?: string }> {
@@ -51,6 +59,8 @@ export async function createProductAction(formData: FormData): Promise<{ error?:
   const tags = (formData.get("tags") as string)?.trim() ?? "";
   const imagesRaw = formData.get("images") as string;
   const images = imagesRaw ? JSON.parse(imagesRaw) : [];
+  const variantsRaw = formData.get("variants") as string;
+  const variants: ProductVariantInput[] = variantsRaw ? JSON.parse(variantsRaw) : [];
 
   if (!categoryId) return { error: "Kategori seçin." };
   if (!sku) return { error: "SKU gerekli." };
@@ -82,6 +92,17 @@ export async function createProductAction(formData: FormData): Promise<{ error?:
             height: 1200,
             order: i,
           })),
+        },
+        variants: {
+          create: variants
+            .filter((v) => v.type?.trim() && v.name?.trim())
+            .map((v, i) => ({
+              type: v.type.trim(),
+              name: v.name.trim(),
+              sku: `${sku}-V${i + 1}`,
+              stock: Math.max(0, Number(v.stock ?? stock)),
+              priceDelta: Number(v.priceDelta ?? 0),
+            })),
         },
       },
     });
@@ -120,6 +141,8 @@ export async function updateProductAction(id: string, formData: FormData): Promi
   const tags = (formData.get("tags") as string)?.trim() ?? "";
   const imagesRaw = formData.get("images") as string;
   const images = imagesRaw ? JSON.parse(imagesRaw) : [];
+  const variantsRaw = formData.get("variants") as string | null;
+  const variants: ProductVariantInput[] | null = variantsRaw ? JSON.parse(variantsRaw) : null;
 
   if (!categoryId) return { error: "Kategori seçin." };
   if (!sku) return { error: "SKU gerekli." };
@@ -161,6 +184,24 @@ export async function updateProductAction(id: string, formData: FormData): Promi
           order: i,
         })),
       });
+    }
+
+    // Varyasyonları yenile
+    if (variants !== null) {
+      const validVariants = variants.filter((v) => v.type?.trim() && v.name?.trim());
+      await prisma.variant.deleteMany({ where: { productId: id } });
+      if (validVariants.length > 0) {
+        await prisma.variant.createMany({
+          data: validVariants.map((v, i) => ({
+            productId: id,
+            type: v.type.trim(),
+            name: v.name.trim(),
+            sku: `${sku}-V${i + 1}`,
+            stock: Math.max(0, Number(v.stock ?? stock)),
+            priceDelta: Number(v.priceDelta ?? 0),
+          })),
+        });
+      }
     }
   } catch (err) {
     console.error(err);

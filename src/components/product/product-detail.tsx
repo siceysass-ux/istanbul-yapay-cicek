@@ -45,15 +45,21 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
 
   const price = product.discountPrice ?? product.basePrice;
 
-  const selectedVariant = product.variants.find((v) =>
-    Object.entries(selectedVariants).every(([type, name]) => v.type === type && v.name === name)
-  );
-  const variantPriceDelta = selectedVariant?.priceDelta ?? 0;
-  const finalPrice = price + variantPriceDelta;
-  const variantStock = selectedVariant?.stock ?? product.stock;
+  // Her varyant grubundan seçili olan varyant nesnelerini bul
+  const selectedVariantObjs = Object.entries(selectedVariants)
+    .map(([type, name]) => product.variants.find((v) => v.type === type && v.name === name))
+    .filter((v): v is NonNullable<typeof v> => Boolean(v));
+
+  const primarySelectedVariant = selectedVariantObjs[0];
+  const variantPriceDelta = selectedVariantObjs.reduce((sum, v) => sum + (v.priceDelta ?? 0), 0);
+  const finalPrice = Math.max(0, price + variantPriceDelta);
+  const variantStock =
+    selectedVariantObjs.length > 0
+      ? Math.min(...selectedVariantObjs.map((v) => v.stock))
+      : product.stock;
   const variantDesc = Object.entries(selectedVariants)
     .map(([type, name]) => `${type === "color" ? "Renk" : type === "size" ? "Boy / Ölçü" : type}: ${name}`)
-    .join(", ");
+    .join(" · ");
 
   useEffect(() => {
     trackViewItem({
@@ -69,7 +75,7 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
     addItem(
       {
         id: product.id,
-        variantId: selectedVariant?.id,
+        variantId: primarySelectedVariant?.id,
         slug: product.slug,
         name: product.name,
         price: finalPrice,
@@ -148,32 +154,50 @@ export function ProductDetail({ product }: { product: ProductWithRelations }) {
         )}
       </div>
 
-      {/* Varyantlar — P2-3: "Beden" yerine "Boy / Ölçü" */}
-      {Object.entries(variantGroups).map(([type, variants]) => (
-        <div key={type} className="space-y-2">
-          <h3 className="text-sm font-medium">
-            {type === "color" ? "Renk" : type === "size" ? "Boy / Ölçü" : type}:{" "}
-            <span className="text-muted">{selectedVariants[type] ?? "Seçiniz"}</span>
-          </h3>
-          <div className="flex flex-wrap gap-2">
-            {variants.map((v) => (
-              <button
-                key={v.id}
-                type="button"
-                onClick={() => setSelectedVariants((s) => ({ ...s, [type]: v.name }))}
-                className={cn(
-                  "rounded-full border px-4 py-2 text-sm transition-all",
-                  selectedVariants[type] === v.name
-                    ? "border-accent bg-accent text-white font-medium"
-                    : "border-primary/20 hover:border-accent"
-                )}
-              >
-                {v.name}
-              </button>
-            ))}
+      {/* Varyantlar — P2-3: Özel varyasyon başlığı ve fiyat farkı gösterimi */}
+      {Object.entries(variantGroups).map(([type, variants]) => {
+        const displayType = type === "color" ? "Renk" : type === "size" ? "Boy / Ölçü" : type;
+        return (
+          <div key={type} className="space-y-2">
+            <h3 className="text-sm font-medium">
+              {displayType}:{" "}
+              <span className="text-muted font-semibold">{selectedVariants[type] ?? "Seçiniz"}</span>
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {variants.map((v) => {
+                const isSelected = selectedVariants[type] === v.name;
+                const optPrice = Math.max(0, price + (v.priceDelta ?? 0));
+                const showPriceBadge = variants.some((x) => (x.priceDelta ?? 0) !== 0);
+                return (
+                  <button
+                    key={v.id}
+                    type="button"
+                    onClick={() => setSelectedVariants((s) => ({ ...s, [type]: v.name }))}
+                    className={cn(
+                      "rounded-full border px-4 py-2 text-xs sm:text-sm transition-all flex items-center gap-1.5",
+                      isSelected
+                        ? "border-accent bg-accent text-white font-semibold shadow-xs"
+                        : "border-primary/20 bg-white hover:border-accent"
+                    )}
+                  >
+                    <span>{v.name}</span>
+                    {showPriceBadge && (
+                      <span
+                        className={cn(
+                          "font-price text-[11px] font-bold",
+                          isSelected ? "text-white/90" : "text-accent"
+                        )}
+                      >
+                        ({formatPrice(optPrice)})
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       {/* Miktar + Sepete ekle */}
       <div className="flex items-center gap-2 sm:gap-3">
