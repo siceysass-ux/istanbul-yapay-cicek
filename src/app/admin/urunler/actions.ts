@@ -188,3 +188,69 @@ export async function deleteProductAction(id: string): Promise<{ error?: string 
     return { error: "Ürün silinemedi." };
   }
 }
+
+export interface QuickUpdatePatch {
+  name?: string;
+  sku?: string;
+  categoryId?: string;
+  basePrice?: number;
+  discountPrice?: number | null;
+  stock?: number;
+  isActive?: boolean;
+  isFeatured?: boolean;
+  isNew?: boolean;
+}
+
+export async function quickUpdateProductAction(
+  id: string,
+  patch: QuickUpdatePatch
+): Promise<{ ok?: boolean; error?: string }> {
+  try {
+    const data: Record<string, unknown> = {};
+    if (typeof patch.name === "string" && patch.name.trim()) {
+      data.name = patch.name.trim();
+    }
+    if (typeof patch.sku === "string" && patch.sku.trim()) {
+      data.sku = patch.sku.trim();
+    }
+    if (typeof patch.categoryId === "string" && patch.categoryId) {
+      data.categoryId = patch.categoryId;
+    }
+    if (typeof patch.basePrice === "number" && !Number.isNaN(patch.basePrice) && patch.basePrice >= 0) {
+      data.basePrice = patch.basePrice;
+    }
+    if (patch.discountPrice !== undefined) {
+      data.discountPrice =
+        patch.discountPrice !== null && !Number.isNaN(Number(patch.discountPrice)) && Number(patch.discountPrice) > 0
+          ? Number(patch.discountPrice)
+          : null;
+    }
+    if (typeof patch.stock === "number" && !Number.isNaN(patch.stock)) {
+      data.stock = Math.max(0, Math.round(patch.stock));
+    }
+    if (typeof patch.isActive === "boolean") {
+      data.isActive = patch.isActive;
+    }
+    if (typeof patch.isFeatured === "boolean") {
+      data.isFeatured = patch.isFeatured;
+    }
+    if (typeof patch.isNew === "boolean") {
+      data.isNew = patch.isNew;
+    }
+
+    const updated = await prisma.product.update({
+      where: { id },
+      data,
+      select: { slug: true },
+    });
+
+    revalidatePath("/");
+    revalidatePath("/kategori/[slug]", "page");
+    revalidatePath(`/urun/${updated.slug}`);
+    revalidatePath("/admin/urunler");
+    return { ok: true };
+  } catch (err) {
+    console.error("Hızlı ürün güncelleme hatası:", err);
+    return { error: "Güncellenemedi." };
+  }
+}
